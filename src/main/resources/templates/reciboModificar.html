@@ -303,36 +303,29 @@
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Nro.</font></th>
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">CUIT</font></th>
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Fecha</font></th>
-										            <th width="20%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>
+										            <th width="20%" style="font-weight:bold;"><font color = "#000000">idHidden</font></th>
 										        </tr>
 										        
-											    <tr th:each="chequeVar : ${recibo.getTpCheques()}">
-											    	<script type="text/javascript">
-												    	//function tomoHora(){
-															var idHiddenDate=new Date();
-															var idHiddenDate2 = idHiddenDate.getTime().toString();
-															crearHiddenB('chequeNro', ${chequeVar.monto}, idHiddenDate2);
-												    	//}
-											    	</script>
-											    	
+											    <tr th:each="chequeVar : ${recibo.getTpCheques()}">											    	
 													<td th:text="${chequeVar.banco.id}"></td>
-													<td th:text="${chequeVar.monto}"></td>
+													<td class="montoCheque" th:text="${chequeVar.monto}"></td>
 													<td th:text="${chequeVar.numero}"></td>
 													<td th:text="${chequeVar.cuit}"></td>
 													<td th:text="${chequeVar.fechaDeposito}"></td>
-													<td class="idParaHidden" style="display: none;" th:text="${chequeVar.numero}"></td>'
+													<!-- <td class="idParaHidden" style="display: none;" th:text="${chequeVar.banco.id}"></td>-->
+													<td class="idParaHidden" th:text="'ch_' + ${chequeVar.banco.id}"></td>
 													<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td>
 												</tr>									
 										</table>																			
 										<form action="#" th:action="@{/recibo/salvar}" th:object="${reciboDto}" method="post" id="reciboFormId">
 																			        
 											    <div th:each="chequeVar : ${recibo.getTpCheques()}">										    	
-													<input type="hidden" name="chequeBanco" th:value="${chequeVar.banco.id}" th:attr="class='ch_' + ${chequeVar.banco.id} + ']'" ></input>
-													<input th:text="${chequeVar.monto}"></input>
-													<input th:text="${chequeVar.numero}"></input>
-													<input th:text="${chequeVar.cuit}"></input>
-													<input th:text="${chequeVar.fechaDeposito}"></input>
-													<input class="idParaHidden" style="display: none;" th:text="${chequeVar.banco.id}"></td>'													
+													<input type="hidden" name="chequeBanco" th:value="${chequeVar.banco.id}" th:attr="class='ch_' + ${chequeVar.banco.id}" ></input>
+													<input type="hidden" name="chequeImporte" th:value="${chequeVar.monto}" th:attr="class='ch_' + ${chequeVar.banco.id}"></input>
+													
+													<input type="hidden" name="chequeNro" th:value="${chequeVar.numero}" th:attr="class='ch_' + ${chequeVar.banco.id}"></input>
+													<input type="hidden" name="chequeCuit" th:value="${chequeVar.cuit}" th:attr="class='ch_' + ${chequeVar.banco.id}"></input>
+													<input type="hidden" name="chequeFechaDeposito" th:value="${chequeVar.fechaDeposito}" th:attr="class='ch_' + ${chequeVar.banco.id} + ']'"></input>																									
 												</div>
 										
 										</form>
