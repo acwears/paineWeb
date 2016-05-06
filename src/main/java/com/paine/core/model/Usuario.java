@@ -7,7 +7,7 @@ public class Usuario extends Bean {
 	private String apellido;
 	private String email;
 	private String pwd;
-	private String role;
+	private Role role;
 
 	public String getNombre() {
 		return nombre;
@@ -49,11 +49,11 @@ public class Usuario extends Bean {
 		this.codigo = codigo;
 	}
 
-	public String getRole() {
+	public Role getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 }

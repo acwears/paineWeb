@@ -1,159 +1,81 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-      
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
 <head th:include="layout :: headerFragment"></head>
 
 <body>
 
 	<div th:include="layout :: menuFragment"></div>
-		
-	<!-- ***************************************************************************************************** -->
-	<!-- ***************************************************************************************************** -->
-	<!-- ***************************************************************************************************** -->
-	<!-- ***************************************************************************************************** -->
-	<!-- ************************************ COMIENZO contenido ********************************************* -->
-	<div class="container-fluid" id="contenido">
-		<div class="tab-content">
-		<div class="tab-pane active" id="test">
-			<div class="row">
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		        	<span class="input-group-addon" id="basic-addon1">Perfil</span>
-		        </div>
-		        
-		        <div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		        	<span class="input-group-addon" id="basic-addon0">Codigo</span>
-		        </div>
-		        
-		        <div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		        	<span class="input-group-addon" id="basic-addon3">Apellido</span>
-		        </div>
-		        
-		        <div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		        	<span class="input-group-addon" id="basic-addon4">Nombre</span>
-		        </div>
-		        
-		        <div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		        	<span class="input-group-addon" id="basic-addon5">Usuario</span>
-		        </div>
-		        
-		        <div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		        	<span class="input-group-addon" id="basic-addon6">Contraseña</span>
-		        </div>
+
+	<div class="row" id="successMessage">
+		<div class="col-md-2"></div>
+		<div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success col-md-8" role="alert"></div>
+		<div class="col-md-2"></div>
+	</div>
+
+	<div class="row" id="errorMessage">
+		<div class="col-md-2"></div>
+		<div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger col-md-8" role="alert"></div>
+		<div class="col-md-2"></div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-1"></div>
+
+		<div class="col-md-10">
+			<div class="panel panel-default">
+				<!-- Default panel contents -->
+				<div class="panel-heading">Usuários Painé</div>
+
+				<!-- Table -->
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>First Name</th>
+							<th>Username</th>
+							<th>Role</th>
+							<th><a th:href="@{/controlPanel/nuevo}" class="btn btn-default">Nuevo Usuário</a></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="usuario : ${usuarios}">
+							<td th:text="${usuario.nombre}"></td>
+							<td th:text="${usuario.email}"></td>
+							<td th:text="${usuario.role}"></td>
+							<td><a th:href="@{/controlPanel/actualizar/} + ${usuario.id}">Actualizar</a></td>
+						</tr>
+
+					</tbody>
+				</table>
 			</div>
-			<div class="row" id="idListadoUsuarios">
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-					<select class="form-control" id="cmbPerfil" aria-describedby="basic-addon1">
-			        	<option th:text="-------"></option>
-			        	<option th:each="usuarioVar : ${usuarios}" th:text="${usuarioVar.role}" th:value="${usuarioVar.id}"></option>
-			        </select>
-				</div>
-				
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" id="idDiv">												
-					<input type="miTabPanelText3" id="txtCodigo" aria-describedby="basic-addon0">
-				</div>				
-				
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">												
-					<input type="miTabPanelText3" id="txtApellido" aria-describedby="basic-addon3">
-				</div>
-				
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">								
-					<input type="miTabPanelText3" id="txtNombre" aria-describedby="basic-addon4">
-				</div>
-				
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-					<input type="miTabPanelText3" id="txtUsuario" aria-describedby="basic-addon5">
-				</div>
-				
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-					<input type="miTabPanelText3" id="txtPwd" aria-describedby="basic-addon6">
-				</div>
-				
-				
-								<div class="row">
-					<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
-						<input class="btn btn-primary btn-lg" type="button" value="Guardar recibo" id="idPrueba">								
-	    			</div>
-				</div>
-				
-				
-				
-			</div>
-			</div>
-			</div>
-			
-			
-			
-			
-			
-					
-		
-	</div> <!-- end contenido -->
+		</div>
+
+		<div class="col-md-1"></div>
+
+	</div>
 
 	<footer>
 		<div class="container-fluid">
 			<address>
-	            Ruka Painé S.r.l &middot; Av. Los Mayas, 253 &middot; 01714 Buenos Aires
-    	        <br />
-        	    Tel 035774 34711 &middot; Fax 03574 34712
-            </address>
+				Ruka Painé S.r.l &middot; Av. Los Mayas, 253 &middot; 01714 Buenos Aires <br /> Tel 035774 34711 &middot; Fax 03574 34712
+			</address>
 		</div>
 	</footer>
 
-	<script src="js/jquery.js"></script>
-	<script src="js/jquery-validate.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/bootstrap-datepicker.min.js"></script>
-	
+	<script th:src="@{/js/jquery.js}"></script>
+	<script th:src="@{/js/jquery-validate.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
+
 	<!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js"></script> -->
 </body>
 
 <script type="text/javascript">
 
-	$(document).ready(function(){	
-		
-		$("#idPrueba").click(function() {
-			var newRecord = '<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">' + '<input type="miTabPanelText3">' + '</div>';
-			$('#test div:last').after(newRecord);
-			
-			
-			
-			var newdiv = document.createElement('div');
-			newdiv.innerHTML = "Entry " + (counter + 1) + " <br><input type='text' name='myInputs[]'>";
-	        document.getElementById('idDiv').appendChild(newdiv);
-			
-			
-			
-			/*while(i<10){
-	               $('#Postsoutput').prepend('<div id="first'+i+'">'+i+'</div>');
-	               $('#first'+i).hide(1000);
-	               $('#first'+i).show(1000);
-	                i++;
-	                }*/
-			
-			
-			
-			
-			
-			
-			//obj = $('idDiv').form;
-			// creo un elemento <input>
-			  //elem=document.createElement('input');
-
-			  // le pongo tipo
-			  //elem.type='text';
-			  
-			  //elem.name='prueba';
-			  
-			  // le pongo al campo el valor que tiene el control file
-			  //elem.value=$('idDiv').value;
-
-			  // le añado el control al formulario
-			  //obj.appendChild(elem);
-		});
-		
-	}
+$(document).ready(function (){
+	$("#successMessage").fadeOut(10000);
+	$("#errorMessage").fadeOut(10000);
+});
 	
 </script>
 

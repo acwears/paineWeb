@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:include="layout :: headerFragment"></head>
+
+<body>
+
+	<div th:include="layout :: menuFragment"></div>
+
+	<div class="row">
+		<div class="col-md-2"></div>
+
+		<div class="col-md-8">
+			<div class="panel panel-default">
+				<!-- Default panel contents -->
+				<div class="panel-heading">Actualizar Usuário</div>
+				<br>
+				
+				<form action="#" th:action="@{/controlPanel/actualizar}" th:object="${usuarioDto}" method="post" class="form-horizontal">
+				
+					<input type="hidden" class="form-control" th:field="${id}">				
+				
+					<div class="form-group">
+						<label for="inputNombreId" class="col-sm-2 control-label">Nombre</label>
+						<div class="col-sm-10">
+							<input id="inputNombreId" class="form-control" th:field="${nombre}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputCodigoId" class="col-sm-2 control-label">Codigo</label>
+						<div class="col-sm-10">
+							<input id="inputCodigoId" class="form-control" th:field="${codigo}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputEmailId" class="col-sm-2 control-label">email</label>
+						<div class="col-sm-10">
+							<input id="inputEmailId" class="form-control" th:field="${email}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputRoleId" class="col-sm-2 control-label">Role</label>
+						<div class="col-sm-10">
+							<select id="inputRoleId" class="form-control" th:field="${role}">
+				                <option th:each="roleVar: ${roles}" th:value="${roleVar}" th:text="${roleVar.descripcion}"></option>
+				            </select>							
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPasswordId" class="col-sm-2 control-label">Password</label>
+						<div class="col-sm-10">
+							<input type="password" id="inputPasswordId" class="form-control" th:field="${pwd}" placeholder="********">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputConfirmPasswordId" class="col-sm-2 control-label">Confirm Password</label>
+						<div class="col-sm-10">
+							<input type="password" id="inputConfirmPasswordId" class="form-control" th:field="${pwdConfirmacion}" placeholder="********">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="submit" class="btn btn-default">Actualizar</button>
+							<a th:href="@{/controlPanel}" class="btn btn-default">Volver</a>
+						</div>
+					</div>
+				</form>
+
+
+			</div>
+		</div>
+
+		<div class="col-md-2"></div>
+
+	</div>
+
+	<footer>
+		<div class="container-fluid">
+			<address>
+				Ruka Painé S.r.l &middot; Av. Los Mayas, 253 &middot; 01714 Buenos Aires <br /> Tel 035774 34711 &middot; Fax 03574 34712
+			</address>
+		</div>
+	</footer>
+
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery-validate.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-datepicker.min.js"></script>
+
+	<!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js"></script> -->
+</body>
+
+<script type="text/javascript">
+
+	
+</script>
+
+</html>
