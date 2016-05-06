@@ -22,7 +22,7 @@ public class UsuarioRepository extends JDBCRepository {
 			usuario.setId(rs.getInt("id"));
 			usuario.setCodigo(rs.getInt("codigo"));
 			usuario.setNombre(rs.getString("nombre"));
-			usuario.setApellido(rs.getString("apellido"));
+			//usuario.setApellido(rs.getString("apellido"));
 			usuario.setEmail(rs.getString("email"));
 			usuario.setPwd(rs.getString("pwd"));
 			usuario.setRole(rs.getString("role"));
@@ -49,7 +49,7 @@ public class UsuarioRepository extends JDBCRepository {
 			usuario.setId(rs.getInt("id"));
 			usuario.setCodigo(rs.getInt("codigo"));
 			usuario.setNombre(rs.getString("nombre"));
-			usuario.setApellido(rs.getString("apellido"));
+			//usuario.setApellido(rs.getString("apellido"));
 			usuario.setEmail(rs.getString("email"));
 			usuario.setPwd(rs.getString("pwd"));
 			usuario.setRole(rs.getString("role"));

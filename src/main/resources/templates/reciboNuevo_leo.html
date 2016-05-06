@@ -164,7 +164,6 @@
 					            <td width="70%" style="font-weight:bold;"><font color = "#000000">Factura nro.</font></td>
 					            <td width="25%" style="font-weight:bold;"><font color = "#000000">Fecha</font></td>
 					            <td width="35%" style="font-weight:bold;"><font color = "#000000">Monto</font></td>
-					            <td width="35%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></td>
 					        </tr>
 					     <!--   <tr style="visibility:hidden; height: 0px;">
 					        </tr> -->
@@ -251,7 +250,7 @@
 							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
 								<div class="input-group input-group-sm">
       								<span class="input-group-addon" id="basic-addon0">Importe</span>
-      								<input type="miTabPanelText" id="efectivoImporte" aria-describedby="basic-addon0" value="0">
+      								<input type="miTabPanelText" id="efectivoImporte" aria-describedby="basic-addon0">
    								</div>
    							</div>
 						</div>						
@@ -306,7 +305,6 @@
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Nro.</font></th>
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">CUIT</font></th>
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Fecha</font></th>
-										            <th width="20%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>
 										        </tr>									
 										</table>
 										
@@ -435,8 +433,7 @@
 									<table class="table table-bordered" id="descuentoTableId">
 									        <tr class="success">
 									        	<th width="200%" style="font-weight:bold;"><font color = "#000000">Descripción</font></th>
-									            <th width="200%" style="font-weight:bold;"><font color = "#000000">Monto</font></th>
-									            <th width="200%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>           
+									            <th width="200%" style="font-weight:bold;"><font color = "#000000">Monto</font></th>            
 									        </tr>
 									</table>														
 								</div>
@@ -613,24 +610,20 @@
 			var facturaSumaImportes = 0;
 			var tdArray = $(this).find("td");
 			
-			var idHiddenDate=new Date();
-			var idHiddenDate2 = idHiddenDate.getTime().toString();			
-			
 			var facturaNro = tdArray[0].innerHTML; //"123A"; //$(this).text();
 			var facturaFecha = tdArray[3].innerHTML;
 			var facturaMonto = tdArray[5].innerHTML;
 			
-			var newRecord = '<tr><td>' + facturaNro + '</td>';
+			var newRecord = '<tr><td class="idParaHidden">' + facturaNro + '</td>';
 			newRecord = newRecord + '<td>' + facturaFecha + '</td>';
 			newRecord = newRecord + '<td class="montoFac">' + facturaMonto + '</td>';
-			newRecord = newRecord + '<td class="idParaHidden" style="display: none;">' + idHiddenDate2 + '</td>';
 			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
 			
 			$('#tblFactura tr:last').after(newRecord);
 		
- 			crearHiddenB('facturaNro', facturaNro, idHiddenDate2);
- 			crearHiddenB('facturaFecha', facturaFecha, idHiddenDate2);
- 			crearHiddenB('facturaMonto', facturaMonto, idHiddenDate2);
+ 			crearHiddenB('facturaNro', facturaNro, facturaNro);
+ 			crearHiddenB('facturaFecha', facturaFecha, facturaNro);
+ 			crearHiddenB('facturaMonto', facturaMonto, facturaNro);
  						
  			//sumo el monto de cada factura
  			sumarMontos("#facturasMontoTotal", facturaMonto);
@@ -691,8 +684,6 @@
 		});
 		
 		$("#chequeBtnAgregarID").click(function() {
-			var idHiddenDate=new Date();
-			var idHiddenDate2 = idHiddenDate.getTime().toString();
 			
 			if(!validaIntegridad_DeCheque()){return;}
 			
@@ -704,21 +695,20 @@
 			
 			var newRecord = '<tr><td>' + $('#chequeBancoID option:selected').text() + '</td>';
 			newRecord = newRecord + '<td class="montoCheque">' + chequeImporteIdVar + '</td>';
-			newRecord = newRecord + '<td>' + chequeNroIdVar + '</td>';
+			newRecord = newRecord + '<td class="idParaHidden">' + chequeNroIdVar + '</td>';
 			newRecord = newRecord + '<td>' + chequeCuitIdVar + '</td>';
-			newRecord = newRecord + '<td>' + chequeFechaIdVar + '</td>';
-			newRecord = newRecord + '<td class="idParaHidden" style="display: none;">' + idHiddenDate2 + '</td>';
+			newRecord = newRecord + '<td>' + chequeFechaIdVar + '</td>';  //</tr>';
 			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
 			
 			//Adicionar row
 			$('#tableChequeId tr:last').after(newRecord);
 			
 			//creo hidden y lo adiciono al form
- 			crearHiddenB('chequeNro', chequeNroIdVar, idHiddenDate2);
-			crearHiddenB('chequeBanco', chequeBancoIDVar, idHiddenDate2);
-			crearHiddenB('chequeImporte', chequeImporteIdVar, idHiddenDate2);
- 			crearHiddenB('chequeCuit', chequeCuitIdVar, idHiddenDate2);
- 			crearHiddenB('chequeFechaDeposito', chequeFechaIdVar, idHiddenDate2);
+ 			crearHiddenB('chequeNro', chequeNroIdVar, chequeNroIdVar);
+			crearHiddenB('chequeBanco', chequeBancoIDVar, chequeNroIdVar);
+			crearHiddenB('chequeImporte', chequeImporteIdVar, chequeNroIdVar);
+ 			crearHiddenB('chequeCuit', chequeCuitIdVar, chequeNroIdVar);
+ 			crearHiddenB('chequeFechaDeposito', chequeFechaIdVar, chequeNroIdVar);
  			
  			//sumo el monto de cada cada cheque agregado
  			sumarMontos("#chequeMontoTotalId", chequeImporteIdVar)
@@ -729,8 +719,6 @@
 		});
 		
 		$('#descuentoBtnAgregarId').click(function(){
-			var idHiddenDate=new Date();
-			var idHiddenDate2 = idHiddenDate.getTime().toString();
 			
 			if($('#facturasMontoTotal').val() == ''){
 				alert("Antes de ingresar un descuento, debe seleccionar la factura.");
@@ -743,15 +731,14 @@
 			var descuentoPorcentajeVar = $('#descuentoPorcentajeId').val();
 			var descuentoDescripcionVar = $('#descuentoDescripcionId').val();
 			
-			var newRecord = '<tr><td>' + descuentoDescripcionVar + '</td>';
-			newRecord = newRecord + '<td class="porcentajeDescuento">' + descuentoPorcentajeVar + '</td>';
-			newRecord = newRecord + '<td class="idParaHidden" style="display: none;">' + idHiddenDate2 + '</td>';
+			var newRecord = '<tr><td class="porcentajeDescuento">' + descuentoPorcentajeVar + '</td>';
+			newRecord = newRecord + '<td class="idParaHidden">' + descuentoDescripcionVar + '</td>'; //</tr>';
 			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
 			
 			$('#descuentoTableId tr:last').after(newRecord);
 			
-			crearHiddenB('descuentoPorcentaje', descuentoPorcentajeVar, idHiddenDate2);
-			crearHiddenB('descuentoDescripcion', descuentoDescripcionVar, idHiddenDate2);
+			crearHiddenB('descuentoPorcentaje', descuentoPorcentajeVar, descuentoDescripcionVar);
+			crearHiddenB('descuentoDescripcion', descuentoDescripcionVar, descuentoDescripcionVar);
 			
  			//sumo el porcentaje de cada descuento
  			//sumarMontos("#reciboTotalDescuento", descuentoPorcentajeVar); lo saque el 19/04
@@ -814,9 +801,7 @@
 			crearHidden('reciboFechaProceso', reciboFechaProceso);
 			crearHidden('reciboTotalDescuento', reciboTotalDescuento);
 			
-			if(efectivoImporte > 0){
-				crearHidden('efectivoImporte', efectivoImporte);
-			}
+			crearHidden('efectivoImporte', efectivoImporte);
 			
 			if(retencionNumero != ''){
 				crearHidden('retencionNumero', retencionNumero);
