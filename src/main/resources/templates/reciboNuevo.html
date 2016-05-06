@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      
+<head>	
+	<meta charset="UTF-8">
+	<title>Ruka Painé S.r.l</title>
+	<meta name="viewport" content="whidt=device-width, user-scalable=no, initial-scale=1.0, maximun-scale=1.0, minimun-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/estilos.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-datepicker.min.css">
+</head>
+
+<body>
+	<header>
+		<div class="container-fluid">
+			<div class="row">
+				<!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<h1>Ruka Painé S.r.l</h1>
+				</div> -->
+
+				<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11" id="idLineaLogueoBienvenida">
+					<h5 th:inline="text">Hello [[${loggedUser.nombre}]]!</h5>
+				</div>
+
+				<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1" id="idLineaLogueoSalir">
+					<a th:href="@{/logout}">Salir</a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+
+	<nav class="navbar navbar-default navColor" id="nav">
+		<div class="container-fluid">
+		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
+		  		<a class="navbar-brand" href="greeting">Home</a>
+		  	</div>
+
+		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
+		  		<a class="navbar-brand" href="ingresar1"><font color="#COLORENHEXA">Ingresar</font></a>
+		  	</div>
+
+		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
+		  		<a class="navbar-brand" href="reciboVer">Ver</a>
+		  	</div>
+
+		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
+		  		<a class="navbar-brand" href="modificar">Modificar</a>
+		  	</div>
+		  	
+		  	<div sec:authorize="hasRole('ROLE_ADMIN')" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+		  		<a class="navbar-brand" href="controlPanel">Panel de control</a>
+		  	</div>
+		</div>
+	</nav>
+		
+	<!-- ***************************************************************************************************** -->
+	<!-- ***************************************************************************************************** -->
+	<!-- ***************************************************************************************************** -->
+	<!-- ***************************************************************************************************** -->
+	<!-- ************************************ COMIENZO contenido ********************************************* -->
+	<div class="container-fluid" id="contenido">
+		<!-- ********************************************************************************************** -->
+		<!-- ******************************** COMIENZO recibo, fecha y datos cliente ********************** -->
+		<div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
+				<div class="input-group input-group-sm">
+					<span class="input-group-addon" id="basic-addon15">Recibo #</span>
+    				<input type="miTabPanelText2" class="form-control" id="nroRecibo" name="nroRecibo" aria-describedby="basic-addon15">
+    			</div>
+    		</div>
+
+    		<div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
+    			<div class="input-group input-group-sm">
+					<span class="input-group-addon" id="basic-addon16">Fecha</span>
+    				<input type="miTabPanelText2" class="form-control" id="fechaRecibo" aria-describedby="basic-addon16">
+    			</div>
+            </div>                                
+
+    		<div class="col-xs-12 col-sm-6 col-md-2 col-lg-2 col-lg-offset-2">	    			
+    			<input type="text" class="form-control" id="clienteId" style="display: none;" readonly="readonly">
+    			<div class="input-group input-group-sm">
+					<span class="input-group-addon" id="basic-addon17">Cliente #</span>
+    				<input type="miTabPanelText" class="form-control" id="clienteNro" readonly="readonly" aria-describedby="basic-addon17">
+    			</div>
+    		</div>
+
+			<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+				<div class="input-group input-group-sm">
+					<span class="input-group-addon" id="basic-addon18">Nombre</span>
+    				<input type="miTabPanelText" class="form-control" id="clienteNombre" readonly="readonly" aria-describedby="basic-addon18"></input>
+    				<span class="input-group-addon" id="basic-addon18">><button class="btn btn-link" data-toggle="modal" data-target="#modal_cliente" id="mostrar_mdl_cliente"></button></span>
+    				<!--<span class="input-group-addon glyphicon glyphicon-search" aria-hidden="true" id="basic-addon18">+<button class="btn btn-link" data-toggle="modal" data-target="#modal_cliente" id="mostrar_mdl_cliente"></button></span>-->
+    			</div>
+    		</div>
+
+			<!-- ***********************************************************************************-->
+			<!-- ***********************************************************************************-->
+			<!-- ************************ COMIENZO VENTANA MODAL CLIENTE ***************************-->
+			<div class="modal fade" id="modal_cliente" tabindex="-1"  role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					 	<div class="modal-header">
+					    	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					    	<h4 class="modal-title"><font color = "green">Seleccione al cliente</font></h4>
+					  	</div>
+
+						<div class="modal-body">
+							<div>
+								<span class="subrayado"><h3>Tipos de busqueda</h3></span>
+							</div>
+
+							<div>
+								<label for="exampleInputEmail1"><h5>Cliente nro.</h5></label>
+								<input type="text" class="form-control" id="mdl_cte_busq_cte_nro">
+								
+								<label for="exampleInputEmail1"><h5>Nombre</h5></label>
+								<input type="text" class="form-control" id="mdl_cte_busq_cte_nom">
+								<br>
+								<br>
+							</div>
+										        
+							<table class="table table-bordered table-hover table-responsive" id="idTableSelectCte">
+							    <thead>
+							        <tr class="success">
+							            <th style="font-weight:bold;">Cliente nro.</font></th>
+							            <th style="font-weight:bold;">Nombre</font></th>
+							        </tr>
+							    </thead>
+							    
+								<tbody>
+									<tr th:each="clienteVar : ${clientes}">
+									    <td th:text="${clienteVar.id}" style="display: none;"></td>
+										<td th:text="${clienteVar.numeroCliente}"></td>
+										<td th:text="${clienteVar.nombre}"></td>
+									</tr>
+							    </tbody>
+							</table>
+						</div>
+
+					  	<div class="modal-footer">
+					    	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+					    	<button type="button" class="btn btn-primary">Seleccionar</button>
+					  	</div>
+					</div><!-- *** FIN modal-content ***-->
+				</div><!-- *** FIN modal-dialog ***-->
+			</div><!-- ****** FIN VENTANA MODAL CLIENTE ****** -->   			
+		</div><!-- END recibo, fecha y datos cliente -->
+
+		<br>
+		<br>
+		<br>
+		<!-- *************************************************************************************************-->
+		<!-- *************************************************************************************************-->
+		<!-- ******************************** COMIENZO datos FACTURA y TIPO DE PAGO ***************************-->
+		
+		<div class="row">			
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+				<div class="panel panel-default">   
+				  	<table class="table table-bordered" id="tblFactura">
+							<tr class="success">
+					            <td width="70%" style="font-weight:bold;"><font color = "#000000">Factura nro.</font></td>
+					            <td width="25%" style="font-weight:bold;"><font color = "#000000">Fecha</font></td>
+					            <td width="35%" style="font-weight:bold;"><font color = "#000000">Monto</font></td>
+					        </tr>
+					     <!--   <tr style="visibility:hidden; height: 0px;">
+					        </tr> -->
+					</table>
+				</div>
+
+				<div class="input-group input-group-sm" id="inGrTotalFacturas">
+					<span class="input-group-addon" id="basic-addon19">Total facturas</span>
+					<input type="miTabPanelText2" class="form-control" id="facturasMontoTotal" aria-describedby="basic-addon18">
+					<span class="input-group-addon" id="basic-addon18">><button class="btn btn-link" data-toggle="modal" data-target="#modal_factura" id="mostrar_mdl_factura"></button></span>						
+				</div>
+			</div>
+
+			<!-- ****** COMIENZO VENTANA MODAL FACTURA ****** -->
+			<div class="modal fade" id="modal_factura" tabindex="-1"  role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					 	<div class="modal-header">
+					    	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					    	<h4 class="modal-title"><font color = "green">Seleccione la factura</font></h4>
+					  	</div>
+
+					  	<div class="modal-body">					      
+							<div class="table-responsive">
+						
+								<table class="table table-bordered table-hover table-condensed table-responsive" id="facturaTblModal">
+								    <thead>
+								        <tr class="success">
+								        	<th><font color = "#000000">Nro. factura</font></th>
+								            <th><font color = "#000000">Cliente nro.</font></th>
+								            <th><font color = "#000000">Nombre</font></th>
+								            <th><font color = "#000000">Fecha factura</font></th>
+								            <th><font color = "#000000">Monto original</font></th>
+								            <th><font color = "#000000">Monto adeudado</font></th>
+								            <th><font color = "#000000">Vencimiento</font></th>
+								        </tr>
+								    </thead>
+								    
+									<tbody>
+										<tr th:each="ccVar : ${cuentasCorrientes}">
+											<td th:text="${ccVar.nro_factura}"></td>
+											<td th:text="${ccVar.id}"></td>
+											<td th:text="${ccVar.nombre}"></td>
+											<td th:text="${#dates.format(ccVar.fecha_factura, 'dd/MM/yyyy')}"></td>
+											<td th:text="${ccVar.monto_original}"></td>
+											<td th:text="${ccVar.monto_adeudado}"></td>
+											<td th:text="${ccVar.fecha_vencimiento}"></td>
+										</tr>
+								    </tbody>
+								</table>
+							</div>
+					  	</div>
+
+					  	<div class="modal-footer">
+					    	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+					    	<button type="button" class="btn btn-primary">Seleccionar</button>
+					  	</div>
+					</div><!-- /.fin modal-content -->
+				</div><!-- /. fin modal-dialog -->
+			</div> <!-- ****** FIN VENTANA MODAL FACTURA ****** -->
+
+			<!-- *********************************************************************************** -->
+			<!-- *********************************************************************************** -->
+			<!-- **************************************** COMIENZO TIPO DE PAGO ******************** -->
+
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+				<div role="tabpanel" class="tab-pane"> <!-- comienzo tabpanel -->						
+					<ul class="nav nav-tabs nav-justified navbar-inverse" role="tablist" id="nv1">
+						<li role="presentation"><a href="#idEfectivo" aria-controls="idEfectivo" data-toggle="tab" role="tab">EFECTIVO</a></li>
+						<li class="active" role="presentation"><a href="#idCheque" aria-controls="idCheque" data-toggle="tab" role="tab">CHEQUE</a></li>
+						<li role="presentation"><a href="#idDeposito" aria-controls="idDeposito" data-toggle="tab" role="tab">DEPOSITO</a></li>
+						<li role="presentation"><a href="#idRetencion" aria-controls="idRetencion" data-toggle="tab" role="tab">RETENCION</a></li>
+						<li role="presentation"><a href="#idTabDescuento" aria-controls="idTabDescuento" data-toggle="tab" role="tab">DESCUENTO</a></li>
+						<li role="presentation"><a href="#idTabObservaciones" aria-controls="idTabObservaciones" data-toggle="tab" role="tab">OBSERVACIONES</a></li>
+					</ul>
+					
+					<div class="tab-content">
+
+						<!-- **************************************************************************************** -->
+						<!-- **************************************************************************************** -->
+						<!-- **************************************************************************************** -->
+					    <!-- *** COMIENZO EFECTIVO ****************************************************************** -->
+						<div role="tabpanel" class="tab-pane" id="idEfectivo">
+							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+								<div class="input-group input-group-sm">
+      								<span class="input-group-addon" id="basic-addon0">Importe</span>
+      								<input type="miTabPanelText" id="efectivoImporte" aria-describedby="basic-addon0">
+   								</div>
+   							</div>
+						</div>						
+						<!-- *** FIN EFECTIVO *** -->
+
+
+						<!-- **************************************************************************************** -->
+						<!-- **************************************************************************************** -->
+						<!-- **************************************************************************************** -->
+						<!-- ******************************************************************** COMIENZO CHEQUE *** -->
+
+						<div role="tabpanel" class="active tab-pane" id="idCheque">
+							<div  class="col-xs-12 col-sm-5 col-md-6 col-lg-4">
+								<div class="input-group input-group-sm">
+							        <span class="input-group-addon" id="basic-addon1">Banco</span>
+									<select class="form-control" id="chequeBancoID" aria-describedby="basic-addon1">
+							        	<option th:text="-------"></option>
+							        	<option th:each="bancoVar : ${bancos}" th:text="${bancoVar.id} + ' - ' +  ${bancoVar.nombre}" th:value="${bancoVar.id}"></option>
+							        </select>
+								</div>
+								
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon2">Cheque #</span>
+	  								<input type="miTabPanelText" id="chequeNroId" aria-describedby="basic-addon2">
+								</div>
+
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon3">Importe</span>
+									<input type="miTabPanelText" id="chequeImporte" aria-describedby="basic-addon3">
+								</div>
+
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon4">CUIT</span>
+									<input type="miTabPanelText" id="chequeCuitId" aria-describedby="basic-addon4">
+								</div>
+
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon5">Fecha dep.</span>
+									<input type="miTabPanelText" id="chequeFechaId" aria-describedby="basic-addon5">								
+								</div>
+								<br>
+									<button type="button" class="btn btn-default" id="chequeBtnAgregarID">Agregar al listado</button>
+							</div>
+
+							<div class="col-xs-12 col-sm-7 col-md-6 col-lg-8" id="idChequeListado">
+								<!--<div class="panel panel-default" style="margin-left: 40px;">-->
+								<div class="panel panel-default">
+										<table class="table table-bordered" id="tableChequeId">
+										        <tr class="success">
+										            <th width="40%" style="font-weight:bold;"><font color = "#000000">Banco</font></th>
+										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Importe</font></th>
+										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Nro.</font></th>
+										            <th width="20%" style="font-weight:bold;"><font color = "#000000">CUIT</font></th>
+										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Fecha</font></th>
+										        </tr>									
+										</table>
+										
+										<form action="#" th:action="@{/recibo/salvar}" th:object="${reciboDto}" method="post" id="reciboFormId">
+										</form>
+								</div>
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon36">Total cheques</span>
+									<input type="miTabPanelText" class="form-control" id="chequeMontoTotalId" readonly="readonly" aria-describedby="basic-addon36">
+								</div>
+							</div>
+						</div>   <!-- *** FIN CHEQUE *** -->
+
+						
+						
+						
+						<!-- ******************************************************************************************************* -->
+						<!-- ******************************************************************************************************* -->
+						<!-- ******************************************************************************************************* -->
+						<!-- ******************************************************************************************************* -->
+						<!-- ******************************************************************** COMIENZO DEPOSITO **************** -->
+
+						<div role="tabpanel" class="tab-pane" id="idDeposito">
+							<div class="col-xs-12 col-sm-5 col-md-5 col-lg-4">
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon6">Banco</span>
+									<select class="form-control" id="depositoBancoId" aria-describedby="basic-addon6">
+										<option th:text="-------"></option>
+										<option th:each="bancoVar : ${bancos}" th:text="${bancoVar.id} + ' - ' +  ${bancoVar.nombre}" th:value="${bancoVar.id}"></option>
+							        </select>
+								</div>
+
+						        <div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon7">Importe</span>
+									<input type="miTabPanelText" id="depositoImporteId" aria-describedby="basic-addon7">
+								</div>
+
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon8">Fecha dep.</span>
+									<input type="miTabPanelText" id="depositoFechaId" aria-describedby="basic-addon8">
+								</div>
+
+								<br>
+								<button type="button" class="btn btn-default" id="depositoBtnAgregarId">Agregar al listado</button>							
+							</div>
+
+							<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7" id="idChequeListado">
+								<div class="panel panel-default">
+									<table class="table table-bordered" id="tableDepositoID">
+									        <tr class="success">
+									            <th width="60%" style="font-weight:bold;"><font color = "#000000">Banco</font></th>
+									            <th width="130%" style="font-weight:bold;"><font color = "#000000">Importe</font></th>
+									            <th width="40%" style="font-weight:bold;"><font color = "#000000">Fecha</font></th>
+									            <th width="40%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>
+									        </tr>
+									</table>
+								</div>
+
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon37">Total depósitos</span>
+									<input type="miTabPanelTex" class="form-control" id="depositoMontoTotal" readonly="readonly" aria-describedby="basic-addon37">
+								</div>
+							</div>
+						</div><!-- *** FIN DEPOSITO *** -->
+
+						
+
+
+
+
+						<!-- ******************************************************************************************************* -->
+						<!-- ******************************************************************************************************* -->
+						<!-- ******************************************************************************************************* -->
+						<!-- ******************************************************************************************************* -->
+						<!-- ******************************************************************** COMIENZO RETENCION *************** -->					
+						<div role="tabpanel" class="tab-pane" id="idRetencion">
+							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon9">Retención #</span>
+									<input type="miTabPanelText" id="retencionNumero" aria-describedby="basic-addon9">
+								</div>
+
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon10">Importe</span>
+									<input type="miTabPanelText" id="retencionImporte" aria-describedby="basic-addon10">
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3" id="idRetencion">
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon11">Sucursal</span>
+									<input type="miTabPanelText" id="retencionSucursal" aria-describedby="basic-addon11">
+								</div>
+
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon12">Año</span>
+									<input type="miTabPanelText" id="retencionYear" aria-describedby="basic-addon12">
+								</div>
+							</div>
+						</div><!-- *** FIN RETENCION *** -->
+
+						<!-- ******************************************************************************************************* -->
+						<!-- ******************************************************************************************************* -->
+						<!-- ******************************************************************************************************* -->
+						<!-- ******************************************************************************************************* -->
+						<!-- ******************************************************************** COMIENZO DESCUENTO *************** -->	
+						<div role="tabpanel" class="tab-pane" id="idTabDescuento">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+				    			<div class="input-group input-group-sm">
+				    				<span class="input-group-addon" id="basic-addon13">Descripción</span>
+				    				<input type="miTabPanelText" id="descuentoDescripcionId" aria-describedby="basic-addon13">
+				    			</div>
+
+				    			<div class="input-group input-group-sm">
+				    				<span class="input-group-addon" id="basic-addon14">Monto</span>
+				    				<input type="miTabPanelText" id="descuentoPorcentajeId" aria-describedby="basic-addon14">
+				    			</div>
+
+				    			<div>
+				    				<br>
+									<button type="button" class="btn btn-default" id="descuentoBtnAgregarId">Agregar al listado</button>
+								</div>
+				    		</div>
+
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-7">
+								<div class="panel panel-default">
+									<table class="table table-bordered" id="descuentoTableId">
+									        <tr class="success">
+									        	<th width="200%" style="font-weight:bold;"><font color = "#000000">Descripción</font></th>
+									            <th width="200%" style="font-weight:bold;"><font color = "#000000">Monto</font></th>            
+									        </tr>
+									</table>														
+								</div>
+
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon38">Total descuento</span>
+									<input type="miTabPanelText" class="form-control" id="importeTotalDescuento" readonly="readonly" value="0" aria-describedby="basic-addon38">
+								</div>
+							</div>		
+						</div><!-- *** FIN DESCUENTO... *** -->
+
+
+						<!-- **************************************************************************************** -->
+						<!-- **************************************************************************************** -->
+						<!-- **************************************************************************************** -->
+					    <!-- *** COMIENZO OBSERVACIONES ************************************************************* -->
+						<div role="tabpanel" class="tab-pane" id="idTabObservaciones">
+							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+								<div class="row">
+	    							<textarea class="form-control" rows="10" placeholder="Indique aqui las observaciones del recibo." id="idObservaciones"></textarea>
+	    						</div>
+   							</div>
+						</div>						
+						<!-- *** FIN OBSERVACIONES *** -->
+
+					</div> <!-- *** END TAB CONTENT... *** -->
+
+				</div> <!-- *** END TAB PANEL... *** -->
+
+			</div> <!-- *** END TIPO DE PAGO - END DIV QUE ENVUELVE AL TAB PANEL *** -->
+
+		</div> <!-- *********************************** END datos FACTURA Y TIPO DE PAGO **************************************** -->
+			   <!-- ************************************************************************************************************* -->
+			   <!-- ************************************************************************************************************* -->
+
+
+
+		<!-- ******************************************************************************************************* -->
+		<!-- ******************************************************************************************************* -->
+		<!-- ******************************************************************************************************* -->
+		<!-- ******************************************************************************************************* -->
+		<!-- *************************************** COMIENZO RESUMEN Y BALANCE ************************************ -->
+		<br>
+		<br>
+		
+		<div class="row">					
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">						
+				<div class="input-group input-group-sm">
+					<span class="input-group-addon" id="basic-addon20">Recibo importe</span>
+					<input type="miTabPanelText" readonly="readonly" id="montoTotalRecibo" aria-describedby="basic-addon20">
+	    		</div>
+
+	    		<div class="input-group input-group-sm">
+	    			<span class="input-group-addon" id="basic-addon21">Balance</span>
+					<input type="miTabPanelText" readonly="readonly" id="balance" aria-describedby="basic-addon21">						
+	    		</div>
+
+	    		<div class="row">
+					<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+						<input class="btn btn-primary btn-lg" type="button" value="Guardar recibo" id="idGuardarRecibo">								
+	    			</div>
+				</div>
+			</div>					
+
+			<div class="tab-pane col-xs-12 col-sm-12 col-md-12 col-lg-8" id="idResumen">
+				<div class="panel panel-success">
+					<div class="panel-heading">RESUMEN</div>
+					<div class="panel-body" style="background-color: #2c3e50;">
+						<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+							<div class="input-group input-group-sm">
+								<span class="input-group-addon" id="basic-addon30">Efectivo</span>
+								<input type="miTabPanelText" id="efectivoImporteRES" readonly="readonly" aria-describedby="basic-addon30">
+							</div>
+
+							<div class="input-group input-group-sm">
+								<span class="input-group-addon" id="basic-addon31">Cheques</span>
+								<input type="miTabPanelText" id="chequeMontoTotalIdRES" readonly="readonly" aria-describedby="basic-addon31">
+							</div>
+						</div>
+
+						<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+							<div class="input-group input-group-sm">
+								<span class="input-group-addon" id="basic-addon32">Depósitos</span>
+								<input type="miTabPanelText" id="depositoMontoTotalRES" readonly="readonly" aria-describedby="basic-addon32">
+							</div>
+
+							<div class="input-group input-group-sm">
+								<span class="input-group-addon" id="basic-addon32">Retención</span>
+								<input type="miTabPanelText" id="retencionImporteRES" readonly="readonly" aria-describedby="basic-addon33">
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+							<div class="input-group input-group-sm">
+								<span class="input-group-addon" id="basic-addon34">Descuento</span>
+								<input type="miTabPanelText" id="importeTotalDescuentoRES" readonly="readonly" aria-describedby="basic-addon34">
+							</div>
+						</div>					
+					</div>
+				</div>						
+			</div>			
+		</div> <!-- *** END RESUMEN Y BALANCE *** -->
+	</div> <!-- end contenido -->
+
+	<footer>
+		<div class="container-fluid">
+			<address>
+	            Ruka Painé S.r.l &middot; Av. Los Mayas, 253 &middot; 01714 Buenos Aires
+    	        <br />
+        	    Tel 035774 34711 &middot; Fax 03574 34712
+            </address>
+		</div>
+	</footer>
+
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery-validate.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-datepicker.min.js"></script>
+	
+	<!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js"></script> -->
+</body>
+
+
+
+					<!-- *****************************************************************************************************-->
+					<!-- *****************************************************************************************************-->
+					<!-- ************************ COMIENZO VENTANA MODAL PARA EL MANEJO DE ERRORES ***************************-->
+					<div class="modal fade" id="modalMensajes" tabindex="-1"  role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+							 	<div class="modal-header">
+							    	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							    	<h4 class="modal-title"><font color = "green">Ruka Paine S.r.l</font></h4>
+							  	</div>
+
+								<div class="modal-body">				
+									<div>
+										<br>
+										<br>
+										<!-- <label for="exampleInputEmail1"><h5 id="textModal"></h5></label> -->
+										<h5 id="textModal"></h5>
+										<br>
+										<br>
+									</div>
+								</div>
+
+								<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+								</div>
+							</div><!-- /.modal-content -->
+						</div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->	
+	    			<!-- ********************************************** FIN VENTANA MODAL ************************************* -->
+	    		
+	    		
+	    		
+
+<script type="text/javascript">
+
+	$(document).ready(function(){	
+		$('#fechaRecibo').datepicker({
+			format: 'dd/mm/yyyy',
+			//inline: true,
+            //sideBySide: true
+		});
+		$('#chequeFechaId').datepicker({
+			format: 'dd/mm/yyyy'
+		});
+		$('#depositoFechaId').datepicker({
+			format: 'dd/mm/yyyy'
+		});
+		
+		
+		$("#facturaTblModal tr").click(function(){
+			var facturaSumaImportes = 0;
+			var tdArray = $(this).find("td");
+			
+			var facturaNro = tdArray[0].innerHTML; //"123A"; //$(this).text();
+			var facturaFecha = tdArray[3].innerHTML;
+			var facturaMonto = tdArray[5].innerHTML;
+			
+			var newRecord = '<tr><td class="idParaHidden">' + facturaNro + '</td>';
+			newRecord = newRecord + '<td>' + facturaFecha + '</td>';
+			newRecord = newRecord + '<td class="montoFac">' + facturaMonto + '</td>';
+			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
+			
+			$('#tblFactura tr:last').after(newRecord);
+		
+ 			crearHiddenB('facturaNro', facturaNro, facturaNro);
+ 			crearHiddenB('facturaFecha', facturaFecha, facturaNro);
+ 			crearHiddenB('facturaMonto', facturaMonto, facturaNro);
+ 						
+ 			//sumo el monto de cada factura
+ 			sumarMontos("#facturasMontoTotal", facturaMonto);
+ 			calcularMontoTotalRecibo();
+ 			//calcularImporte_Descuento();
+ 			calcularBalance();
+		});
+		
+		//BORRO LA FACTURA SELECCIONADA DE LA GRILLA
+	/*	$("#tblFactura tr").dblclick(function(){
+			var tdArray = $(this).find("td");
+			var monto = tdArray[1].innerHTML;
+			alert(monto);
+			document.getElementById("tblFactura").deleteRow(1);
+	    });*/
+		
+		$("#idTableSelectCte tr").click(function(){
+			var tdArray = $(this).find("td");
+
+			var clienteId = tdArray[0].innerHTML;
+			var clienteNumero = tdArray[1].innerHTML;
+			var clienteNombre = tdArray[2].innerHTML;
+			$("#modal_cliente").modal('toggle');
+			
+			$("#clienteNro").val(clienteNumero);
+			$("#clienteNombre").val(clienteNombre);
+			$("#clienteId").val(clienteId);
+		});
+
+		$("#depositoBtnAgregarId").click(function() {
+			var idHiddenDate=new Date();
+			var idHiddenDate2 = idHiddenDate.getTime().toString();
+			
+			if(!validaIntegridad_Deposito()){return;}
+			
+			var depositoBancoVar = $('#depositoBancoId').val();
+			var depositoImporteVar = $('#depositoImporteId').val();
+			var depositoFechaVar = $('#depositoFechaId').val();
+			//class="idParaHidden"
+			var newRecord = '<tr><td>' + $('#depositoBancoId option:selected').text() + '</td>';
+			newRecord = newRecord + '<td class="montoDeposito">' + depositoImporteVar + '</td>';
+			newRecord = newRecord + '<td>' + depositoFechaVar + '</td>';
+			newRecord = newRecord + '<td class="idParaHidden" style="display: none;">' + idHiddenDate2 + '</td>';
+			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
+			//Adicionar row
+			$('#tableDepositoID tr:last').after(newRecord);
+			
+			//creo hidden y lo adiciono al form
+			
+ 			crearHiddenB('depositoBanco', depositoBancoVar, idHiddenDate2);
+ 			crearHiddenB('depositoImporte', depositoImporteVar, idHiddenDate2);
+ 			crearHiddenB('depositoFecha', depositoFechaVar, idHiddenDate2);
+ 			
+ 			//sumo el monto de cada cada deposito agregado
+ 			sumarMontos("#depositoMontoTotal", depositoImporteVar);
+ 			calcularMontoTotalRecibo();
+ 			calcularBalance();
+		});
+		
+		$("#chequeBtnAgregarID").click(function() {
+			
+			if(!validaIntegridad_DeCheque()){return;}
+			
+			var chequeNroIdVar = $('#chequeNroId').val();
+			var chequeBancoIDVar = $('#chequeBancoID').val();
+			var chequeImporteIdVar = $('#chequeImporte').val();
+			var chequeCuitIdVar = $('#chequeCuitId').val();
+			var chequeFechaIdVar = $('#chequeFechaId').val();
+			
+			var newRecord = '<tr><td>' + $('#chequeBancoID option:selected').text() + '</td>';
+			newRecord = newRecord + '<td class="montoCheque">' + chequeImporteIdVar + '</td>';
+			newRecord = newRecord + '<td class="idParaHidden">' + chequeNroIdVar + '</td>';
+			newRecord = newRecord + '<td>' + chequeCuitIdVar + '</td>';
+			newRecord = newRecord + '<td>' + chequeFechaIdVar + '</td>';  //</tr>';
+			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
+			
+			//Adicionar row
+			$('#tableChequeId tr:last').after(newRecord);
+			
+			//creo hidden y lo adiciono al form
+ 			crearHiddenB('chequeNro', chequeNroIdVar, chequeNroIdVar);
+			crearHiddenB('chequeBanco', chequeBancoIDVar, chequeNroIdVar);
+			crearHiddenB('chequeImporte', chequeImporteIdVar, chequeNroIdVar);
+ 			crearHiddenB('chequeCuit', chequeCuitIdVar, chequeNroIdVar);
+ 			crearHiddenB('chequeFechaDeposito', chequeFechaIdVar, chequeNroIdVar);
+ 			
+ 			//sumo el monto de cada cada cheque agregado
+ 			sumarMontos("#chequeMontoTotalId", chequeImporteIdVar)
+ 			
+ 			//sumo el monto total del recibo
+ 			calcularMontoTotalRecibo();
+ 			calcularBalance();
+		});
+		
+		$('#descuentoBtnAgregarId').click(function(){
+			
+			if($('#facturasMontoTotal').val() == ''){
+				alert("Antes de ingresar un descuento, debe seleccionar la factura.");
+				$('#facturasMontoTotal').focus();
+				return;
+			}
+			
+			if(!validaIntegridad_Descuento()){return;}
+			
+			var descuentoPorcentajeVar = $('#descuentoPorcentajeId').val();
+			var descuentoDescripcionVar = $('#descuentoDescripcionId').val();
+			
+			var newRecord = '<tr><td class="porcentajeDescuento">' + descuentoPorcentajeVar + '</td>';
+			newRecord = newRecord + '<td class="idParaHidden">' + descuentoDescripcionVar + '</td>'; //</tr>';
+			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
+			
+			$('#descuentoTableId tr:last').after(newRecord);
+			
+			crearHiddenB('descuentoPorcentaje', descuentoPorcentajeVar, descuentoDescripcionVar);
+			crearHiddenB('descuentoDescripcion', descuentoDescripcionVar, descuentoDescripcionVar);
+			
+ 			//sumo el porcentaje de cada descuento
+ 			//sumarMontos("#reciboTotalDescuento", descuentoPorcentajeVar); lo saque el 19/04
+ 			sumarMontos("#importeTotalDescuento", descuentoPorcentajeVar);
+ 			//calcularImporte_Descuento(); lo saque el 19/04
+ 			calcularBalance();
+		});
+		
+		$('#idGuardarRecibo').click(function(){
+			
+			if (!validaIntegridadDeDatos()){return;}
+			
+			calcularMontoTotalRecibo();
+			//calcularImporte_Descuento();
+			calcularBalance();
+			
+			//if($('#balance').val() != '0' && $('#balance').val() != '0.00'){
+			if(parseFloat($('#balance').val()) > 0){
+				alert('El balance del recibo debe ser cero ó menor para poder procesar el mismo.');
+				$('#balance').focus();
+				return;
+			}
+			
+			var reciboNumero = $('#nroRecibo').val();
+			var reciboClienteId = $('#clienteId').val(); //1;//Tomar el cliente id
+			var reciboFecha = $('#fechaRecibo').val();
+			var reciboImporteSumaFacturas = $('#facturasMontoTotal').val(); //$('#idFacturasMontoTotal').val();
+			var reciboImporteTotal = $('#montoTotalRecibo').val();
+			var reciboObservaciones = $('#idObservaciones').val();
+			var reciboUsuario = $('#idObservaciones').val();
+			var reciboFechaProceso = $('#fechaRecibo').val(); //"23/12/2015"; //$('#idObservaciones').val();
+			var reciboTotalDescuento = $('#importeTotalDescuento').val(); // $('#reciboTotalDescuento').val();
+			
+			var efectivoImporte = $('#efectivoImporte').val();
+			
+			var retencionNumero = $('#retencionNumero').val();
+			var retencionImporte  = $('#retencionImporte').val();
+			var retencionSucursal = $('#retencionSucursal').val();
+			var retencionYear = $('#retencionYear').val();
+			
+			//creo hidden y lo adiciono al form
+			/*console.log("A:"+reciboNumero);
+			console.log("B:"+reciboClienteId);
+			console.log("C:"+reciboFecha);
+			console.log("D:"+reciboImporteSumaFacturas);
+			console.log("E:"+reciboImporteTotal);
+			console.log("F:"+reciboObservaciones);
+			console.log("G:"+reciboUsuario);
+			console.log("H:"+reciboFechaProceso);*/
+			
+			console.log("D:"+reciboImporteSumaFacturas);
+			
+			crearHidden('reciboNumero', reciboNumero);
+			crearHidden('reciboClienteId', reciboClienteId);
+			crearHidden('reciboFecha', reciboFecha);
+			crearHidden('reciboImporteSumaFacturas', reciboImporteSumaFacturas);
+			crearHidden('reciboImporteTotal', reciboImporteTotal);
+			crearHidden('reciboObservaciones', reciboObservaciones);
+			crearHidden('reciboUsuario', reciboUsuario);
+			crearHidden('reciboFechaProceso', reciboFechaProceso);
+			crearHidden('reciboTotalDescuento', reciboTotalDescuento);
+			
+			crearHidden('efectivoImporte', efectivoImporte);
+			
+			if(retencionNumero != ''){
+				crearHidden('retencionNumero', retencionNumero);
+				crearHidden('retencionImporte', retencionImporte);
+				crearHidden('retencionSucursal', retencionSucursal);
+				crearHidden('retencionYear', retencionYear);
+			}
+			$('#reciboFormId').submit();
+		});
+		
+		$("#efectivoImporte").change(function(){
+			
+			$("#efectivoImporteRES").val($("#efectivoImporte").val());
+			calcularMontoTotalRecibo();
+			calcularBalance();			
+		});
+		
+		
+		$("#retencionImporte").change(function(){
+			
+			$("#retencionImporteRES").val($("#retencionImporte").val());
+			calcularMontoTotalRecibo();
+			calcularBalance();		
+		});		
+		
+		/*$('#reciboFormId').validate({
+			rules: {
+					nroRecibo: {
+						required: true,
+						number: true
+				 	}
+					//nroRecibo: "required"
+			},
+			messages:{
+					//nroRecibo: "campo obligatorio",
+					nroRecibo: {
+						required: "campo obligatorio",
+						number: "Solo numeros"
+				 	}
+			}
+		}); */
+		
+	}); //END ready(function()
+	
+	
+	
+	crearHidden = function(nameVar, valueVar){
+		var tempHidden = $('<input>').attr({
+			type: 'hidden',
+			name: nameVar, 
+			value: valueVar
+		});
+		
+		$('#reciboFormId').append(tempHidden);
+	};
+	
+	crearHiddenB = function(nameVar, valueVar, id){
+		//elimino los '.' y los espacios en blanco para el ID del Hidden
+		var AuxId = id;
+		AuxId = AuxId.split(' ').join('');
+		AuxId = AuxId.split('.').join('');
+		AuxId = AuxId.split(',').join('');
+		AuxId = AuxId.split('/').join('');
+		
+		var tempHidden = $('<input>').attr({
+			'type': 'hidden',
+			'name': nameVar, 
+			'value': valueVar,
+			'class':AuxId
+		});
+		
+		$('#reciboFormId').append(tempHidden);
+	};
+	
+	function validaIntegridadDeDatos(){
+		
+		/*if($('#nroRecibo').val() == ''){
+			document.getElementById('textModal').innerHTML = '- Ingrese el Nº de Recibo.';
+			$('#modalMensajes').modal();
+			return '#nroRecibo';
+		}*/
+		
+		if($('#nroRecibo').val() == ''){
+			document.getElementById('textModal').innerHTML = '- Ingrese el Nº de Recibo.';
+			$('#modalMensajes').modal();
+			$('#nroRecibo').focus();
+			return false;
+		}
+		
+		if($('#fechaRecibo').val() == ''){
+			alert("Ingrese la fecha del Recibo.");
+			$('#fechaRecibo').focus();
+			return false;
+		}
+		
+		if($("#clienteNro").val() == ''){
+			alert("Seleccione un cliente.");
+			$("#modal_cliente").modal();
+			$('#clienteNro').focus();
+			return false;
+		}
+		
+		if($("#facturasMontoTotal").val() == ''){
+			alert("Debe seleccionar al menos una factura.");
+			$("#modal_factura").modal();
+			$('#facturasMontoTotal').focus();
+			return false;
+		}
+		
+		if($('#retencionNumero').val() == '' && $('#efectivoImporte').val() == '' && $('#chequeMontoTotalId').val() == '' && $('#depositoMontoTotal').val() == ''){
+			alert("Debe ingresar al menos un tipo de pago.");
+			$('#retencionNumero').focus();
+			return false;
+		}
+
+		return true;
+	};
+	
+	function validaIntegridad_DeCheque(){
+		
+		if($('#chequeBancoID').val() == '-------'){
+			alert("Seleccione el banco.");
+			$('#chequeBancoID').focus();
+			return false;
+		}
+		
+		if($('#chequeNroId').val() == ''){
+			alert("Ingrese el número de Cheque.");
+			$('#chequeNroId').focus();
+			return false;
+		}
+		
+		if($('#chequeImporte').val() == ''){
+			alert("Ingrese el monto del cheque.");
+			$('#chequeImporte').focus();
+			return false;
+		}
+		
+		if($('#chequeCuitId').val() == ''){
+			alert("Ingrese el Nº de CUIT.");
+			$('#chequeCuitId').focus();
+			return false;
+		}
+		
+		if($('#chequeFechaId').val() == ''){
+			alert("Ingrese la fecha del Cheque.");
+			$('#chequeFechaId').focus();
+			return false;
+		}
+		
+		return true;
+	};
+	
+	function validaIntegridad_Deposito(){
+		
+		if($('#depositoBancoId').val() == '-------'){
+			alert("Seleccione el banco.");
+			$('#depositoBancoId').focus();
+			return false;
+		}
+		
+		if($('#depositoImporteId').val() == ''){
+			alert("Indique el importe del deposito.");
+			$('#depositoImporteId').focus();
+			return false;
+		}
+		
+		if($('#depositoFechaId').val() == ''){
+			alert("Indique la fecha del deposito.");
+			$('#depositoFechaId').focus();
+			return false;
+		}		
+		
+		return true;
+	};
+	
+	function validaIntegridad_Descuento(){
+		
+		if($('#descuentoPorcentajeId').val() == ''){
+			alert("Indique el importe del descuento.");
+			$('#descuentoPorcentajeId').focus();
+			return false;
+		}
+		
+		if($('#descuentoDescripcionId').val() == ''){
+			alert("Indique la descripción del desuento.");
+			$('#descuentoDescripcionId').focus();
+			return false;
+		}		
+		
+		return true;
+	};
+	
+	function calcularMontoTotalRecibo(){
+		var monto=0;
+		var chequeImporteTotal = $("#chequeMontoTotalId").val();
+		var efectivoMonto = $("#efectivoImporte").val();
+		var depositoImporteTotal = $("#depositoMontoTotal").val();
+		var retencionImporte = $("#retencionImporte").val();
+		
+		if(chequeImporteTotal == ''){chequeImporteTotal = 0}
+		if(efectivoMonto == ''){efectivoMonto = 0}
+		if(depositoImporteTotal == ''){depositoImporteTotal = 0}
+		if(retencionImporte == ''){retencionImporte = 0}
+		
+		//$("#montoTotalRecibo").val(parseFloat(chequeImporteTotal) + parseFloat(efectivoMonto) + parseFloat(depositoImporteTotal) + parseFloat(retencionImporte));
+		monto = parseFloat(chequeImporteTotal) + parseFloat(efectivoMonto) + parseFloat(depositoImporteTotal) + parseFloat(retencionImporte);
+		$("#montoTotalRecibo").val(monto.toFixed(2));
+	};
+	
+	/*function calcularImporte_Descuento(){
+		var monto=0;
+		var facturasMontoTotal = $('#facturasMontoTotal').val();
+		var reciboTotalDescuento = $('#reciboTotalDescuento').val();
+		
+		if(facturasMontoTotal == '' || reciboTotalDescuento == ''){
+			return;
+		}
+		
+		//$('#importeTotalDescuento').val(parseFloat($('#facturasMontoTotal').val()) / parseFloat(100) * parseFloat($('#reciboTotalDescuento').val()));
+		monto = parseFloat($('#facturasMontoTotal').val()) / parseFloat(100) * parseFloat($('#reciboTotalDescuento').val());
+		$('#importeTotalDescuento').val(monto.toFixed(2));
+	};*/
+	
+	function calcularBalance(){
+		var monto=0;
+		var importeTotalDescuento = $('#importeTotalDescuento').val();
+		
+		if(importeTotalDescuento == ''){importeTotalDescuento = 0;}
+		
+		if($('#facturasMontoTotal').val() != ''){
+			//$('#balance').val(parseFloat($('#facturasMontoTotal').val()) - (parseFloat($('#montoTotalRecibo').val()) + parseFloat(importeTotalDescuento)));
+			monto = parseFloat($('#facturasMontoTotal').val()) - (parseFloat($('#montoTotalRecibo').val()) + parseFloat(importeTotalDescuento));
+			$('#balance').val(monto.toFixed(2));
+		}
+	}
+	
+	function sumarMontos(inputName, montoParcial){
+		var monto =0;
+		if($(inputName).val() == ''){
+	 			$(inputName).val(montoParcial);
+		}
+		else{
+			//$(inputName).val(parseFloat($(inputName).val()) + parseFloat(montoParcial));
+			monto = parseFloat($(inputName).val()) + parseFloat(montoParcial);
+			$(inputName).val(monto.toFixed(2));
+		}
+		
+		if(inputName != "#facturasMontoTotal"){
+			$(inputName + 'RES').val($(inputName).val());
+		}
+	};
+	
+	function eliminarHidden (botonEliminar) {	
+		
+		var elementoTR = $(botonEliminar).closest('tr');
+		var idHidden = $(elementoTR).find('.idParaHidden').text();		
+		
+		var montoDescAux = '';
+		var montoFactura = '';
+		var montoCheque = '';
+		var montoDeposito = '';
+		var porcentajeDescuento = '';
+		
+		montoFactura = $(elementoTR).find('.montoFac').text();
+		montoCheque = $(elementoTR).find('.montoCheque').text();
+		montoDeposito = $(elementoTR).find('.montoDeposito').text();
+		porcentajeDescuento = $(elementoTR).find('.porcentajeDescuento').text();		
+		
+		//new
+			/*alert(montoFactura);
+			alert(montoCheque);
+			alert(montoDeposito);
+			alert(porcentajeDescuento);*/
+			
+		/*	alert($(this).text);
+			if($(elementoTR).hasClass('montoFac')) {
+   				alert('Este link tiene la clase "montoFac".');
+  			}*/
+		//end new
+		var monto =0;
+		if(montoFactura != ''){
+			monto = parseFloat($('#facturasMontoTotal').val()) - parseFloat(montoFactura);
+			$('#facturasMontoTotal').val(monto.toFixed(2));
+		}else{
+			if(montoCheque != ''){
+				monto = parseFloat($('#chequeMontoTotalId').val()) - parseFloat(montoCheque);
+				$('#chequeMontoTotalId').val(monto.toFixed(2));
+				$('#chequeMontoTotalIdRES').val($('#chequeMontoTotalId').val());
+			}
+			else{
+				if(montoDeposito != ''){					
+					monto = parseFloat($('#depositoMontoTotal').val()) - parseFloat(montoDeposito);
+					$('#depositoMontoTotal').val(monto.toFixed(2));
+					$('#depositoMontoTotalRES').val($('#depositoMontoTotal').val());
+				}else{				
+					//monto = parseFloat($('#reciboTotalDescuento').val()) - parseFloat(porcentajeDescuento);
+					//$('#reciboTotalDescuento').val(monto.toFixed(2));
+					
+					//monto = parseFloat($('#facturasMontoTotal').val()) / parseFloat(100) * parseFloat(porcentajeDescuento);
+					montoDescAux = parseFloat($('#importeTotalDescuento').val()) - parseFloat(porcentajeDescuento); //parseFloat(monto);
+					$('#importeTotalDescuento').val(montoDescAux.toFixed(2));
+					$('#importeTotalDescuentoRES').val($('#importeTotalDescuento').val());
+				}
+			}
+		}
+		
+		calcularMontoTotalRecibo();
+		//calcularImporte_Descuento();
+ 		calcularBalance();
+		
+		//le saco los ' ' los '.' y las ',' al texto para igualarlo con el id del hidden
+		idHidden = idHidden.split(' ').join('');
+		idHidden = idHidden.split('.').join('');
+		idHidden = idHidden.split(',').join('');
+		idHidden = idHidden.split('/').join('');
+		
+		$('.' + idHidden).remove();
+		elementoTR.remove();
+	}	
+</script>
+
+</html>
