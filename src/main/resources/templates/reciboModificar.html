@@ -1,57 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>	
-	<meta charset="UTF-8">
-	<title>Ruka Painé S.r.l</title>
-	<meta name="viewport" content="whidt=device-width, user-scalable=no, initial-scale=1.0, maximun-scale=1.0, minimun-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="css/estilos.css">
-	<link rel="stylesheet" type="text/css" href="css/bootstrap-datepicker.min.css">
-</head>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      
+<head th:include="layout :: headerFragment"></head>
 
 <body>
-	<header>
-		<div class="container-fluid">
-			<div class="row">
-				<!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<h1>Ruka Painé S.r.l</h1>
-				</div> -->
 
-				<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11" id="idLineaLogueoBienvenida">
-					<h5>Bienvenido: Mariano Bertran</h5>
-				</div>
-
-				<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1" id="idLineaLogueoSalir">
-					<button class="btn btn-link" id="idLogout">Salir</button>
-				</div>
-			</div>
-		</div>
-	</header>
-
-
-	<nav class="navbar navbar-default navColor" id="nav">
-		<div class="container-fluid">
-		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-		  		<a class="navbar-brand" href="greeting">Home</a>
-		  	</div>
-
-		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-		  		<a class="navbar-brand" href="ingresar1"><font color="#COLORENHEXA">Ingresar</font></a>
-		  	</div>
-
-		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-		  		<a class="navbar-brand" href="reciboVer">Ver</a>
-		  	</div>
-
-		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-		  		<a class="navbar-brand" href="modificar">Modificar</a>
-		  	</div>
-		  	
-		  	<div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-		  		<a class="navbar-brand" href="controlPanel">Panel de control</a>
-		  	</div>
-		</div>
-	</nav>
+	<div th:include="layout :: menuFragment"></div>
 		
 	<!-- ***************************************************************************************************** -->
 	<!-- ***************************************************************************************************** -->
@@ -303,7 +259,7 @@
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Nro.</font></th>
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">CUIT</font></th>
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Fecha</font></th>
-										            <th width="20%" style="font-weight:bold;"><font color = "#000000">idHidden</font></th>
+										            <th width="20%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>
 										        </tr>
 										        
 											    <tr th:each="chequeVar : ${recibo.getTpCheques()}">											    	
@@ -312,20 +268,18 @@
 													<td th:text="${chequeVar.numero}"></td>
 													<td th:text="${chequeVar.cuit}"></td>
 													<td th:text="${chequeVar.fechaDeposito}"></td>
-													<!-- <td class="idParaHidden" style="display: none;" th:text="${chequeVar.banco.id}"></td>-->
-													<td class="idParaHidden" th:text="'ch_' + ${chequeVar.banco.id}"></td>
+													<td class="idParaHidden" style="display: none;" th:text="'ch_' + ${chequeVar.id}"></td>
 													<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td>
 												</tr>									
 										</table>																			
 										<form action="#" th:action="@{/recibo/salvar}" th:object="${reciboDto}" method="post" id="reciboFormId">
-																			        
+												<!-- CREO EL HIDDEN DEL CHEQUE -->					        
 											    <div th:each="chequeVar : ${recibo.getTpCheques()}">										    	
-													<input type="hidden" name="chequeBanco" th:value="${chequeVar.banco.id}" th:attr="class='ch_' + ${chequeVar.banco.id}" ></input>
-													<input type="hidden" name="chequeImporte" th:value="${chequeVar.monto}" th:attr="class='ch_' + ${chequeVar.banco.id}"></input>
-													
-													<input type="hidden" name="chequeNro" th:value="${chequeVar.numero}" th:attr="class='ch_' + ${chequeVar.banco.id}"></input>
-													<input type="hidden" name="chequeCuit" th:value="${chequeVar.cuit}" th:attr="class='ch_' + ${chequeVar.banco.id}"></input>
-													<input type="hidden" name="chequeFechaDeposito" th:value="${chequeVar.fechaDeposito}" th:attr="class='ch_' + ${chequeVar.banco.id} + ']'"></input>																									
+													<input type="hidden" name="chequeBanco" th:value="${chequeVar.banco.id}" th:attr="class='ch_' + ${chequeVar.id}" ></input>
+													<input type="hidden" name="chequeImporte" th:value="${chequeVar.monto}" th:attr="class='ch_' + ${chequeVar.id}"></input>													
+													<input type="hidden" name="chequeNro" th:value="${chequeVar.numero}" th:attr="class='ch_' + ${chequeVar.id}"></input>
+													<input type="hidden" name="chequeCuit" th:value="${chequeVar.cuit}" th:attr="class='ch_' + ${chequeVar.id}"></input>
+													<input type="hidden" name="chequeFechaDeposito" th:value="${chequeVar.fechaDeposito}" th:attr="class='ch_' + ${chequeVar.id}"></input>																									
 												</div>
 										
 										</form>
@@ -378,6 +332,16 @@
 									            <th width="130%" style="font-weight:bold;"><font color = "#000000">Importe</font></th>
 									            <th width="40%" style="font-weight:bold;"><font color = "#000000">Fecha</font></th>
 									            <th width="40%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>
+									        </tr>
+									        
+									       	<tr th:each="depositoVar : ${recibo.getTpDepositos()}">
+												<td th:text="${depositoVar.banco.id}"></td>
+												<td th:text="${depositoVar.monto}"></td>
+												<td th:text="${depositoVar.fecha}"></td>							
+											</tr>
+									        
+									        <tr th:each="chequeVar : ${recibo.getTpCheques()}">
+									        
 									        </tr>
 									</table>
 								</div>
