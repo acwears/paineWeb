@@ -45,23 +45,23 @@
 		<nav class="navbar navbar-default navColor" id="nav">
 			<div class="container-fluid">
 				<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-					<a class="navbar-brand" href="greeting">Home</a>
+					<a class="navbar-brand" th:href="@{/greeting}">Home</a>
 				</div>
 
 				<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-					<a class="navbar-brand" href="ingresar1"><font color="#COLORENHEXA">Ingresar</font></a>
+					<a class="navbar-brand" th:href="@{/ingresar1}"><font color="#COLORENHEXA">Ingresar</font></a>
 				</div>
 
 				<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-					<a class="navbar-brand" href="reciboVer">Ver</a>
+					<a class="navbar-brand" th:href="@{/reciboVer}">Ver</a>
 				</div>
 
 				<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-					<a class="navbar-brand" href="modificar">Modificar</a>
+					<a class="navbar-brand" th:href="@{/modificar}">Modificar</a>
 				</div>
 
 				<div sec:authorize="hasRole('ROLE_ADMIN')" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-					<a class="navbar-brand" href="controlPanel">Panel de control</a>
+					<a class="navbar-brand" th:href="@{/controlPanel}">Panel de control</a>
 				</div>
 			</div>
 		</nav>

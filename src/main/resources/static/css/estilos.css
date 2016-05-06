@@ -323,3 +323,5 @@ input[type="miTabPanelText3"] {
 	font-size:12px;
 	width: 100%;
 }
+
+.nounderline{text-decoration: none}
