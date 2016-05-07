@@ -3,6 +3,7 @@ package main.java.com.paine.core.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,9 @@ import main.java.com.paine.core.repository.UsuarioRepository;
 @Service
 @Transactional
 public class UsuarioService {
+	
+	@Autowired
+	private PasswordEncoder encoder;
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
@@ -36,11 +40,29 @@ public class UsuarioService {
 	}
 
 	public void salvar(Usuario usuario) {
+
+		// Codificar el password
+		String password = usuario.getPwd();
+		password = encoder.encode(password);
+		usuario.setPwd(password);
+		
+		// Salvar el usuário
 		usuarioRepository.salvar(usuario);
 	}
 
 	public void actualizar(Usuario usuario) {
+		
+		// Codificar el password
+		String password = usuario.getPwd();
+		password = encoder.encode(password);
+		usuario.setPwd(password);
+		
+		// Actualizar el usuário
 		usuarioRepository.actualizar(usuario);
+	}
+	
+	public Usuario findByEmail(String email) {
+		return usuarioRepository.getAuthenticated(email);
 	}
 
 }

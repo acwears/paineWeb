@@ -2,6 +2,7 @@ package main.java.com.paine.core.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,6 +12,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -28,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http
 			.authorizeRequests()
-			.antMatchers("/login", "/logout/**").permitAll()
+			.antMatchers("/login", "/logout/**", "/cosmos00/controlPanel/**").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.formLogin()
@@ -42,27 +45,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService);
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	}
-
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/css/**", "/fonts/**", "/images/**", "/js/**");
 	}
 
-	// @Autowired
-	// public void configureGlobal(AuthenticationManagerBuilder auth) throws
-	// Exception {
-	// auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-	// }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		return encoder;
+	}
 
-	// @Bean
-	// public PasswordEncoder passwordEncoder() {
-	// PasswordEncoder encoder = new BCryptPasswordEncoder();
-	// return encoder;
-	// }
-	//
 	// @Autowired
 	// private DataSource dataSource;
 	//

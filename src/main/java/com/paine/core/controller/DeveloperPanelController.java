@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,20 +19,19 @@ import main.java.com.paine.core.model.Usuario;
 import main.java.com.paine.core.service.UsuarioService;
 
 @Controller
-public class ControlPanelController {
+public class DeveloperPanelController {
 	
-	public static final Log log = LogFactory.getLog(ControlPanelController.class);
+	public static final Log log = LogFactory.getLog(DeveloperPanelController.class);
 	
 	@Autowired
 	private UsuarioService usuarioService;
 
-	@Secured({ "ROLE_ADMIN" })
-	@RequestMapping("/controlPanel")
+	@RequestMapping("/cosmos00/controlPanel")
 	public ModelAndView listado(String successMessage, String errorMessage) {
 
 		List<Usuario> usuarios = usuarioService.cargarUsuarios();
 
-		ModelAndView model = new ModelAndView("controlPanel");
+		ModelAndView model = new ModelAndView("developerPanel");
 		model.addObject("usuarios", usuarios);
 		model.addObject("successMessage", successMessage);
 		model.addObject("errorMessage", errorMessage);
@@ -41,26 +39,23 @@ public class ControlPanelController {
 		return model;
 	}
 
-	@Secured({ "ROLE_ADMIN" })
-	@RequestMapping("/controlPanel/nuevo")
+	@RequestMapping("/cosmos00/controlPanel/nuevo")
 	public String crearNuevo(@ModelAttribute("usuarioDto") UsuarioDto usuarioDto, Model model) {
 		model.addAttribute("roles", Role.values());
-		return "salvarUsuario";
+		return "developerSalvarUsuario";
 	}
 
-	@Secured({ "ROLE_ADMIN" })
-	@RequestMapping("/controlPanel/actualizar/{usuarioId}")
+	@RequestMapping("/cosmos00/controlPanel/actualizar/{usuarioId}")
 	public String mostrarActualizar(@PathVariable Integer usuarioId, Model model) {
 
 		Usuario usuario = usuarioService.find(usuarioId);
 		model.addAttribute("usuarioDto", UsuarioDto.crearDto(usuario));
 		model.addAttribute("roles", Role.values());
 
-		return "salvarUsuario";
+		return "developerSalvarUsuario";
 	}
 
-	@Secured({ "ROLE_ADMIN" })
-	@RequestMapping("/controlPanel/salvar")
+	@RequestMapping("/cosmos00/controlPanel/salvar")
 	public ModelAndView salvar(@ModelAttribute("usuarioDto") UsuarioDto usuarioDto, Model model) {
 
 		try {
@@ -71,9 +66,9 @@ public class ControlPanelController {
 				if (validate(usuarioDto) == false) {
 					return this.listado(null, "Todos los campos son obligatorios en la creación de nuevo usuário");
 				}
-				
+
 				Usuario existeUsuario = usuarioService.findByEmail(usuarioDto.getEmail());
-				if(existeUsuario != null) {
+				if (existeUsuario != null) {
 					return this.listado(null, "El usuário no fue creado porque ya existe!");
 				}
 
