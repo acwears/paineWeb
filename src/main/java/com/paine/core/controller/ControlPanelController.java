@@ -12,12 +12,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import main.java.com.paine.core.dto.view.UsuarioDto;
 import main.java.com.paine.core.model.Role;
 import main.java.com.paine.core.model.Usuario;
+import main.java.com.paine.core.service.FileUploadService;
 import main.java.com.paine.core.service.UsuarioService;
+import main.java.com.paine.core.util.JsonMessageResult;
 
 @Controller
 public class ControlPanelController {
@@ -26,6 +31,9 @@ public class ControlPanelController {
 	
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private FileUploadService fileUploadService;
 
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping("/controlPanel")
@@ -121,6 +129,36 @@ public class ControlPanelController {
 			return this.listado(null, "Error interno");
 		}
 	}
+	
+	@Secured({ "ROLE_ADMIN" })
+	@ResponseBody
+	@RequestMapping(value = "/controlPanel/upload")
+	public JsonMessageResult uploadFile(@RequestParam MultipartFile fileUpload) {
+
+		try {
+
+			log.info("Uploading file");
+			
+			if (fileUpload == null || fileUpload.isEmpty()) {
+				log.info("File contain is empty, uploading aborted");
+				return JsonMessageResult.error().result("FILE_EMPTY");
+			}
+
+			if (!fileUpload.getOriginalFilename().contains(".txt")) {
+				log.info("Invalid file extension");
+				return JsonMessageResult.error().result("INVALID_FILE_EXTENSION");
+			}
+
+			fileUploadService.saveFile(fileUpload);
+
+		} catch (Exception e) {
+			log.error("Error uploading profile picture");
+			return JsonMessageResult.error();
+		}
+
+		return JsonMessageResult.success();
+	}	
+	
 
 	private boolean validate(UsuarioDto usuarioDto) {
 

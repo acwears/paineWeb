@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
 <!-- start: HEAD -->
 <head th:fragment="headerFragment">
@@ -68,6 +66,28 @@
 
 	</div>
 	<!-- end: MENU -->
+
+	<!-- start: FOOTER -->
+	<div th:fragment="footerFragment">
+
+		<footer>
+			<div class="container-fluid">
+				<address>
+					Ruka Painé S.r.l &middot; Av. Los Mayas, 253 &middot; 01714 Buenos Aires <br /> Tel 035774 34711 &middot; Fax 03574 34712
+				</address>
+			</div>
+		</footer>
+
+		<script th:src="@{/js/jquery.js}"></script>
+		<script th:src="@{/js/jquery-validate.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
+		<script th:src="@{/js/fileupload/jquery.ui.widget.js}"></script>
+		<script th:src="@{/js/fileupload/jquery.iframe-transport.js}"></script>
+		<script th:src="@{/js/fileupload/jquery.fileupload.js}"></script>
+
+	</div>
+	<!-- end: FOOTER -->
 
 </body>
 </html>
