@@ -16,32 +16,32 @@
 				<div class="panel-heading">Actualizar Usuário</div>
 				<br>
 				
-				<form action="#" th:action="@{/controlPanel/actualizar}" th:object="${usuarioDto}" method="post" class="form-horizontal">
+				<form action="#" th:action="@{/cosmos00/controlPanel/salvar}" th:object="${usuarioDto}" method="post" class="form-horizontal">
 				
-					<input type="hidden" class="form-control" th:field="${id}">				
+					<input type="hidden" class="form-control" th:field="${usuarioDto.id}">				
 				
 					<div class="form-group">
 						<label for="inputNombreId" class="col-sm-2 control-label">Nombre</label>
 						<div class="col-sm-10">
-							<input id="inputNombreId" class="form-control" th:field="${nombre}">
+							<input id="inputNombreId" class="form-control" th:field="${usuarioDto.nombre}">
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="inputCodigoId" class="col-sm-2 control-label">Codigo</label>
 						<div class="col-sm-10">
-							<input id="inputCodigoId" class="form-control" th:field="${codigo}">
+							<input id="inputCodigoId" class="form-control" th:field="${usuarioDto.codigo}">
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="inputEmailId" class="col-sm-2 control-label">email</label>
 						<div class="col-sm-10">
-							<input id="inputEmailId" class="form-control" th:field="${email}">
+							<input id="inputEmailId" class="form-control" th:field="${usuarioDto.email}">
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="inputRoleId" class="col-sm-2 control-label">Role</label>
 						<div class="col-sm-10">
-							<select id="inputRoleId" class="form-control" th:field="${role}">
+							<select id="inputRoleId" class="form-control" th:field="${usuarioDto.role}">
 				                <option th:each="roleVar: ${roles}" th:value="${roleVar}" th:text="${roleVar.descripcion}"></option>
 				            </select>							
 						</div>
@@ -49,19 +49,19 @@
 					<div class="form-group">
 						<label for="inputPasswordId" class="col-sm-2 control-label">Password</label>
 						<div class="col-sm-10">
-							<input type="password" id="inputPasswordId" class="form-control" th:field="${pwd}" placeholder="********">
+							<input type="password" id="inputPasswordId" class="form-control" th:field="${usuarioDto.pwd}">
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="inputConfirmPasswordId" class="col-sm-2 control-label">Confirm Password</label>
 						<div class="col-sm-10">
-							<input type="password" id="inputConfirmPasswordId" class="form-control" th:field="${pwdConfirmacion}" placeholder="********">
+							<input type="password" id="inputConfirmPasswordId" class="form-control" th:field="${usuarioDto.pwdConfirmacion}">
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-default">Actualizar</button>
-							<a th:href="@{/controlPanel}" class="btn btn-default">Volver</a>
+							<button type="submit" class="btn btn-default">Salvar</button>
+							<a th:href="@{/cosmos00/controlPanel}" class="btn btn-default">Volver</a>
 						</div>
 					</div>
 				</form>
@@ -74,25 +74,8 @@
 
 	</div>
 
-	<footer>
-		<div class="container-fluid">
-			<address>
-				Ruka Painé S.r.l &middot; Av. Los Mayas, 253 &middot; 01714 Buenos Aires <br /> Tel 035774 34711 &middot; Fax 03574 34712
-			</address>
-		</div>
-	</footer>
+	<div th:include="layout :: footerFragment"></div>
 
-	<script src="js/jquery.js"></script>
-	<script src="js/jquery-validate.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/bootstrap-datepicker.min.js"></script>
-
-	<!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js"></script> -->
 </body>
-
-<script type="text/javascript">
-
-	
-</script>
 
 </html>

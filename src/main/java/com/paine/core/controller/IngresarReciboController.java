@@ -206,7 +206,7 @@ public class IngresarReciboController {
 		// salvar descuentos
 		// descuentoRepository.save(descuentos);
 
-		reciboService.salvar(recibo);
+		//reciboService.salvar(recibo);
 
 		return recibo;
 	}

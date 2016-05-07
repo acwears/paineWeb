@@ -45,7 +45,7 @@ public class UsuarioRepository extends JDBCRepository {
 		StringBuilder sb = new StringBuilder();
 		sb.append(" SELECT * FROM usuario WHERE email = ? ");
 
-		return getJdbcTemplate().queryForObject(sb.toString(), new Object[] { email }, (rs, rowNum) -> {
+		return queryForObjectNull(sb.toString(), new Object[] { email }, (rs, rowNum) -> {
 
 			AuthenticatedUser usuario = new AuthenticatedUser();
 
