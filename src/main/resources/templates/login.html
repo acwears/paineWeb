@@ -27,7 +27,7 @@
 
 	<div class="container">
 		<div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
-			<div th:if="${param.error}">Usuário invalido o password inválido</div>
+			<div class="alert alert-danger" role="alert" th:if="${param.error}">Usuário invalido o password inválido</div>
 		</div>
 	</div>
 
