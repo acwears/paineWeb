@@ -10,12 +10,6 @@
 	<div th:include="layout :: menuFragment"></div>
 
 	<div class="container-fluid" id="contenido">
-	
-		<div class="row" id="errorMessage">
-			<div class="col-md-2"></div>
-			<div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger col-md-8" role="alert"></div>
-			<div class="col-md-2"></div>
-		</div>	
 
 		<div class="row" id="successMessage">
 			<div class="col-md-2"></div>
@@ -23,9 +17,9 @@
 			<div class="col-md-2"></div>
 		</div>
 
-		<div class="row" id="errorMessage-deletar">
+		<div class="row" id="errorMessage">
 			<div class="col-md-2"></div>
-			<div th:if="${errorMessage != null && make}" th:text="${errorMessage}" class="alert alert-danger col-md-8" role="alert"></div>
+			<div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger col-md-8" role="alert"></div>
 			<div class="col-md-2"></div>
 		</div>
 

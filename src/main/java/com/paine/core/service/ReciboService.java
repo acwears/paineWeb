@@ -57,14 +57,16 @@ public class ReciboService {
     	List<TpRetencion> tpRetenciones = reciboRepository.agregoRetencion(id);
     	TpEff tpEff = reciboRepository.agregoEff(id);
     	Cliente cliente = reciboRepository.agregoCliente(id);
-    	   	
+    	List<Descuento> descuentos = reciboRepository.agregoDescuento(id);
+    	
     	recibo.setFacturas(facturas);
     	recibo.setTpCheques(cheques);
     	recibo.setTpDepositos(tpDepositos);
     	recibo.setTpRetenciones(tpRetenciones);
     	recibo.setTpEff(tpEff);
     	recibo.setCliente(cliente);
-
+    	recibo.setDescuentos(descuentos);
+    	
 		return recibo;
 	}
 	
@@ -106,5 +108,9 @@ public class ReciboService {
 		if(CollectionUtils.isNotEmpty(descuentos)) {
 			descuentoRepository.save(descuentos);
 		}
+	}
+	
+	public void modify(Recibo recibo) {
+		reciboRepository.modify(recibo);
 	}
 }

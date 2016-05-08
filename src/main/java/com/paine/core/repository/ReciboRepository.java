@@ -1,5 +1,7 @@
 package main.java.com.paine.core.repository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import main.java.com.paine.core.model.Cliente;
+import main.java.com.paine.core.model.Descuento;
 import main.java.com.paine.core.model.Factura;
 import main.java.com.paine.core.model.Recibo;
 import main.java.com.paine.core.model.TpCheque;
@@ -202,7 +205,27 @@ public class ReciboRepository extends JDBCRepository {
 		});	
 	}
 	
+	//****************************************************************************************
+	//******************* Agrego DESCUENTO al RECIBO	
+	public List<Descuento> agregoDescuento(int id) {
 	
+		StringBuilder sb = new StringBuilder();
+		sb.append(" SELECT * FROM descuento  ");
+		sb.append(" where id_recibo = ? ");
+		
+		Object[] params = new Object[]{id};
+		
+		return getJdbcTemplate().query(sb.toString(), params, (rs, rowNum) -> {
+					
+			Descuento descuento = new Descuento();
+			
+			descuento.setId(rs.getInt("id"));
+			descuento.setPorcentaje(rs.getDouble("porcentaje"));
+			descuento.setDescripcion(rs.getString("descripcion"));
+			
+			return descuento;
+		});
+	}
 	
 
 	
@@ -262,7 +285,32 @@ public class ReciboRepository extends JDBCRepository {
 	  
 	  getJdbcTemplate().update(sb.toString(), params);
 	 } 
+	
+	 public void modify(Recibo recibo) {
+		 //java.util.Date fech;
+		 //fech = new java.sql.Date(recibo.getFechaProceso().getTime());
+		 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		 
+		  StringBuilder sb = new StringBuilder();
+		  sb.append(" UPDATE recibo ");
+		  sb.append(" SET nro_recibo = ?, ");
+		  sb.append(" id_cliente = ?, ");
+		  sb.append(" fecha = ?, ");
+		  sb.append(" descuento = ?, ");
+		  sb.append(" importe_suma_facturas = ?, ");
+		  sb.append(" importe_total = ?, ");
+		  sb.append(" observaciones = ?, ");
+		  sb.append(" id_usuario = ?, ");
+		  sb.append(" fecha_proceso = ? ");
+		  sb.append(" WHERE id = ? ");
+		  
+		  //recibo.getFecha()
+		  
+		  Object[] params = new Object[]{recibo.getNumero(), recibo.getCliente().getId(), recibo.getFecha(), recibo.getDescuento(), recibo.getImporteSumaFacturas(), recibo.getImporteTotal(), recibo.getObservaciones(), 26561556, recibo.getFechaProceso(), recibo.getId()};
+		  
+		  getJdbcTemplate().update(sb.toString(), params);
+		 } 	 
+	 
 	 public void save(Recibo recibo) {
 		 
 		 Map<String, Object> parameters = new HashMap<>();

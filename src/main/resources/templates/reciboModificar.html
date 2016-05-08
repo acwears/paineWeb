@@ -8,7 +8,19 @@
 <body>
 
 	<div th:include="layout :: menuFragment"></div>
-		
+	
+	<div class="row" id="successMessage">
+		<div class="col-md-2"></div>
+		<div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success col-md-8" role="alert"></div>
+		<div class="col-md-2"></div>
+	</div>
+
+	<div class="row" id="errorMessage">
+		<div class="col-md-2"></div>
+		<div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger col-md-8" role="alert"></div>
+		<div class="col-md-2"></div>
+	</div>
+	
 	<!-- ***************************************************************************************************** -->
 	<!-- ***************************************************************************************************** -->
 	<!-- ***************************************************************************************************** -->
@@ -21,29 +33,29 @@
 			<div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
 				<div class="input-group input-group-sm">
 					<span class="input-group-addon" id="basic-addon15">Recibo #</span>
-    				<input type="miTabPanelText2" class="form-control" id="nroRecibo" name="nroRecibo" aria-describedby="basic-addon15">
+    				<input th:value="${recibo.numero}" type="miTabPanelText2" class="form-control" id="nroRecibo" name="nroRecibo" aria-describedby="basic-addon15">
     			</div>
     		</div>
 
     		<div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
     			<div class="input-group input-group-sm">
 					<span class="input-group-addon" id="basic-addon16">Fecha</span>
-    				<input type="miTabPanelText2" class="form-control" id="fechaRecibo" aria-describedby="basic-addon16">
+    				<input th:value="${recibo.fecha}" type="miTabPanelText2" class="form-control" id="fechaRecibo" aria-describedby="basic-addon16">
     			</div>
             </div>                                
 
     		<div class="col-xs-12 col-sm-6 col-md-2 col-lg-2 col-lg-offset-2">	    			
-    			<input type="text" class="form-control" id="clienteId" style="display: none;" readonly="readonly">
+    			<input th:value="${recibo.getCliente().id}" type="text" class="form-control" id="clienteId" style="display: none;" readonly="readonly">
     			<div class="input-group input-group-sm">
 					<span class="input-group-addon" id="basic-addon17">Cliente #</span>
-    				<input type="miTabPanelText" class="form-control" id="clienteNro" readonly="readonly" aria-describedby="basic-addon17">
+    				<input th:value="${recibo.getCliente().numeroCliente}" type="miTabPanelText" class="form-control" id="clienteNro" readonly="readonly" aria-describedby="basic-addon17">
     			</div>
     		</div>
 
 			<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 				<div class="input-group input-group-sm">
 					<span class="input-group-addon" id="basic-addon18">Nombre</span>
-    				<input type="miTabPanelText" class="form-control" id="clienteNombre" readonly="readonly" aria-describedby="basic-addon18"></input>
+    				<input th:value="${recibo.getCliente().nombre}" type="miTabPanelText" class="form-control" id="clienteNombre" readonly="readonly" aria-describedby="basic-addon18"></input>
     				<span class="input-group-addon" id="basic-addon18">><button class="btn btn-link" data-toggle="modal" data-target="#modal_cliente" id="mostrar_mdl_cliente"></button></span>
     				<!--<span class="input-group-addon glyphicon glyphicon-search" aria-hidden="true" id="basic-addon18">+<button class="btn btn-link" data-toggle="modal" data-target="#modal_cliente" id="mostrar_mdl_cliente"></button></span>-->
     			</div>
@@ -119,6 +131,14 @@
 					            <td width="35%" style="font-weight:bold;"><font color = "#000000">Monto</font></td>
 					            <td width="35%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></td>
 					        </tr>
+				        	<tr th:each="facturaVar : ${recibo.getFacturas()}">
+								<td th:text="${facturaVar.numero}"></td>
+								<td th:text="${facturaVar.fecha}"></td>
+								<td th:text="${facturaVar.monto}"></td>
+								<td class="idParaHidden" style="display: none;" th:text="'fac_' + ${facturaVar.id}"></td>
+								<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td>							
+							</tr>
+					        
 					     <!--   <tr style="visibility:hidden; height: 0px;">
 					        </tr> -->
 					</table>
@@ -126,7 +146,7 @@
 
 				<div class="input-group input-group-sm" id="inGrTotalFacturas">
 					<span class="input-group-addon" id="basic-addon19">Total facturas</span>
-					<input type="miTabPanelText2" class="form-control" id="facturasMontoTotal" aria-describedby="basic-addon18">
+					<input th:value="${recibo.importeSumaFacturas}" type="miTabPanelText2" class="form-control" id="facturasMontoTotal" aria-describedby="basic-addon18">
 					<span class="input-group-addon" id="basic-addon18">><button class="btn btn-link" data-toggle="modal" data-target="#modal_factura" id="mostrar_mdl_factura"></button></span>						
 				</div>
 			</div>
@@ -200,11 +220,12 @@
 						<!-- **************************************************************************************** -->
 						<!-- **************************************************************************************** -->
 					    <!-- *** COMIENZO EFECTIVO ****************************************************************** -->
+					    
 						<div role="tabpanel" class="tab-pane" id="idEfectivo">
 							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
 								<div class="input-group input-group-sm">
       								<span class="input-group-addon" id="basic-addon0">Importe</span>
-      								<input type="miTabPanelText" id="efectivoImporte" aria-describedby="basic-addon0" value="0">
+      								<input th:value="${recibo.getTpEff().monto}" type="miTabPanelText" id="efectivoImporte" aria-describedby="basic-addon0">
    								</div>
    							</div>
 						</div>						
@@ -259,7 +280,7 @@
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Nro.</font></th>
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">CUIT</font></th>
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Fecha</font></th>
-										            <th width="20%" style="font-weight:bold;"><font color = "#000000">idHidden</font></th>
+										            <th width="20%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>
 										        </tr>
 										        
 											    <tr th:each="chequeVar : ${recibo.getTpCheques()}">											    	
@@ -268,27 +289,44 @@
 													<td th:text="${chequeVar.numero}"></td>
 													<td th:text="${chequeVar.cuit}"></td>
 													<td th:text="${chequeVar.fechaDeposito}"></td>
-													<!-- <td class="idParaHidden" style="display: none;" th:text="${chequeVar.banco.id}"></td>-->
-													<td class="idParaHidden" th:text="'ch_' + ${chequeVar.banco.id}"></td>
+													<td class="idParaHidden" style="display: none;" th:text="'ch_' + ${chequeVar.id}"></td>
 													<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td>
 												</tr>									
 										</table>																			
-										<form action="#" th:action="@{/recibo/salvar}" th:object="${reciboDto}" method="post" id="reciboFormId">
-																			        
+										<form action="#" th:action="@{/recibo/modificar}" th:object="${reciboDto}" method="post" id="reciboFormId">
+												<!-- CREO EL HIDDEN DEL CHEQUE -->					        
 											    <div th:each="chequeVar : ${recibo.getTpCheques()}">										    	
-													<input type="hidden" name="chequeBanco" th:value="${chequeVar.banco.id}" th:attr="class='ch_' + ${chequeVar.banco.id}" ></input>
-													<input type="hidden" name="chequeImporte" th:value="${chequeVar.monto}" th:attr="class='ch_' + ${chequeVar.banco.id}"></input>
-													
-													<input type="hidden" name="chequeNro" th:value="${chequeVar.numero}" th:attr="class='ch_' + ${chequeVar.banco.id}"></input>
-													<input type="hidden" name="chequeCuit" th:value="${chequeVar.cuit}" th:attr="class='ch_' + ${chequeVar.banco.id}"></input>
-													<input type="hidden" name="chequeFechaDeposito" th:value="${chequeVar.fechaDeposito}" th:attr="class='ch_' + ${chequeVar.banco.id} + ']'"></input>																									
+													<input type="hidden" name="chequeBanco" th:value="${chequeVar.banco.id}" th:attr="class='ch_' + ${chequeVar.id}" ></input>
+													<input type="hidden" name="chequeImporte" th:value="${chequeVar.monto}" th:attr="class='ch_' + ${chequeVar.id}"></input>													
+													<input type="hidden" name="chequeNro" th:value="${chequeVar.numero}" th:attr="class='ch_' + ${chequeVar.id}"></input>
+													<input type="hidden" name="chequeCuit" th:value="${chequeVar.cuit}" th:attr="class='ch_' + ${chequeVar.id}"></input>
+													<input type="hidden" name="chequeFechaDeposito" th:value="${chequeVar.fechaDeposito}" th:attr="class='ch_' + ${chequeVar.id}"></input>																									
 												</div>
-										
+												
+												<!-- CREO EL HIDDEN DEL DEPOSITO -->
+												<div th:each="depositoVar : ${recibo.getTpDepositos()}">
+													<input type="hidden" name="depositoBanco" th:value="${depositoVar.banco.id}" th:attr="class='dep_' + ${depositoVar.id}" ></input>
+													<input type="hidden" name="depositoImporte" th:value="${depositoVar.monto}" th:attr="class='dep_' + ${depositoVar.id}" ></input>
+													<input type="hidden" name="depositoFecha" th:value="${depositoVar.fecha}" th:attr="class='dep_' + ${depositoVar.id}" ></input>
+												</div>
+												
+												<!-- CREO EL HIDDEN DEL DESCUENTO -->
+												<div th:each="descuentoVar : ${recibo.getDescuentos()}">
+													<input type="hidden" name="descuentoDescripcion" th:value="${descuentoVar.descripcion}" th:attr="class='des_' + ${descuentoVar.id}" ></input>
+													<input type="hidden" name="descuentoPorcentaje" th:value="${descuentoVar.porcentaje}" th:attr="class='des_' + ${descuentoVar.id}" ></input>
+												</div>
+												
+												<!-- CREO EL HIDDEN DE LAS FACTURA -->
+												<div th:each="facturaVar : ${recibo.getFacturas()}">
+													<input type="hidden" name="facturaNro" th:value="${facturaVar.numero}" th:attr="class='fac_' + ${facturaVar.id}" ></input>
+													<input type="hidden" name="facturaFecha" th:value="${facturaVar.fecha}" th:attr="class='fac_' + ${facturaVar.id}" ></input>
+													<input type="hidden" name="facturaMonto" th:value="${facturaVar.monto}" th:attr="class='fac_' + ${facturaVar.id}" ></input>
+												</div>
 										</form>
 								</div>
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="basic-addon36">Total cheques</span>
-									<input type="miTabPanelText" class="form-control" id="chequeMontoTotalId" readonly="readonly" aria-describedby="basic-addon36">
+									<input th:value="${sumaMontoCheques}" type="miTabPanelText" class="form-control" id="chequeMontoTotalId" readonly="readonly" aria-describedby="basic-addon36">
 								</div>
 							</div>
 						</div>   <!-- *** FIN CHEQUE *** -->
@@ -326,21 +364,29 @@
 								<button type="button" class="btn btn-default" id="depositoBtnAgregarId">Agregar al listado</button>							
 							</div>
 
-							<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7" id="idChequeListado">
+							<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7" id="idDepListado">
 								<div class="panel panel-default">
 									<table class="table table-bordered" id="tableDepositoID">
-									        <tr class="success">
-									            <th width="60%" style="font-weight:bold;"><font color = "#000000">Banco</font></th>
-									            <th width="130%" style="font-weight:bold;"><font color = "#000000">Importe</font></th>
-									            <th width="40%" style="font-weight:bold;"><font color = "#000000">Fecha</font></th>
-									            <th width="40%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>
-									        </tr>
+								        <tr class="success">
+								            <th width="60%" style="font-weight:bold;"><font color = "#000000">Banco</font></th>
+								            <th width="130%" style="font-weight:bold;"><font color = "#000000">Importe</font></th>
+								            <th width="40%" style="font-weight:bold;"><font color = "#000000">Fecha</font></th>
+								            <th width="40%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>
+								        </tr>
+								        								        
+								       	<tr th:each="depositoVar : ${recibo.getTpDepositos()}">
+											<td th:text="${depositoVar.banco.id}"></td>
+											<td th:text="${depositoVar.monto}" class="montoDeposito"></td>
+											<td th:text="${depositoVar.fecha}"></td>
+											<td class="idParaHidden" style="display: none;" th:text="'dep_' + ${depositoVar.id}"></td>
+											<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td>							
+										</tr>									      
 									</table>
 								</div>
 
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="basic-addon37">Total depósitos</span>
-									<input type="miTabPanelTex" class="form-control" id="depositoMontoTotal" readonly="readonly" aria-describedby="basic-addon37">
+									<input th:value="${sumaMontoDepositos}" type="miTabPanelTex" class="form-control" id="depositoMontoTotal" readonly="readonly" aria-describedby="basic-addon37">
 								</div>
 							</div>
 						</div><!-- *** FIN DEPOSITO *** -->
@@ -354,28 +400,29 @@
 						<!-- ******************************************************************************************************* -->
 						<!-- ******************************************************************************************************* -->
 						<!-- ******************************************************************************************************* -->
-						<!-- ******************************************************************** COMIENZO RETENCION *************** -->					
-						<div role="tabpanel" class="tab-pane" id="idRetencion">
+						<!-- ******************************************************************** COMIENZO RETENCION *************** -->											
+						
+						<div th:each="retencionVar : ${recibo.getTpRetenciones()}" role="tabpanel" class="tab-pane" id="idRetencion">
 							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="basic-addon9">Retención #</span>
-									<input type="miTabPanelText" id="retencionNumero" aria-describedby="basic-addon9">
+									<input th:value="${retencionVar.numero}" type="miTabPanelText" id="retencionNumero" aria-describedby="basic-addon9">
 								</div>
 
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="basic-addon10">Importe</span>
-									<input type="miTabPanelText" id="retencionImporte" aria-describedby="basic-addon10">
+									<input th:value="${retencionVar.monto}" type="miTabPanelText" id="retencionImporte" aria-describedby="basic-addon10">
 								</div>
 							</div>
 							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3" id="idRetencion">
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="basic-addon11">Sucursal</span>
-									<input type="miTabPanelText" id="retencionSucursal" aria-describedby="basic-addon11">
+									<input th:value="${retencionVar.sucursal}" type="miTabPanelText" id="retencionSucursal" aria-describedby="basic-addon11">
 								</div>
 
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="basic-addon12">Año</span>
-									<input type="miTabPanelText" id="retencionYear" aria-describedby="basic-addon12">
+									<input th:value="${retencionVar.anio}" type="miTabPanelText" id="retencionYear" aria-describedby="basic-addon12">
 								</div>
 							</div>
 						</div><!-- *** FIN RETENCION *** -->
@@ -411,12 +458,18 @@
 									            <th width="200%" style="font-weight:bold;"><font color = "#000000">Monto</font></th>
 									            <th width="200%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>           
 									        </tr>
+									        <tr th:each="descuentoVar : ${recibo.getDescuentos()}">
+									        	<td th:text="${descuentoVar.descripcion}"></td>
+									        	<td class="porcentajeDescuento" th:text="${descuentoVar.porcentaje}"></td>
+									        	<td class="idParaHidden" style="display: none;" th:text="'des_' + ${descuentoVar.id}"></td>
+												<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td>
+									        </tr>
 									</table>														
 								</div>
 
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="basic-addon38">Total descuento</span>
-									<input type="miTabPanelText" class="form-control" id="importeTotalDescuento" readonly="readonly" value="0" aria-describedby="basic-addon38">
+									<input th:value="${recibo.descuento}" type="miTabPanelText" class="form-control" id="importeTotalDescuento" readonly="readonly" value="0" aria-describedby="basic-addon38">
 								</div>
 							</div>		
 						</div><!-- *** FIN DESCUENTO... *** -->
@@ -426,10 +479,11 @@
 						<!-- **************************************************************************************** -->
 						<!-- **************************************************************************************** -->
 					    <!-- *** COMIENZO OBSERVACIONES ************************************************************* -->
+					    
 						<div role="tabpanel" class="tab-pane" id="idTabObservaciones">
 							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 								<div class="row">
-	    							<textarea class="form-control" rows="10" placeholder="Indique aqui las observaciones del recibo." id="idObservaciones"></textarea>
+	    							<textarea th:text="${recibo.observaciones}" class="form-control" rows="10" placeholder="Indique aqui las observaciones del recibo." id="idObservaciones"></textarea>
 	    						</div>
    							</div>
 						</div>						
@@ -459,7 +513,7 @@
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">						
 				<div class="input-group input-group-sm">
 					<span class="input-group-addon" id="basic-addon20">Recibo importe</span>
-					<input type="miTabPanelText" readonly="readonly" id="montoTotalRecibo" aria-describedby="basic-addon20">
+					<input th:value="${recibo.importeTotal}" type="miTabPanelText" readonly="readonly" id="montoTotalRecibo" aria-describedby="basic-addon20">
 	    		</div>
 
 	    		<div class="input-group input-group-sm">
@@ -481,30 +535,30 @@
 						<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
 							<div class="input-group input-group-sm">
 								<span class="input-group-addon" id="basic-addon30">Efectivo</span>
-								<input type="miTabPanelText" id="efectivoImporteRES" readonly="readonly" aria-describedby="basic-addon30">
+								<input th:value="${recibo.getTpEff().monto}" type="miTabPanelText" id="efectivoImporteRES" readonly="readonly" aria-describedby="basic-addon30">
 							</div>
 
 							<div class="input-group input-group-sm">
 								<span class="input-group-addon" id="basic-addon31">Cheques</span>
-								<input type="miTabPanelText" id="chequeMontoTotalIdRES" readonly="readonly" aria-describedby="basic-addon31">
+								<input th:value="${sumaMontoCheques}" type="miTabPanelText" id="chequeMontoTotalIdRES" readonly="readonly" aria-describedby="basic-addon31">
 							</div>
 						</div>
 
 						<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
 							<div class="input-group input-group-sm">
 								<span class="input-group-addon" id="basic-addon32">Depósitos</span>
-								<input type="miTabPanelText" id="depositoMontoTotalRES" readonly="readonly" aria-describedby="basic-addon32">
+								<input th:value="${sumaMontoDepositos}" type="miTabPanelText" id="depositoMontoTotalRES" readonly="readonly" aria-describedby="basic-addon32">
 							</div>
 
 							<div class="input-group input-group-sm">
 								<span class="input-group-addon" id="basic-addon32">Retención</span>
-								<input type="miTabPanelText" id="retencionImporteRES" readonly="readonly" aria-describedby="basic-addon33">
+								<input th:value="${sumaMontoRetenciones}" type="miTabPanelText" id="retencionImporteRES" readonly="readonly" aria-describedby="basic-addon33">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
 							<div class="input-group input-group-sm">
 								<span class="input-group-addon" id="basic-addon34">Descuento</span>
-								<input type="miTabPanelText" id="importeTotalDescuentoRES" readonly="readonly" aria-describedby="basic-addon34">
+								<input th:value="${recibo.descuento}" type="miTabPanelText" id="importeTotalDescuentoRES" readonly="readonly" aria-describedby="basic-addon34">
 							</div>
 						</div>					
 					</div>
@@ -555,6 +609,11 @@
 <script type="text/javascript">
 
 	$(document).ready(function(){	
+		
+		$("#successMessage").fadeOut(10000);
+		$("#errorMessage").fadeOut(10000);
+		calcularBalance();
+		
 		$('#fechaRecibo').datepicker({
 			format: 'dd/mm/yyyy',
 			//inline: true,
