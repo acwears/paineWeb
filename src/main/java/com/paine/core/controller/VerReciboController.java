@@ -24,7 +24,7 @@ public class VerReciboController {
 	
 	@RequestMapping("/reciboVer")
     public String listado(Model model) {
-    	int idRecibo=75;
+    	int idRecibo=90;
     	
     	Recibo recibo = reciboService.findOne(idRecibo);
         model.addAttribute("recibo", recibo);

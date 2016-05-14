@@ -55,7 +55,7 @@ public class ReciboRepository extends JDBCRepository {
 	//******************* Agrego FACTURA al RECIBO
 	
 	public List<Factura> agregoFacturas(int id) {
-
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append(" SELECT * FROM factura  ");
 		sb.append(" where id_recibo = ? ");
@@ -71,7 +71,7 @@ public class ReciboRepository extends JDBCRepository {
 			factura.setMonto(rs.getDouble("monto"));
 			factura.setNumero(rs.getString("numero"));
 			
-			return factura; //recibo;
+			return factura;
 		});
 		
 	}
@@ -321,7 +321,8 @@ public class ReciboRepository extends JDBCRepository {
 		 parameters.put("importe_suma_facturas", recibo.getImporteSumaFacturas());
 		 parameters.put("importe_total", recibo.getImporteTotal());
 		 parameters.put("observaciones", recibo.getObservaciones());
-		 parameters.put("id_usuario", recibo.getUsuarioCriador().getId());
+		 //parameters.put("id_usuario", recibo.getUsuarioCriador().getId());
+		 parameters.put("id_usuario", recibo.getUsuario().getId());
 		 parameters.put("fecha_proceso", new java.sql.Date(recibo.getFechaProceso().getTime()));
 		 
 		 SimpleJdbcInsert simpleJdbcInsert = getSimpleJdbcInsert();

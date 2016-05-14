@@ -62,5 +62,18 @@ public class TpEffRepository extends JDBCRepository {
 		Object[] params = new Object[] { tpEff.getRecibo().getId(), tpEff.getMonto() };
 		getJdbcTemplate().update(sb.toString(), params);
 	}
+	
+	 public void delete(int idReciboDelete){
+		 
+		  StringBuilder sb = new StringBuilder();
+		  
+		  sb.append(" DELETE ");
+		  sb.append(" FROM tp_eff ");
+		  sb.append(" WHERE id_recibo = ? ");
+		  		  
+		  Object[] params = new Object[]{idReciboDelete};
+		  
+		  getJdbcTemplate().update(sb.toString(), params);
+	}
 
 }

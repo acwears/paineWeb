@@ -112,5 +112,41 @@ public class ReciboService {
 	
 	public void modify(Recibo recibo) {
 		reciboRepository.modify(recibo);
+		
+		TpEff tpEff = recibo.getTpEff();
+		if(tpEff.getMonto() != 0) {
+			tpEffRepository.delete(recibo.getId());
+			tpEffRepository.save(tpEff);
+		}
+		
+		List<TpDeposito> depositos = recibo.getTpDepositos();
+		if(CollectionUtils.isNotEmpty(depositos)) {
+			tpDepositoRepository.delete(recibo.getTpDepositos(), 75);
+			tpDepositoRepository.save(depositos);
+		}
+		
+		List<TpCheque> cheques = recibo.getTpCheques();
+		if(CollectionUtils.isNotEmpty(cheques)) {
+			tpChequeRepository.delete(recibo.getId());
+			tpChequeRepository.save(cheques);
+		}
+		
+		List<Factura> facturas = recibo.getFacturas();
+		if(CollectionUtils.isNotEmpty(facturas)) {
+			facturaRepository.delete(recibo.getId());
+			facturaRepository.save(facturas);
+		}
+		
+		List<Descuento> descuentos = recibo.getDescuentos();
+		if(CollectionUtils.isNotEmpty(descuentos)) {
+			descuentoRepository.delete(recibo.getId());
+			descuentoRepository.save(descuentos);
+		}
+		
+		List<TpRetencion> tpRetencion = recibo.getTpRetenciones();
+		if(CollectionUtils.isNotEmpty(tpRetencion)){
+			tpRetencionRepository.delete(recibo.getId());
+			tpRetencionRepository.save(tpRetencion);
+		}
 	}
 }

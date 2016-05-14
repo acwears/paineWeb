@@ -56,4 +56,13 @@ public class Usuario extends Bean {
 	public void setRole(Role role) {
 		this.role = role;
 	}
+
+	public boolean isAdmin() {
+		
+		if(this.role == null) {
+			return false;
+		}
+		
+		return this.role.equals(Role.ROLE_ADMIN);
+	}
 }

@@ -46,13 +46,14 @@
 		<div class="row">
 			<div class="row"> 
 	    		<div class="col-xs-12 col-sm-7 col-md-7 col-lg-6">
-					<div class="table-responsive">
-						<table class="table table-bordered" id="tblFactura">
+					 <div class="table-responsive"> 
+				<!--	<div class="panel panel-default"> -->
+						<table class="table table-bordered table-responsive" id="tblFacturaVer">
 						    <thead>
 						        <tr>
-						            <th><font color = "#000000">Factura nro.</font></th>
-						            <th><font color = "#000000">Fecha</font></th>
-						            <th><font color = "#000000">Monto</font></th>
+						            <th><font color = "white">Factura nro.</font></th>
+						            <th><font color = "white">Fecha</font></th>
+						            <th><font color = "white">Monto</font></th>
 						        </tr>
 						    </thead>
 						    
@@ -63,7 +64,7 @@
 									<td th:text="${facturaVar.fecha}"></td>
 									<td th:text="${facturaVar.monto}"></td>									
 								</tr>			
-						    </tbody>
+						    </tbody>			
 						</table>
 					</div>	    		
 				</div>
@@ -118,14 +119,14 @@
 			<div class="row">
 				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="idChequeListado">
 					<div class="table-responsive">
-						<table class="table table-bordered" id="tableChequeId">
+						<table class="table table-bordered table-responsive" id="tableChequeVer">
 						    <thead>
 						        <tr>
-						            <th><font color = "#000000">Banco</font></th>
-						            <th><font color = "#000000">Importe</font></th>
-						            <th><font color = "#000000">Cheque nro.</font></th>
-						            <th><font color = "#000000">CUIT</font></th>
-						            <th><font color = "#000000">Fecha de deposito</font></th>
+						            <th><font color = "white">Banco</font></th>
+						            <th><font color = "white">Importe</font></th>
+						            <th><font color = "white">Cheque_#</font></th>
+						            <th><font color = "white">CUIT</font></th>
+						            <th><font color = "white">Fecha</font></th>
 						        </tr>
 						    </thead>
 						    
@@ -164,12 +165,12 @@
 			<div class="row">
 				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="idChequeListado">					
 					<div class="table-responsive">
-						<table class="table table-bordered" id="tableDepositoID">
+						<table class="table table-bordered table-responsive" id="tableDepositoVer">
 						    <thead>
 						        <tr>
-						            <th><font color = "#000000">Banco</font></th>
-						            <th><font color = "#000000">Importe</font></th>
-						            <th><font color = "#000000">Fecha de depósito</font></th>
+						            <th><font color = "white">Banco</font></th>
+						            <th><font color = "white">Importe</font></th>
+						            <th><font color = "white">Fecha de depósito</font></th>
 						        </tr>
 						    </thead>
 							 	<tr th:each="depositoVar : ${recibo.getTpDepositos()}">
@@ -204,13 +205,13 @@
 			<div class="row">			
 				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="idRetencionListado">					
 					<div class="table-responsive">
-						<table class="table table-bordered" id="tableDepositoID">
+						<table class="table table-bordered table-responsive" id="tableRetencionVer">
 						    <thead>
 						        <tr>
-						            <th><font color = "#000000">Retención #</font></th>
-						            <th><font color = "#000000">Importe</font></th>
-						            <th><font color = "#000000">Sucursal</font></th>
-						            <th><font color = "#000000">Año</font></th>
+						            <th><font color = "white">Retención #</font></th>
+						            <th><font color = "white">Importe</font></th>
+						            <th><font color = "white">Sucursal</font></th>
+						            <th><font color = "white">Año</font></th>
 						        </tr>
 						    </thead>
 						 		<tr th:each="retencionVar : ${recibo.getTpRetenciones()}">
@@ -323,6 +324,9 @@
 					</div><!-- /.modal -->	
 	    		<!-- ****** FIN VENTANA MODAL RECIBOS ****** -->
 
+<style> 
+#mnuVer{color:white;} 
+</style>
 
 <script type="text/javascript">
 	

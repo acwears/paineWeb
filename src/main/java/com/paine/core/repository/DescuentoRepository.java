@@ -37,4 +37,16 @@ public class DescuentoRepository extends JDBCRepository {
 		});
 	 }
 	
+	 public void delete(int idReciboDelete){
+		 
+		  StringBuilder sb = new StringBuilder();
+		  
+		  sb.append(" DELETE ");
+		  sb.append(" FROM descuento ");
+		  sb.append(" WHERE id_recibo = ? ");
+		  		  
+		  Object[] params = new Object[]{idReciboDelete};
+		  
+		  getJdbcTemplate().update(sb.toString(), params);
+	}
 }
