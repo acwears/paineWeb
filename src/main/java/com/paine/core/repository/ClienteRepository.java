@@ -62,5 +62,24 @@ public class ClienteRepository extends JDBCRepository{
 			
 			return cliente;
 		});
-	}	
+	}
+	
+	public Cliente findOneByNroCte(double nro) {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(" SELECT * FROM clientes WHERE nro_cliente = ? ");
+		Object[] params = new Object[]{nro};
+		
+		return getJdbcTemplate().queryForObject(sb.toString(), params, (rs, rowNum) -> {
+
+			Cliente cliente = new Cliente();
+			
+			cliente.setId(rs.getInt("id"));
+			cliente.setNumeroCliente(rs.getInt("nro_cliente"));
+			cliente.setNombre(rs.getString("nombre"));
+			cliente.setVendedor(rs.getString("vendedor"));
+			
+			return cliente;
+		});
+	}
 }

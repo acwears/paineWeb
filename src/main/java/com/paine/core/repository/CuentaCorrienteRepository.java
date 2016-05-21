@@ -1,7 +1,11 @@
 package main.java.com.paine.core.repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 import main.java.com.paine.core.model.CuentaCorriente;
@@ -64,6 +68,37 @@ public class CuentaCorrienteRepository extends JDBCRepository{
 			cuentaCorriente.setFecha_vencimiento(rs.getDate("fecha_vencimiento"));
 			
 			return cuentaCorriente;
+		});
+	}
+	
+	public void saveCC(List<CuentaCorriente> CCs){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		 StringBuilder sb = new StringBuilder();
+		 sb.append(" INSERT INTO cc (nro_cliente, nro_factura, nombre, fecha_factura, monto_original, monto_adeudado, suma_deuda, fecha_vencimiento) ");
+		 sb.append(" VALUES(?, ?, ?, ?, ?, ?, ?, ?) ");
+		 
+		 getJdbcTemplate().batchUpdate(sb.toString(), new BatchPreparedStatementSetter() {
+			
+				@Override
+				public void setValues(PreparedStatement ps, int index) throws SQLException {
+					
+					CuentaCorriente cc = CCs.get(index);
+					
+					ps.setInt(1, cc.getCliente().getNumeroCliente());
+					ps.setString(2, cc.getNro_factura());
+					ps.setString(3, cc.getNombre());
+					ps.setDate(4, new java.sql.Date(cc.getFecha_factura().getTime()));
+					ps.setDouble(5, cc.getMonto_original());
+					ps.setDouble(6, cc.getMonto_adeudado());
+					ps.setDouble(7, cc.getSuma_deuda());
+					ps.setDate(8, new java.sql.Date(cc.getFecha_vencimiento().getTime()));
+				}
+				
+				@Override
+				public int getBatchSize() {
+					return CCs.size();
+				}
 		});
 	}
 }
