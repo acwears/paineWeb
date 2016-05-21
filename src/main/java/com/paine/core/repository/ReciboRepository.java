@@ -345,7 +345,7 @@ public class ReciboRepository extends JDBCRepository {
 				
 				Recibo recibos = new Recibo();
 				
-				recibos.setId(rs.getInt("id"));
+				recibos.setId(rs.getInt("recibo.id"));
 				recibos.setNumero(rs.getInt("nro_recibo"));
 				recibos.setDescuento(rs.getDouble("descuento"));
 				recibos.setFecha(rs.getDate("fecha"));
