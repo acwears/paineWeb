@@ -288,6 +288,7 @@ input[type="miTabPanelText3"] {
 	color: white;
 	font-size:12px;
 	width: 100%;
+	white-space: nowrap;
 }
 
 
@@ -297,12 +298,12 @@ input[type="miTabPanelText3"] {
   	width: 100%;
 	display: block;
 	overflow-y: auto;
-  	background-color: #2c3e50;
+  	background-color: #A47878;
 }
 #idTableSelectCte td{	
 	border-bottom: 1px solid white;
 	border-right: 1px solid white;
-	color: white;
+	color: black;
 	font-size:12px;
 	width: 100%;
 }
@@ -314,13 +315,111 @@ input[type="miTabPanelText3"] {
   	width: 100%;
 	display: block;
 	overflow-y: auto;
-  	background-color: #2c3e50;	
+  	background-color: #A47878; /*#2c3e50;	*/
 }
 #facturaTblModal td{
+	border-bottom: 1px solid white;
+	border-right: 1px solid white;
+	color: black;
+	font-size:12px;
+	width: 100%;
+}
+
+#facturaTblModal tr:hover{
+	color: gray;
+}
+
+
+/* TABLAS DEL MENU VER */
+#tblFacturaVer{
+	height: 200px;
+  	width: 100%;
+	display: block;
+	overflow-y: auto;
+  	background-color: #2c3e50; /*#2c3e50;	*/
+}
+
+#tblFacturaVer td{
 	border-bottom: 1px solid white;
 	border-right: 1px solid white;
 	color: white;
 	font-size:12px;
 	width: 100%;
+	white-space: nowrap;
 }
 
+#tableChequeVer{
+	height: 200px;
+  	width: 100%;
+	display: block;
+	overflow-y: auto;
+  	background-color: #2c3e50; /*#2c3e50;	*/
+}
+
+#tableChequeVer td{
+	border-bottom: 1px solid white;
+	border-right: 1px solid white;
+	color: white;
+	font-size:12px;
+	width: 100%;
+	white-space: nowrap;
+}
+
+#tableDepositoVer{
+	height: 200px;
+  	width: 100%;
+	display: block;
+	overflow-y: auto;
+  	background-color: #2c3e50; /*#2c3e50;	*/
+}
+
+#tableDepositoVer td{
+	border-bottom: 1px solid white;
+	border-right: 1px solid white;
+	color: white;
+	font-size:12px;
+	width: 100%;
+	white-space: nowrap;
+}
+
+#tableRetencionVer{
+	height: 200px;
+  	width: 100%;
+	display: block;
+	overflow-y: auto;
+  	background-color: #2c3e50; /*#2c3e50;	*/
+}
+
+#tableRetencionVer td{
+	border-bottom: 1px solid white;
+	border-right: 1px solid white;
+	color: white;
+	font-size:12px;
+	width: 100%;
+	white-space: nowrap;
+}
+/* END MENU VER TABLES*/
+
+
+/*.mifit td.fit,
+.mifit th.fit {
+	white-space: nowrap;
+    width: 1%;
+}*/
+
+/* unvisited link grey */
+#topMenu a:link {
+/*	color: blue; #777;*/
+}
+/* visited link grey */
+#topMenu a:visited {
+/*	color: orange; #777;*/
+}
+/* mouse over link blue */
+#topMenu a:hover {
+	color: gray; /*#0CF;*/
+}
+/* selected link blue */
+#topMenu a:active {
+	color: red;
+}

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import main.java.com.paine.core.model.Recibo;
 import main.java.com.paine.core.model.TpCheque;
+import main.java.com.paine.core.model.TpDeposito;
 
 @Repository
 public class TpChequeRepository extends JDBCRepository{
@@ -80,5 +81,18 @@ public class TpChequeRepository extends JDBCRepository{
 				}
 		});
 	 }
+	 
+	 public void delete(int idReciboDelete){ //(List<TpCheque> tpCheques) {
+		 
+		  StringBuilder sb = new StringBuilder();
+		  
+		  sb.append(" DELETE ");
+		  sb.append(" FROM tp_cheque ");
+		  sb.append(" WHERE id_recibo = ? ");
+		  		  
+		  Object[] params = new Object[]{idReciboDelete}; //tpCheques.get(0).getRecibo().getId()
+		  
+		  getJdbcTemplate().update(sb.toString(), params);
+	}
 	
 }

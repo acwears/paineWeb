@@ -70,12 +70,12 @@ public class TpDepositoRepository extends JDBCRepository{
 		 
 		  StringBuilder sb = new StringBuilder();
 		  
-		  sb.append(" DELETE * ");
-		  sb.append(" FROM tp_deposito, ");
-		  sb.append(" WHERE id = ? ");
+		  sb.append(" DELETE ");
+		  sb.append(" FROM tp_deposito ");
+		  sb.append(" WHERE id_recibo = ? ");
 		  		  
-		  //Object[] params = new Object[]{recibo.getNumero(), recibo.getCliente().getId(), recibo.getFecha(), recibo.getDescuento(), recibo.getImporteSumaFacturas(), recibo.getImporteTotal(), recibo.getObservaciones(), 26561556, recibo.getFechaProceso(), recibo.getId()};
+		  Object[] params = new Object[]{idReciboDelete};
 		  
-		  //getJdbcTemplate().update(sb.toString(), params);
-		 } 	 
+		  getJdbcTemplate().update(sb.toString(), params);
+	} 	 
 }

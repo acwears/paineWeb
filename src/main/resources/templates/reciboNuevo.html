@@ -503,10 +503,10 @@
 					<!-- ************************ COMIENZO VENTANA MODAL PARA EL MANEJO DE ERRORES ***************************-->
 					<div class="modal fade" id="modalMensajes" tabindex="-1"  role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true">
 						<div class="modal-dialog">
-							<div class="modal-content">
-							 	<div class="modal-header">
+							<div class="modal-content" style="background-color: #D8D8D8;">
+							 	<div class="modal-header" style="background-color: #585858">
 							    	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							    	<h4 class="modal-title"><font color = "green">Ruka Paine S.r.l</font></h4>
+							    	<h4 class="modal-title"><font color = "white">Ruka Paine S.r.l</font></h4>
 							  	</div>
 
 								<div class="modal-body">				
@@ -514,25 +514,27 @@
 										<br>
 										<br>
 										<!-- <label for="exampleInputEmail1"><h5 id="textModal"></h5></label> -->
-										<h5 id="textModal"></h5>
+										<h5 id="textModal" style="color: #610B21"></h5>
 										<br>
 										<br>
 									</div>
 								</div>
 
-								<div class="modal-footer">
+								<div class="modal-footer" style="background-color: #848484">
 								<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 								</div>
 							</div><!-- /.modal-content -->
 						</div><!-- /.modal-dialog -->
 					</div><!-- /.modal -->	
 	    			<!-- ********************************************** FIN VENTANA MODAL ************************************* -->
-	    		
-	    		
-	    		
+	    				
+<style> 
+#mnuIngresar{color:white;} 
+</style>
 
 <script type="text/javascript">
-
+	var errObject ='';
+	
 	$(document).ready(function(){	
 		$('#fechaRecibo').datepicker({
 			format: 'dd/mm/yyyy',
@@ -708,8 +710,9 @@
 			
 			//if($('#balance').val() != '0' && $('#balance').val() != '0.00'){
 			if(parseFloat($('#balance').val()) > 0){
-				alert('El balance del recibo debe ser cero ó menor para poder procesar el mismo.');
-				$('#balance').focus();
+				document.getElementById('textModal').innerHTML = '- El balance del recibo debe ser cero ó menor para poder procesar el mismo.';
+				errObject = '#balance';
+				$('#modalMensajes').modal();
 				return;
 			}
 			
@@ -780,7 +783,9 @@
 			calcularBalance();		
 		});		
 		
-		/*$('#reciboFormId').validate({
+		//************************************************************************************
+		//************************************************************** BEGIN validacion jquery
+		$('#reciboFormId').validate({
 			rules: {
 					nroRecibo: {
 						required: true,
@@ -795,8 +800,9 @@
 						number: "Solo numeros"
 				 	}
 			}
-		}); */
-		
+		}); 
+		//************************************************************** END validacion jquery
+		//************************************************************************************		
 	}); //END ready(function()
 	
 	
@@ -829,44 +835,48 @@
 		$('#reciboFormId').append(tempHidden);
 	};
 	
+	//**** este evento se ejecuta automaticamente cuando se cierra la vtna modal *****
+	$('#modalMensajes').on('hidden.bs.modal', function (e) {
+		$(errObject).focus();
+	});
+	
 	function validaIntegridadDeDatos(){
-		
-		/*if($('#nroRecibo').val() == ''){
+				
+		if($('#nroRecibo').val() == ''|| $('#nroRecibo').val() == null){
 			document.getElementById('textModal').innerHTML = '- Ingrese el Nº de Recibo.';
 			$('#modalMensajes').modal();
-			return '#nroRecibo';
-		}*/
+			errObject = '#nroRecibo';
+			return false;
+		}
 		
-		if($('#nroRecibo').val() == ''){
-			document.getElementById('textModal').innerHTML = '- Ingrese el Nº de Recibo.';
-			$('#modalMensajes').modal();
-			$('#nroRecibo').focus();
+		if(isNaN($('#nroRecibo').val())){
+			document.getElementById('textModal').innerHTML = '- El Nº de Recibo debe ser numérico.';
+			errObject = '#nroRecibo';
+			$('#modalMensajes').modal();			
 			return false;
 		}
 		
 		if($('#fechaRecibo').val() == ''){
-			alert("Ingrese la fecha del Recibo.");
-			$('#fechaRecibo').focus();
+			document.getElementById('textModal').innerHTML = '- Ingrese la fecha del Recibo.';
+			errObject = '#fechaRecibo';
+			$('#modalMensajes').modal();			
 			return false;
 		}
 		
 		if($("#clienteNro").val() == ''){
-			alert("Seleccione un cliente.");
 			$("#modal_cliente").modal();
-			$('#clienteNro').focus();
 			return false;
 		}
 		
 		if($("#facturasMontoTotal").val() == ''){
-			alert("Debe seleccionar al menos una factura.");
 			$("#modal_factura").modal();
-			$('#facturasMontoTotal').focus();
 			return false;
 		}
 		
-		if($('#retencionNumero').val() == '' && $('#efectivoImporte').val() == '' && $('#chequeMontoTotalId').val() == '' && $('#depositoMontoTotal').val() == ''){
-			alert("Debe ingresar al menos un tipo de pago.");
-			$('#retencionNumero').focus();
+		//if($('#retencionNumero').val() == '' && $('#efectivoImporte').val() == 0 && $('#chequeMontoTotalId').val() == '' && $('#depositoMontoTotal').val() == ''){
+		if(($('#retencionNumero').val() == '' || $('#retencionNumero').val() == 0) && ($('#efectivoImporte').val() == 0 || $('#efectivoImporte').val() == '') && ($('#chequeMontoTotalId').val() == '' || $('#chequeMontoTotalId').val() == 0.00) && ($('#depositoMontoTotal').val() == '' || $('#depositoMontoTotal').val() == 0.00)){					
+			document.getElementById('textModal').innerHTML = '- Debe ingresar al menos un tipo de pago.';
+			$('#modalMensajes').modal();
 			return false;
 		}
 
@@ -876,32 +886,50 @@
 	function validaIntegridad_DeCheque(){
 		
 		if($('#chequeBancoID').val() == '-------'){
-			alert("Seleccione el banco.");
-			$('#chequeBancoID').focus();
+			document.getElementById('textModal').innerHTML = '- Seleccione el banco.';
+			errObject = '#chequeBancoID';
+			$('#modalMensajes').modal();
 			return false;
 		}
 		
 		if($('#chequeNroId').val() == ''){
-			alert("Ingrese el número de Cheque.");
-			$('#chequeNroId').focus();
+			document.getElementById('textModal').innerHTML = '- Ingrese el número de Cheque.';
+			errObject = '#chequeNroId';
+			$('#modalMensajes').modal();
+			return false;
+		}
+		if(isNaN($('#chequeNroId').val())){
+			document.getElementById('textModal').innerHTML = '- El nro. de cheque debe ser numérico.';
+			errObject = '#chequeNroId';
+			$('#modalMensajes').modal();			
 			return false;
 		}
 		
+		
 		if($('#chequeImporte').val() == ''){
-			alert("Ingrese el monto del cheque.");
-			$('#chequeImporte').focus();
+			document.getElementById('textModal').innerHTML = '- Ingrese el importe del cheque.';
+			errObject = '#chequeImporte';
+			$('#modalMensajes').modal();
+			return false;
+		}	
+		if(isNaN($('#chequeImporte').val())){
+			document.getElementById('textModal').innerHTML = '- El importe del cheque debe ser numérico.';
+			errObject = '#chequeImporte';
+			$('#modalMensajes').modal();			
 			return false;
 		}
 		
 		if($('#chequeCuitId').val() == ''){
-			alert("Ingrese el Nº de CUIT.");
-			$('#chequeCuitId').focus();
+			document.getElementById('textModal').innerHTML = '- Ingrese el Nº de CUIT.';
+			errObject = '#chequeCuitId';
+			$('#modalMensajes').modal();
 			return false;
 		}
 		
 		if($('#chequeFechaId').val() == ''){
-			alert("Ingrese la fecha del Cheque.");
-			$('#chequeFechaId').focus();
+			document.getElementById('textModal').innerHTML = '- Ingrese la fecha del Cheque.';
+			errObject = '#chequeFechaId';
+			$('#modalMensajes').modal();
 			return false;
 		}
 		
@@ -911,20 +939,29 @@
 	function validaIntegridad_Deposito(){
 		
 		if($('#depositoBancoId').val() == '-------'){
-			alert("Seleccione el banco.");
-			$('#depositoBancoId').focus();
+			document.getElementById('textModal').innerHTML = '- Seleccione el banco.';
+			errObject = '#depositoBancoId';
+			$('#modalMensajes').modal();
 			return false;
 		}
 		
 		if($('#depositoImporteId').val() == ''){
-			alert("Indique el importe del deposito.");
-			$('#depositoImporteId').focus();
+			document.getElementById('textModal').innerHTML = '- Indique el importe del deposito.';
+			errObject = '#depositoImporteId';
+			$('#modalMensajes').modal();
+			return false;
+		}
+		if(isNaN($('#depositoImporteId').val())){
+			document.getElementById('textModal').innerHTML = '- El importe del deposito debe ser numérico.';
+			errObject = '#depositoImporteId';
+			$('#modalMensajes').modal();			
 			return false;
 		}
 		
 		if($('#depositoFechaId').val() == ''){
-			alert("Indique la fecha del deposito.");
-			$('#depositoFechaId').focus();
+			document.getElementById('textModal').innerHTML = '- Indique la fecha del deposito.';
+			errObject = '#depositoFechaId';
+			$('#modalMensajes').modal();
 			return false;
 		}		
 		
@@ -932,19 +969,26 @@
 	};
 	
 	function validaIntegridad_Descuento(){
+		if($('#descuentoDescripcionId').val() == ''){
+			document.getElementById('textModal').innerHTML = '- Indique la descripción del desuento.';
+			errObject = '#descuentoDescripcionId';
+			$('#modalMensajes').modal();
+			return false;
+		}	
 		
 		if($('#descuentoPorcentajeId').val() == ''){
-			alert("Indique el importe del descuento.");
-			$('#descuentoPorcentajeId').focus();
+			document.getElementById('textModal').innerHTML = '- Indique el monto del descuento.';
+			errObject = '#descuentoPorcentajeId';
+			$('#modalMensajes').modal();
 			return false;
 		}
-		
-		if($('#descuentoDescripcionId').val() == ''){
-			alert("Indique la descripción del desuento.");
-			$('#descuentoDescripcionId').focus();
+		if(isNaN($('#descuentoPorcentajeId').val())){
+			document.getElementById('textModal').innerHTML = '- El monto del descuento debe ser numérico.';
+			errObject = '#descuentoPorcentajeId';
+			$('#modalMensajes').modal();			
 			return false;
-		}		
-		
+		}
+				
 		return true;
 	};
 	
