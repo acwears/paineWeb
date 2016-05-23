@@ -131,53 +131,13 @@
 				</div>
 			</div>
 
-			<!-- ****** COMIENZO VENTANA MODAL FACTURA ****** -->
+			<!-- ****** COMIENZO VENTANA MODAL FACTURA ************************** -->
+			
 			<div class="modal fade" id="modal_factura" tabindex="-1"  role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-					 	<div class="modal-header">
-					    	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					    	<h4 class="modal-title"><font color = "green">Seleccione la factura</font></h4>
-					  	</div>
-
-					  	<div class="modal-body">					      
-							<div class="table-responsive">
-						
-								<table class="table table-bordered table-hover table-condensed table-responsive" id="facturaTblModal">
-								    <thead>
-								        <tr class="success">
-								        	<th><font color = "#000000">Nro. factura</font></th>
-								            <th><font color = "#000000">Cliente nro.</font></th>
-								            <th><font color = "#000000">Nombre</font></th>
-								            <th><font color = "#000000">Fecha factura</font></th>
-								            <th><font color = "#000000">Monto original</font></th>
-								            <th><font color = "#000000">Monto adeudado</font></th>
-								            <th><font color = "#000000">Vencimiento</font></th>
-								        </tr>
-								    </thead>
-								    
-									<tbody>
-										<tr th:each="ccVar : ${cuentasCorrientes}">
-											<td th:text="${ccVar.nro_factura}"></td>
-											<td th:text="${ccVar.id}"></td>
-											<td th:text="${ccVar.nombre}"></td>
-											<td th:text="${#dates.format(ccVar.fecha_factura, 'dd/MM/yyyy')}"></td>
-											<td th:text="${ccVar.monto_original}"></td>
-											<td th:text="${ccVar.monto_adeudado}"></td>
-											<td th:text="${ccVar.fecha_vencimiento}"></td>
-										</tr>
-								    </tbody>
-								</table>
-							</div>
-					  	</div>
-
-					  	<div class="modal-footer">
-					    	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-					    	<button type="button" class="btn btn-primary">Seleccionar</button>
-					  	</div>
-					</div><!-- /.fin modal-content -->
-				</div><!-- /. fin modal-dialog -->
-			</div> <!-- ****** FIN VENTANA MODAL FACTURA ****** -->
+				<!-- ESTE CONTENIDO LO COMPLETARA AJAX -->
+			</div>
+			
+			<!-- ****** FIN VENTANA MODAL FACTURA ******************************* -->
 
 			<!-- *********************************************************************************** -->
 			<!-- *********************************************************************************** -->
@@ -549,34 +509,24 @@
 		});
 		
 		
-		$("#facturaTblModal tr").click(function(){
-			var facturaSumaImportes = 0;
-			var tdArray = $(this).find("td");
+		$("#mostrar_mdl_factura").click(function(){
 			
-			var idHiddenDate=new Date();
-			var idHiddenDate2 = idHiddenDate.getTime().toString();			
+			var clienteNro = $("#clienteNro").val();
 			
-			var facturaNro = tdArray[0].innerHTML; //"123A"; //$(this).text();
-			var facturaFecha = tdArray[3].innerHTML;
-			var facturaMonto = tdArray[5].innerHTML;
-			
-			var newRecord = '<tr><td>' + facturaNro + '</td>';
-			newRecord = newRecord + '<td>' + facturaFecha + '</td>';
-			newRecord = newRecord + '<td class="montoFac">' + facturaMonto + '</td>';
-			newRecord = newRecord + '<td class="idParaHidden" style="display: none;">' + idHiddenDate2 + '</td>';
-			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
-			
-			$('#tblFactura tr:last').after(newRecord);
-		
- 			crearHiddenB('facturaNro', facturaNro, idHiddenDate2);
- 			crearHiddenB('facturaFecha', facturaFecha, idHiddenDate2);
- 			crearHiddenB('facturaMonto', facturaMonto, idHiddenDate2);
- 						
- 			//sumo el monto de cada factura
- 			sumarMontos("#facturasMontoTotal", facturaMonto);
- 			calcularMontoTotalRecibo();
- 			//calcularImporte_Descuento();
- 			calcularBalance();
+			$.ajax({
+				url : '/listarCCByCustomer',
+				data : 'clienteNro=' + clienteNro,
+				type : 'GET',
+				dataType : 'html',
+				success : function(data) {
+					$('#modal_factura').html(data);
+					$("#modal_factura").modal();
+		 			//$("#modal_recibos").modal('toggle');
+				},
+				error : function() {
+					// Aqui código cuando servidor retorna error
+				},
+			});
 		});
 		
 		//BORRO LA FACTURA SELECCIONADA DE LA GRILLA

@@ -62,7 +62,7 @@ public class FileUploadService {
 				//String line = s.nextLine();
 				String[] lineArray = line.split(";");
 				//String ext = FilenameUtils.getExtension(fileUpload.getOriginalFilename());
-				Cliente cliente = clienteRepository.findOneByNroCte(Integer.parseInt(lineArray[0]));
+//				Cliente cliente = clienteRepository.findOneByNroCte(Integer.parseInt(lineArray[0]));
 				
 				CuentaCorriente cuentaCorriente = new CuentaCorriente();
 				
@@ -74,6 +74,9 @@ public class FileUploadService {
 				cuentaCorriente.setMonto_adeudado( Double.parseDouble(lineArray[5]));
 				cuentaCorriente.setSuma_deuda( Double.parseDouble(lineArray[6]));
 				cuentaCorriente.setFecha_vencimiento(sdf.parse(lineArray[7]));
+				
+				Cliente cliente = new Cliente();
+				cliente.setNumeroCliente(Integer.parseInt(lineArray[0]));
 				cuentaCorriente.setCliente(cliente);
 				
 				CCs.add(cuentaCorriente);

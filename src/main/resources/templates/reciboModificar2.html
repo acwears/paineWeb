@@ -1,16 +1,23 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      
 <head th:include="layout :: headerFragment"></head>
 
 <body>
 
 	<div th:include="layout :: menuFragment"></div>
 
-
-	<div id="container">
+	
+	<!-- ***************************************************************************************************** -->
+	<!-- ***************************************************************************************************** -->
+	<!-- ***************************************************************************************************** -->
+	<!-- ***************************************************************************************************** -->
+	<!-- ************************************ COMIENZO contenido ********************************************* -->
+	<div class="container-fluid" id="contenido">
 		<!-- Este contenido es cargado por AJAX -->
-	</div>
+	</div> <!-- end contenido -->
 
 	<div th:include="layout :: footerFragment"></div>
 
@@ -77,16 +84,15 @@
 <!-- /.modal -->
 <!-- ****** FIN VENTANA MODAL RECIBOS *************************************************************** -->
 <!-- ************************************************************************************************ -->
-
-<style>
-#mnuVer {
-	color: white;
-}
-</style>
+	    		
+	    		
+<style> 
+#mnuModif{color:white;} 
+</style>    		
 
 <script type="text/javascript">
-	$(document).ready(function() {
-
+	
+	$(document).ready(function(){	
 		$("#modal_recibos").modal();
 
 		// Funcion para cargar recibo por id
@@ -95,12 +101,12 @@
 			var reciboId = $(this).find("td").first().text();
 
 			$.ajax({
-				url : '/verRecibo',
+				url : '/modificar',
 				data : 'reciboId=' + reciboId,
 				type : 'GET',
 				dataType : 'html',
 				success : function(data) {
-					$('#container').html(data);
+					$('#contenido').html(data);
 		 			$("#modal_recibos").modal('toggle');
 				},
 				error : function() {
@@ -109,7 +115,8 @@
 			});
 
 		});
-	});
+	}); //END ready(function()
+	
 </script>
 
 </html>

@@ -33,6 +33,7 @@ import main.java.com.paine.core.repository.BancoRepository;
 import main.java.com.paine.core.repository.ClienteRepository;
 import main.java.com.paine.core.repository.CuentaCorrienteRepository;
 import main.java.com.paine.core.repository.TpDepositoRepository;
+import main.java.com.paine.core.service.CuentaCorrienteService;
 import main.java.com.paine.core.service.ReciboService;
 import main.java.com.paine.core.util.Context;
 
@@ -56,6 +57,9 @@ public class IngresarReciboController {
 	@Autowired
 	private ReciboService reciboService;
 
+	@Autowired
+	private CuentaCorrienteService cuentaCorrienteService;
+	
 	@RequestMapping("/ingresar1")
 	public String ingresar(@RequestParam(value = "name", required = false, defaultValue = "World") String name,
 			Model model) {
@@ -105,6 +109,33 @@ public class IngresarReciboController {
 		return "reciboNuevo";
 	}
 
+	@RequestMapping("/listarCCByCustomer")
+	public String listarCCByCustomer(@RequestParam Integer clienteNro, Model model) {
+		
+
+		try {
+	
+			
+			//List<CuentaCorriente> cuentasCorrientes = cuentaCorrienteService.find(Context.loggedUser().getCodigo());
+			List<CuentaCorriente> cuentasCorrientes = cuentaCorrienteRepository.cargarCCByCustomer(Context.loggedUser().getCodigo());
+			model.addAttribute("cuentasCorrientes", cuentasCorrientes);	
+
+			
+			model.addAttribute("reciboDto", new ReciboDto());
+			
+		} catch (Exception e) {
+			e.printStackTrace(System.out);
+			System.out.println(e.getMessage());
+			System.out.println("*** There is exception! ***");
+			log.info("THIS IS THE LOGGER *** There is exception! ***");
+			log.info(e.getMessage());
+			log.info(e);
+		}
+
+		// model.addAttribute("name", name);
+		return "ccSelectedCustomer";
+	}
+	
 	@RequestMapping("/recibo/salvar")
 	public String salvar(@ModelAttribute("reciboDto") ReciboDto reciboDto, Model model) {
 
