@@ -32,7 +32,6 @@ import main.java.com.paine.core.model.Usuario;
 import main.java.com.paine.core.repository.BancoRepository;
 import main.java.com.paine.core.repository.ClienteRepository;
 import main.java.com.paine.core.repository.CuentaCorrienteRepository;
-import main.java.com.paine.core.repository.ReciboRepository;
 import main.java.com.paine.core.service.ReciboService;
 import main.java.com.paine.core.util.Context;
 
@@ -43,9 +42,6 @@ public class ModificarReciboController {
 
 	@Autowired
 	private ReciboService reciboService;
-
-	@Autowired
-	private ReciboRepository reciboRepository;
 
 	@Autowired
 	private BancoRepository bancoRepository;
@@ -143,7 +139,7 @@ public class ModificarReciboController {
 	}
 
 	@RequestMapping("/recibo/modificar")
-	public ModelAndView salvar(@ModelAttribute("reciboDto") ReciboDto reciboDto, Model model) {
+	public String salvar(@ModelAttribute("reciboDto") ReciboDto reciboDto, Model model) {
 		Recibo recibo = null;
 
 		try {
@@ -152,12 +148,13 @@ public class ModificarReciboController {
 			reciboService.modify(recibo);
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			return this.modificar(null, null, "Se produjo un error al intentar guardar el recibo");
+			log.error("Error tratando de actualizar el recibo");
+			model.addAttribute("errorMessage", "Se produjo un error al intentar modificar el recibo");
+			return "mensajeInformativo";
 		}
 
-		// Mostrar mensaje suceso al cliente
-		return this.modificar(90, "Se guardaron los datos del recibo!", null);
+		model.addAttribute("successMessage", "El recibo fue modificado!");
+		return "mensajeInformativo";
 	}
 
 	private Recibo criarRecibo(ReciboDto reciboDto, int idReciboModificar) throws ParseException {
@@ -260,26 +257,5 @@ public class ModificarReciboController {
 			recibo.addRetencion(tpRetencion);
 		}
 		return recibo;
-	}
-
-	@RequestMapping("/save")
-	public String save() {
-
-		Recibo recibo = new Recibo();
-		// recibo.setName("primero insert");
-
-		reciboRepository.save(recibo);
-
-		return "index";
-	}
-
-	@RequestMapping("/update")
-	public String update() {
-
-		Recibo recibo = reciboRepository.findOne(2);
-		// recibo.setName("modificando...");
-		reciboRepository.update(recibo);
-
-		return "index";
 	}
 }

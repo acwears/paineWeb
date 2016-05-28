@@ -55,7 +55,7 @@
 				<div>
 					<span class="subrayado"><h3>Opciones de busqueda</h3></span>
 				</div>
-
+				
 				<div>
 					<label for="exampleInputEmail1"><h5>Recibo #</h5></label> <input type="text" class="form-control" id="mdl_cte_busq_cte_nro"> <label
 						for="exampleInputEmail1"><h5>Cliente #</h5></label> <input type="text" class="form-control" id="mdl_cte_busq_cte_nom"> <br> <br>
@@ -96,8 +96,7 @@
 <!-- /.modal -->
 <!-- ****** FIN VENTANA MODAL RECIBOS *************************************************************** -->
 <!-- ************************************************************************************************ -->
-	    		
-	    		
+
 <style> 
 #mnuModif{color:white;} 
 </style>    		
@@ -105,12 +104,16 @@
 <script type="text/javascript">
 	
 	$(document).ready(function(){	
-		$("#modal_recibos").modal();
+		
+		$("#modal_recibos").modal({backdrop: 'static', keyboard: false});
 
 		// Funcion para cargar recibo por id
 		$('#tableSelectCliente tbody tr').click(function() {
 
 			var reciboId = $(this).find("td").first().text();
+
+			$('.modal-footer').hide();
+			$('.modal-body').html('<p style="color: red;">Buscando recibo...</div>');
 
 			$.ajax({
 				url : '/modificar',
