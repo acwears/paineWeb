@@ -3,6 +3,8 @@ package main.java.com.paine.core.service;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +65,16 @@ public class ReciboService {
     	recibo.setTpCheques(cheques);
     	recibo.setTpDepositos(tpDepositos);
     	recibo.setTpRetenciones(tpRetenciones);
-    	recibo.setTpEff(tpEff);
+    	    	
+    	if(tpEff != null){
+    		recibo.setTpEff(tpEff);
+    	}
+    	else{
+    		TpEff tpEff2 = new TpEff();
+			tpEff2.setMonto(0);
+			recibo.setTpEff(tpEff2);
+    	}
+    	
     	recibo.setCliente(cliente);
     	recibo.setDescuentos(descuentos);
     	

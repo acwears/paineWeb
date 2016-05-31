@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -88,7 +89,9 @@ public class ReciboRepository extends JDBCRepository {
 		Object[] params = new Object[]{id};
 		
 		return getJdbcTemplate().query(sb.toString(), params, (rs, rowNum) -> {
-
+			
+			try {
+			
 			TpCheque tpCheque = new TpCheque();
 			
 			tpCheque.setId(rs.getInt("id"));
@@ -99,6 +102,10 @@ public class ReciboRepository extends JDBCRepository {
 			tpCheque.setNumero(rs.getInt("numero"));
 			
 			return tpCheque;
+			
+			} catch (EmptyResultDataAccessException e) {
+				 return null;
+			}
 		});
 	}
 	
@@ -162,7 +169,7 @@ public class ReciboRepository extends JDBCRepository {
 	//******************* Agrego tpEff al RECIBO
 	
 	public TpEff agregoEff(int id) {
-
+		try {
 		StringBuilder sb = new StringBuilder();
 		sb.append(" SELECT * FROM tp_eff  ");
 		sb.append(" where id_recibo = ? ");
@@ -170,14 +177,21 @@ public class ReciboRepository extends JDBCRepository {
 		Object[] params = new Object[]{id};
 		
 		return getJdbcTemplate().queryForObject(sb.toString(), params, (rs, rowNum) -> {
-					
+			
+			
+			
 			TpEff tpEff = new TpEff();
 			
 			tpEff.setId(rs.getInt("id"));
 			tpEff.setMonto(rs.getDouble("importe"));
 						
 			return tpEff;
+			
+			
 		});
+		} catch (EmptyResultDataAccessException e) {
+			 return null;
+		}
 	}
 	
 	
