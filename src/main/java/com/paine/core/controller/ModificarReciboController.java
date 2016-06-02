@@ -90,8 +90,7 @@ public class ModificarReciboController {
 			List<CuentaCorriente> cuentasCorrientes = cuentaCorrienteRepository.cargarCC();
 			model.addObject("cuentasCorrientes", cuentasCorrientes);
 		} else {
-			List<CuentaCorriente> cuentasCorrientes = cuentaCorrienteRepository
-					.cargarCCByVendedor(Context.loggedUser().getCodigo());
+			List<CuentaCorriente> cuentasCorrientes = cuentaCorrienteRepository.cargarCCByVendedor(Context.loggedUser().getCodigo());
 			model.addObject("cuentasCorrientes", cuentasCorrientes);
 		}
 
@@ -137,14 +136,16 @@ public class ModificarReciboController {
 
 		return model;
 	}
-
+	
 	@RequestMapping("/recibo/modificar")
+	//public String salvar(@RequestParam Integer reciboId, @ModelAttribute("reciboDto") ReciboDto reciboDto, Model model) {
 	public String salvar(@ModelAttribute("reciboDto") ReciboDto reciboDto, Model model) {
 		Recibo recibo = null;
 
 		try {
 
-			recibo = criarRecibo(reciboDto, 90);
+			recibo = criarRecibo(reciboDto, 108);
+			//recibo = criarRecibo(reciboDto, reciboId);
 			reciboService.modify(recibo);
 
 		} catch (Exception e) {

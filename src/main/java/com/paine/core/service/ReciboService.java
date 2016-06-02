@@ -64,8 +64,19 @@ public class ReciboService {
     	recibo.setFacturas(facturas);
     	recibo.setTpCheques(cheques);
     	recibo.setTpDepositos(tpDepositos);
-    	recibo.setTpRetenciones(tpRetenciones);
-    	    	
+    	
+    	if(CollectionUtils.isNotEmpty(tpRetenciones)){
+    		recibo.setTpRetenciones(tpRetenciones);
+    	}
+    	else{
+    		TpRetencion tpr = new TpRetencion();
+    		tpr.setMonto(0);
+    		tpr.setAnio(0);
+    		tpr.setNumero("");
+    		tpr.setSucursal("");
+    		recibo.addRetencion(tpr);
+    	}
+    	
     	if(tpEff != null){
     		recibo.setTpEff(tpEff);
     	}
@@ -132,7 +143,7 @@ public class ReciboService {
 		
 		List<TpDeposito> depositos = recibo.getTpDepositos();
 		if(CollectionUtils.isNotEmpty(depositos)) {
-			tpDepositoRepository.delete(recibo.getTpDepositos(), 75);
+			tpDepositoRepository.delete(recibo.getId()); //getTpDepositos(), 75
 			tpDepositoRepository.save(depositos);
 		}
 		

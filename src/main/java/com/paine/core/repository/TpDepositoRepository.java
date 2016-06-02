@@ -66,7 +66,7 @@ public class TpDepositoRepository extends JDBCRepository{
 		});
 	 }
 	 
-	 public void delete(List<TpDeposito> tpDepositos, int idReciboDelete) {
+	 public void delete(int idReciboDelete){//(List<TpDeposito> tpDepositos, int idReciboDelete) {
 		 
 		  StringBuilder sb = new StringBuilder();
 		  

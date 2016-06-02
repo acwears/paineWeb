@@ -13,6 +13,7 @@
 		<div class="row">
 			<div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
 				<div class="input-group input-group-sm">
+					<input th:value="${recibo.getId()}" type="text" class="form-control" id="IdRecibo" style="display: none;" readonly="readonly">
 					<span class="input-group-addon" id="basic-addon15">Recibo #</span>
     				<input th:value="${recibo.numero}" type="miTabPanelText2" class="form-control" id="nroRecibo" name="nroRecibo" aria-describedby="basic-addon15">
     			</div>
@@ -822,6 +823,22 @@
 				crearHidden('retencionSucursal', retencionSucursal);
 				crearHidden('retencionYear', retencionYear);
 			}
+			//************ START AJAX			
+		/*	var reciboId = $('#IdRecibo').val();
+			$.ajax({
+				url : '/recibo/modificar',
+				data : 'reciboId=' + reciboId,
+				type : 'GET',
+				dataType : 'html',
+				success : function(data) {
+					//$('#contenido').html(data);
+		 			//$("#modal_recibos").modal('toggle');
+				},
+				error : function() {
+					// Aqui código cuando servidor retorna error
+				},
+			});*/
+			//************ FIN AJAX
 			$('#reciboFormId').submit();
 		});
 		
@@ -1082,7 +1099,7 @@
 		
 		if(importeTotalDescuento == ''){importeTotalDescuento = 0;}
 		
-		if($('#facturasMontoTotal').val() != ''){
+		if($('#facturasMontoTotal').val() != '' && $('#facturasMontoTotal').val() != '0.00'){
 			//$('#balance').val(parseFloat($('#facturasMontoTotal').val()) - (parseFloat($('#montoTotalRecibo').val()) + parseFloat(importeTotalDescuento)));
 			monto = parseFloat($('#facturasMontoTotal').val()) - (parseFloat($('#montoTotalRecibo').val()) + parseFloat(importeTotalDescuento));
 			$('#balance').val(monto.toFixed(2));

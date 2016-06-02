@@ -142,25 +142,28 @@ public class ReciboRepository extends JDBCRepository {
 	//******************* Agrego tpRetencion al RECIBO
 	
 	public List<TpRetencion> agregoRetencion(int id) {
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append(" SELECT * FROM tp_retencion  ");
-		sb.append(" where id_recibo = ? ");
-		
-		Object[] params = new Object[]{id};
-
-		return getJdbcTemplate().query(sb.toString(), params, (rs, rowNum) -> {
-					
-			TpRetencion tpRetencion = new TpRetencion();
+		try {
+			StringBuilder sb = new StringBuilder();
+			sb.append(" SELECT * FROM tp_retencion  ");
+			sb.append(" where id_recibo = ? ");
 			
-			tpRetencion.setId(rs.getInt("id"));
-			tpRetencion.setNumero(rs.getString("numero"));
-			tpRetencion.setSucursal(rs.getString("sucursal"));
-			tpRetencion.setMonto(rs.getDouble("importe"));
-			tpRetencion.setAnio(rs.getInt("anio"));
-			
-			return tpRetencion;
-		});
+			Object[] params = new Object[]{id};
+	
+			return getJdbcTemplate().query(sb.toString(), params, (rs, rowNum) -> {
+						
+				TpRetencion tpRetencion = new TpRetencion();
+				
+				tpRetencion.setId(rs.getInt("id"));
+				tpRetencion.setNumero(rs.getString("numero"));
+				tpRetencion.setSucursal(rs.getString("sucursal"));
+				tpRetencion.setMonto(rs.getDouble("importe"));
+				tpRetencion.setAnio(rs.getInt("anio"));
+				
+				return tpRetencion;
+			});
+		} catch (EmptyResultDataAccessException e) {
+			 return null;
+		}
 	}
 	
 	
