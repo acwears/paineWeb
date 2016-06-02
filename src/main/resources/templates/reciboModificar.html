@@ -774,6 +774,7 @@
 				return;
 			}
 			
+			var reciboId = $('#IdRecibo').val();
 			var reciboNumero = $('#nroRecibo').val();
 			var reciboClienteId = $('#clienteId').val(); //1;//Tomar el cliente id
 			var reciboFecha = $('#fechaRecibo').val();
@@ -803,6 +804,7 @@
 			
 			console.log("D:"+reciboImporteSumaFacturas);
 			
+			crearHidden('reciboId', reciboId);
 			crearHidden('reciboNumero', reciboNumero);
 			crearHidden('reciboClienteId', reciboClienteId);
 			crearHidden('reciboFecha', reciboFecha);

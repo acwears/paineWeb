@@ -1,7 +1,8 @@
 package main.java.com.paine.core.dto.view;
 
 public class ReciboDto {
-
+	
+	private Integer reciboId;
 	private Integer reciboNumero;
 
 	private Integer reciboClienteId;
@@ -256,5 +257,13 @@ public class ReciboDto {
 
 	public void setRetencionYear(int[] retencionYear) {
 		this.retencionYear = retencionYear;
+	}
+
+	public Integer getReciboId() {
+		return reciboId;
+	}
+
+	public void setReciboId(Integer reciboId) {
+		this.reciboId = reciboId;
 	}
 }

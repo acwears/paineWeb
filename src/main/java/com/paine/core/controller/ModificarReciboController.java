@@ -144,7 +144,7 @@ public class ModificarReciboController {
 
 		try {
 
-			recibo = criarRecibo(reciboDto, 108);
+			recibo = criarRecibo(reciboDto); //108
 			//recibo = criarRecibo(reciboDto, reciboId);
 			reciboService.modify(recibo);
 
@@ -158,14 +158,15 @@ public class ModificarReciboController {
 		return "mensajeInformativo";
 	}
 
-	private Recibo criarRecibo(ReciboDto reciboDto, int idReciboModificar) throws ParseException {
+	//private Recibo criarRecibo(ReciboDto reciboDto, int idReciboModificar) throws ParseException {
+	private Recibo criarRecibo(ReciboDto reciboDto) throws ParseException {
 		Cliente cliente = clienteRepository.findOne(reciboDto.getReciboClienteId());
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		// Salvar recibo
 		Recibo recibo = new Recibo();
-		recibo.setId(idReciboModificar);
+		recibo.setId(reciboDto.getReciboId()); //recibo.setId(idReciboModificar);
 		recibo.setNumero(reciboDto.getReciboNumero());
 		recibo.setFecha(sdf.parse(reciboDto.getReciboFecha()));
 		recibo.setObservaciones(reciboDto.getReciboObservaciones());
