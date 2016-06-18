@@ -47,17 +47,17 @@
 		</dependency>
 
 		<!-- SET: MySQL Driver -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>mysql</groupId> -->
-<!-- 			<artifactId>mysql-connector-java</artifactId> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
 		<!-- END: MySQL Driver -->
 
 		<!-- SET: Postgresql Driver -->		
-		<dependency>
-		    <groupId>org.postgresql</groupId>
-		    <artifactId>postgresql</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 		    <groupId>org.postgresql</groupId> -->
+<!-- 		    <artifactId>postgresql</artifactId> -->
+<!-- 		</dependency> -->
 		<!-- END: Postgresql Driver -->		
 
 		<dependency>
