@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:include="layout :: headerFragment"></head>
+
+<body>
+
+	<div th:include="layout :: menuFragment"></div>
+
+
+	<div id="container">
+		<!-- Este contenido es cargado por AJAX -->
+	</div>
+
+	<div th:include="layout :: footerFragment"></div>
+
+</body>
+
+<!-- ***********************************************************************************-->
+<!-- ***********************************************************************************-->
+<!-- ************************ COMIENZO VENTANA MODAL RECIBO ***************************-->
+
+<div class="modal fade" id="modal_recibos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">
+					<font color="green">Seleccione el Recibo</font>
+				</h4>
+			</div>
+
+			<div class="modal-body">
+				<div>
+					<span class="subrayado"><h3>Opciones de busqueda</h3></span>
+				</div>
+				
+				<div>
+					<label for="exampleInputEmail1"><h5>Recibo #</h5></label> <input type="text" class="form-control" id="mdl_cte_busq_cte_nro"> <label
+						for="exampleInputEmail1"><h5>Cliente #</h5></label> <input type="text" class="form-control" id="mdl_cte_busq_cte_nom"> <br> <br>
+				</div>
+
+				<table class="table table-bordered table-hover table-responsive" id="tableSelectCliente">
+					<thead>
+						<tr>
+							<th><font color="#000000">Recibo #</font></th>
+							<th><font color="#000000">Fecha</font></th>
+							<th><font color="#000000">Cliente #</font></th>
+							<th><font color="#000000">Nombre</font></th>
+							<th><font color="#000000">Importe total</font></th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:each="recibosVarTodos : ${recibos}">
+							<td th:text="${recibosVarTodos.id}" style="display: none;"></td>
+							<td th:text="${recibosVarTodos.numero}"></td>
+							<td th:text="${recibosVarTodos.fecha}"></td>
+							<td th:text="${recibosVarTodos.getCliente().numeroCliente}"></td>
+							<td th:text="${recibosVarTodos.getCliente().nombre}"></td>
+							<td th:text="${recibosVarTodos.importeTotal}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<!-- ****** FIN VENTANA MODAL RECIBOS *************************************************************** -->
+<!-- ************************************************************************************************ -->
+
+<style>
+#mnuVer {
+	color: white;
+}
+</style>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$("#modal_recibos").modal({backdrop: 'static', keyboard: false});
+
+		// Funcion para cargar recibo por id
+		$('#tableSelectCliente tbody tr').click(function() {
+
+			var reciboId = $(this).find("td").first().text();
+			
+			$('.modal-footer').hide();
+			$('.modal-body').html('<p style="color: red;">Cargando recibo...</div>');
+
+			$.ajax({
+				url : '/verRecibo',
+				data : 'reciboId=' + reciboId,
+				type : 'GET',
+				dataType : 'html',
+				success : function(data) {
+					$('#container').html(data);
+		 			$("#modal_recibos").modal('toggle');
+				},
+				error : function() {
+					// Aqui código cuando servidor retorna error
+				},
+			});
+
+		});
+	});
+</script>
+
+</html>

@@ -3,6 +3,8 @@ package main.java.com.paine.core.service;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,14 +59,36 @@ public class ReciboService {
     	List<TpRetencion> tpRetenciones = reciboRepository.agregoRetencion(id);
     	TpEff tpEff = reciboRepository.agregoEff(id);
     	Cliente cliente = reciboRepository.agregoCliente(id);
-    	   	
+    	List<Descuento> descuentos = reciboRepository.agregoDescuento(id);
+    	
     	recibo.setFacturas(facturas);
     	recibo.setTpCheques(cheques);
     	recibo.setTpDepositos(tpDepositos);
-    	recibo.setTpRetenciones(tpRetenciones);
-    	recibo.setTpEff(tpEff);
+    	
+    	if(CollectionUtils.isNotEmpty(tpRetenciones)){
+    		recibo.setTpRetenciones(tpRetenciones);
+    	}
+    	else{
+    		TpRetencion tpr = new TpRetencion();
+    		tpr.setMonto(0);
+    		tpr.setAnio(0);
+    		tpr.setNumero("");
+    		tpr.setSucursal("");
+    		recibo.addRetencion(tpr);
+    	}
+    	
+    	if(tpEff != null){
+    		recibo.setTpEff(tpEff);
+    	}
+    	else{
+    		TpEff tpEff2 = new TpEff();
+			tpEff2.setMonto(0);
+			recibo.setTpEff(tpEff2);
+    	}
+    	
     	recibo.setCliente(cliente);
-
+    	recibo.setDescuentos(descuentos);
+    	
 		return recibo;
 	}
 	
@@ -105,6 +129,46 @@ public class ReciboService {
 		List<Descuento> descuentos = recibo.getDescuentos();
 		if(CollectionUtils.isNotEmpty(descuentos)) {
 			descuentoRepository.save(descuentos);
+		}
+	}
+	
+	public void modify(Recibo recibo) {
+		reciboRepository.modify(recibo);
+		
+		TpEff tpEff = recibo.getTpEff();
+		if(tpEff.getMonto() != 0) {
+			tpEffRepository.delete(recibo.getId());
+			tpEffRepository.save(tpEff);
+		}
+		
+		List<TpDeposito> depositos = recibo.getTpDepositos();
+		if(CollectionUtils.isNotEmpty(depositos)) {
+			tpDepositoRepository.delete(recibo.getId()); //getTpDepositos(), 75
+			tpDepositoRepository.save(depositos);
+		}
+		
+		List<TpCheque> cheques = recibo.getTpCheques();
+		if(CollectionUtils.isNotEmpty(cheques)) {
+			tpChequeRepository.delete(recibo.getId());
+			tpChequeRepository.save(cheques);
+		}
+		
+		List<Factura> facturas = recibo.getFacturas();
+		if(CollectionUtils.isNotEmpty(facturas)) {
+			facturaRepository.delete(recibo.getId());
+			facturaRepository.save(facturas);
+		}
+		
+		List<Descuento> descuentos = recibo.getDescuentos();
+		if(CollectionUtils.isNotEmpty(descuentos)) {
+			descuentoRepository.delete(recibo.getId());
+			descuentoRepository.save(descuentos);
+		}
+		
+		List<TpRetencion> tpRetencion = recibo.getTpRetenciones();
+		if(CollectionUtils.isNotEmpty(tpRetencion)){
+			tpRetencionRepository.delete(recibo.getId());
+			tpRetencionRepository.save(tpRetencion);
 		}
 	}
 }

@@ -3,58 +3,11 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
       
-<head>	
-	<meta charset="UTF-8">
-	<title>Ruka Painé S.r.l</title>
-	<meta name="viewport" content="whidt=device-width, user-scalable=no, initial-scale=1.0, maximun-scale=1.0, minimun-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="css/estilos.css">
-	<link rel="stylesheet" type="text/css" href="css/bootstrap-datepicker.min.css">
-</head>
+<head th:include="layout :: headerFragment"></head>
 
 <body>
-	<header>
-		<div class="container-fluid">
-			<div class="row">
-				<!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<h1>Ruka Painé S.r.l</h1>
-				</div> -->
-
-				<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11" id="idLineaLogueoBienvenida">
-					<h5 th:inline="text">Hello [[${loggedUser.nombre}]]!</h5>
-				</div>
-
-				<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1" id="idLineaLogueoSalir">
-					<a th:href="@{/logout}">Salir</a>
-				</div>
-			</div>
-		</div>
-	</header>
-
-
-	<nav class="navbar navbar-default navColor" id="nav">
-		<div class="container-fluid">
-		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-		  		<a class="navbar-brand" href="greeting">Home</a>
-		  	</div>
-
-		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-		  		<a class="navbar-brand" href="ingresar1"><font color="#COLORENHEXA">Ingresar</font></a>
-		  	</div>
-
-		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-		  		<a class="navbar-brand" href="reciboVer">Ver</a>
-		  	</div>
-
-		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-		  		<a class="navbar-brand" href="modificar">Modificar</a>
-		  	</div>
-		  	
-		  	<div sec:authorize="hasRole('ROLE_ADMIN')" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-		  		<a class="navbar-brand" href="controlPanel">Panel de control</a>
-		  	</div>
-		</div>
-	</nav>
+		
+	<div th:include="layout :: menuFragment"></div>
 		
 	<!-- ***************************************************************************************************** -->
 	<!-- ***************************************************************************************************** -->
@@ -164,6 +117,7 @@
 					            <td width="70%" style="font-weight:bold;"><font color = "#000000">Factura nro.</font></td>
 					            <td width="25%" style="font-weight:bold;"><font color = "#000000">Fecha</font></td>
 					            <td width="35%" style="font-weight:bold;"><font color = "#000000">Monto</font></td>
+					            <td width="35%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></td>
 					        </tr>
 					     <!--   <tr style="visibility:hidden; height: 0px;">
 					        </tr> -->
@@ -177,53 +131,13 @@
 				</div>
 			</div>
 
-			<!-- ****** COMIENZO VENTANA MODAL FACTURA ****** -->
+			<!-- ****** COMIENZO VENTANA MODAL FACTURA ************************** -->
+			
 			<div class="modal fade" id="modal_factura" tabindex="-1"  role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-					 	<div class="modal-header">
-					    	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					    	<h4 class="modal-title"><font color = "green">Seleccione la factura</font></h4>
-					  	</div>
-
-					  	<div class="modal-body">					      
-							<div class="table-responsive">
-						
-								<table class="table table-bordered table-hover table-condensed table-responsive" id="facturaTblModal">
-								    <thead>
-								        <tr class="success">
-								        	<th><font color = "#000000">Nro. factura</font></th>
-								            <th><font color = "#000000">Cliente nro.</font></th>
-								            <th><font color = "#000000">Nombre</font></th>
-								            <th><font color = "#000000">Fecha factura</font></th>
-								            <th><font color = "#000000">Monto original</font></th>
-								            <th><font color = "#000000">Monto adeudado</font></th>
-								            <th><font color = "#000000">Vencimiento</font></th>
-								        </tr>
-								    </thead>
-								    
-									<tbody>
-										<tr th:each="ccVar : ${cuentasCorrientes}">
-											<td th:text="${ccVar.nro_factura}"></td>
-											<td th:text="${ccVar.id}"></td>
-											<td th:text="${ccVar.nombre}"></td>
-											<td th:text="${#dates.format(ccVar.fecha_factura, 'dd/MM/yyyy')}"></td>
-											<td th:text="${ccVar.monto_original}"></td>
-											<td th:text="${ccVar.monto_adeudado}"></td>
-											<td th:text="${ccVar.fecha_vencimiento}"></td>
-										</tr>
-								    </tbody>
-								</table>
-							</div>
-					  	</div>
-
-					  	<div class="modal-footer">
-					    	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-					    	<button type="button" class="btn btn-primary">Seleccionar</button>
-					  	</div>
-					</div><!-- /.fin modal-content -->
-				</div><!-- /. fin modal-dialog -->
-			</div> <!-- ****** FIN VENTANA MODAL FACTURA ****** -->
+				<!-- ESTE CONTENIDO LO COMPLETARA AJAX -->
+			</div>
+			
+			<!-- ****** FIN VENTANA MODAL FACTURA ******************************* -->
 
 			<!-- *********************************************************************************** -->
 			<!-- *********************************************************************************** -->
@@ -250,7 +164,7 @@
 							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
 								<div class="input-group input-group-sm">
       								<span class="input-group-addon" id="basic-addon0">Importe</span>
-      								<input type="miTabPanelText" id="efectivoImporte" aria-describedby="basic-addon0">
+      								<input type="miTabPanelText" id="efectivoImporte" aria-describedby="basic-addon0" value="0">
    								</div>
    							</div>
 						</div>						
@@ -305,6 +219,7 @@
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Nro.</font></th>
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">CUIT</font></th>
 										            <th width="20%" style="font-weight:bold;"><font color = "#000000">Fecha</font></th>
+										            <th width="20%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>
 										        </tr>									
 										</table>
 										
@@ -433,7 +348,8 @@
 									<table class="table table-bordered" id="descuentoTableId">
 									        <tr class="success">
 									        	<th width="200%" style="font-weight:bold;"><font color = "#000000">Descripción</font></th>
-									            <th width="200%" style="font-weight:bold;"><font color = "#000000">Monto</font></th>            
+									            <th width="200%" style="font-weight:bold;"><font color = "#000000">Monto</font></th>
+									            <th width="200%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>           
 									        </tr>
 									</table>														
 								</div>
@@ -536,23 +452,8 @@
 			</div>			
 		</div> <!-- *** END RESUMEN Y BALANCE *** -->
 	</div> <!-- end contenido -->
+	<div th:include="layout :: footerFragment"></div>
 
-	<footer>
-		<div class="container-fluid">
-			<address>
-	            Ruka Painé S.r.l &middot; Av. Los Mayas, 253 &middot; 01714 Buenos Aires
-    	        <br />
-        	    Tel 035774 34711 &middot; Fax 03574 34712
-            </address>
-		</div>
-	</footer>
-
-	<script src="js/jquery.js"></script>
-	<script src="js/jquery-validate.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/bootstrap-datepicker.min.js"></script>
-	
-	<!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js"></script> -->
 </body>
 
 
@@ -562,10 +463,10 @@
 					<!-- ************************ COMIENZO VENTANA MODAL PARA EL MANEJO DE ERRORES ***************************-->
 					<div class="modal fade" id="modalMensajes" tabindex="-1"  role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true">
 						<div class="modal-dialog">
-							<div class="modal-content">
-							 	<div class="modal-header">
+							<div class="modal-content" style="background-color: #D8D8D8;">
+							 	<div class="modal-header" style="background-color: #585858">
 							    	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							    	<h4 class="modal-title"><font color = "green">Ruka Paine S.r.l</font></h4>
+							    	<h4 class="modal-title"><font color = "white">Ruka Paine S.r.l</font></h4>
 							  	</div>
 
 								<div class="modal-body">				
@@ -573,25 +474,27 @@
 										<br>
 										<br>
 										<!-- <label for="exampleInputEmail1"><h5 id="textModal"></h5></label> -->
-										<h5 id="textModal"></h5>
+										<h5 id="textModal" style="color: #610B21"></h5>
 										<br>
 										<br>
 									</div>
 								</div>
 
-								<div class="modal-footer">
+								<div class="modal-footer" style="background-color: #848484">
 								<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 								</div>
 							</div><!-- /.modal-content -->
 						</div><!-- /.modal-dialog -->
 					</div><!-- /.modal -->	
 	    			<!-- ********************************************** FIN VENTANA MODAL ************************************* -->
-	    		
-	    		
-	    		
+	    				
+<style> 
+#mnuIngresar{color:white;} 
+</style>
 
 <script type="text/javascript">
-
+	var errObject ='';
+	
 	$(document).ready(function(){	
 		$('#fechaRecibo').datepicker({
 			format: 'dd/mm/yyyy',
@@ -606,30 +509,24 @@
 		});
 		
 		
-		$("#facturaTblModal tr").click(function(){
-			var facturaSumaImportes = 0;
-			var tdArray = $(this).find("td");
+		$("#mostrar_mdl_factura").click(function(){
 			
-			var facturaNro = tdArray[0].innerHTML; //"123A"; //$(this).text();
-			var facturaFecha = tdArray[3].innerHTML;
-			var facturaMonto = tdArray[5].innerHTML;
+			var clienteNro = $("#clienteNro").val();
 			
-			var newRecord = '<tr><td class="idParaHidden">' + facturaNro + '</td>';
-			newRecord = newRecord + '<td>' + facturaFecha + '</td>';
-			newRecord = newRecord + '<td class="montoFac">' + facturaMonto + '</td>';
-			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
-			
-			$('#tblFactura tr:last').after(newRecord);
-		
- 			crearHiddenB('facturaNro', facturaNro, facturaNro);
- 			crearHiddenB('facturaFecha', facturaFecha, facturaNro);
- 			crearHiddenB('facturaMonto', facturaMonto, facturaNro);
- 						
- 			//sumo el monto de cada factura
- 			sumarMontos("#facturasMontoTotal", facturaMonto);
- 			calcularMontoTotalRecibo();
- 			//calcularImporte_Descuento();
- 			calcularBalance();
+			$.ajax({
+				url : '/listarCCByCustomer',
+				data : 'clienteNro=' + clienteNro,
+				type : 'GET',
+				dataType : 'html',
+				success : function(data) {
+					$('#modal_factura').html(data);
+					$("#modal_factura").modal();
+		 			//$("#modal_recibos").modal('toggle');
+				},
+				error : function() {
+					// Aqui código cuando servidor retorna error
+				},
+			});
 		});
 		
 		//BORRO LA FACTURA SELECCIONADA DE LA GRILLA
@@ -684,6 +581,8 @@
 		});
 		
 		$("#chequeBtnAgregarID").click(function() {
+			var idHiddenDate=new Date();
+			var idHiddenDate2 = idHiddenDate.getTime().toString();
 			
 			if(!validaIntegridad_DeCheque()){return;}
 			
@@ -695,20 +594,21 @@
 			
 			var newRecord = '<tr><td>' + $('#chequeBancoID option:selected').text() + '</td>';
 			newRecord = newRecord + '<td class="montoCheque">' + chequeImporteIdVar + '</td>';
-			newRecord = newRecord + '<td class="idParaHidden">' + chequeNroIdVar + '</td>';
+			newRecord = newRecord + '<td>' + chequeNroIdVar + '</td>';
 			newRecord = newRecord + '<td>' + chequeCuitIdVar + '</td>';
-			newRecord = newRecord + '<td>' + chequeFechaIdVar + '</td>';  //</tr>';
+			newRecord = newRecord + '<td>' + chequeFechaIdVar + '</td>';
+			newRecord = newRecord + '<td class="idParaHidden" style="display: none;">' + idHiddenDate2 + '</td>';
 			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
 			
 			//Adicionar row
 			$('#tableChequeId tr:last').after(newRecord);
 			
 			//creo hidden y lo adiciono al form
- 			crearHiddenB('chequeNro', chequeNroIdVar, chequeNroIdVar);
-			crearHiddenB('chequeBanco', chequeBancoIDVar, chequeNroIdVar);
-			crearHiddenB('chequeImporte', chequeImporteIdVar, chequeNroIdVar);
- 			crearHiddenB('chequeCuit', chequeCuitIdVar, chequeNroIdVar);
- 			crearHiddenB('chequeFechaDeposito', chequeFechaIdVar, chequeNroIdVar);
+ 			crearHiddenB('chequeNro', chequeNroIdVar, idHiddenDate2);
+			crearHiddenB('chequeBanco', chequeBancoIDVar, idHiddenDate2);
+			crearHiddenB('chequeImporte', chequeImporteIdVar, idHiddenDate2);
+ 			crearHiddenB('chequeCuit', chequeCuitIdVar, idHiddenDate2);
+ 			crearHiddenB('chequeFechaDeposito', chequeFechaIdVar, idHiddenDate2);
  			
  			//sumo el monto de cada cada cheque agregado
  			sumarMontos("#chequeMontoTotalId", chequeImporteIdVar)
@@ -719,6 +619,8 @@
 		});
 		
 		$('#descuentoBtnAgregarId').click(function(){
+			var idHiddenDate=new Date();
+			var idHiddenDate2 = idHiddenDate.getTime().toString();
 			
 			if($('#facturasMontoTotal').val() == ''){
 				alert("Antes de ingresar un descuento, debe seleccionar la factura.");
@@ -731,14 +633,15 @@
 			var descuentoPorcentajeVar = $('#descuentoPorcentajeId').val();
 			var descuentoDescripcionVar = $('#descuentoDescripcionId').val();
 			
-			var newRecord = '<tr><td class="porcentajeDescuento">' + descuentoPorcentajeVar + '</td>';
-			newRecord = newRecord + '<td class="idParaHidden">' + descuentoDescripcionVar + '</td>'; //</tr>';
+			var newRecord = '<tr><td>' + descuentoDescripcionVar + '</td>';
+			newRecord = newRecord + '<td class="porcentajeDescuento">' + descuentoPorcentajeVar + '</td>';
+			newRecord = newRecord + '<td class="idParaHidden" style="display: none;">' + idHiddenDate2 + '</td>';
 			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
 			
 			$('#descuentoTableId tr:last').after(newRecord);
 			
-			crearHiddenB('descuentoPorcentaje', descuentoPorcentajeVar, descuentoDescripcionVar);
-			crearHiddenB('descuentoDescripcion', descuentoDescripcionVar, descuentoDescripcionVar);
+			crearHiddenB('descuentoPorcentaje', descuentoPorcentajeVar, idHiddenDate2);
+			crearHiddenB('descuentoDescripcion', descuentoDescripcionVar, idHiddenDate2);
 			
  			//sumo el porcentaje de cada descuento
  			//sumarMontos("#reciboTotalDescuento", descuentoPorcentajeVar); lo saque el 19/04
@@ -757,8 +660,9 @@
 			
 			//if($('#balance').val() != '0' && $('#balance').val() != '0.00'){
 			if(parseFloat($('#balance').val()) > 0){
-				alert('El balance del recibo debe ser cero ó menor para poder procesar el mismo.');
-				$('#balance').focus();
+				document.getElementById('textModal').innerHTML = '- El balance del recibo debe ser cero ó menor para poder procesar el mismo.';
+				errObject = '#balance';
+				$('#modalMensajes').modal();
 				return;
 			}
 			
@@ -801,7 +705,9 @@
 			crearHidden('reciboFechaProceso', reciboFechaProceso);
 			crearHidden('reciboTotalDescuento', reciboTotalDescuento);
 			
-			crearHidden('efectivoImporte', efectivoImporte);
+			if(efectivoImporte > 0){
+				crearHidden('efectivoImporte', efectivoImporte);
+			}
 			
 			if(retencionNumero != ''){
 				crearHidden('retencionNumero', retencionNumero);
@@ -827,7 +733,9 @@
 			calcularBalance();		
 		});		
 		
-		/*$('#reciboFormId').validate({
+		//************************************************************************************
+		//************************************************************** BEGIN validacion jquery
+		$('#reciboFormId').validate({
 			rules: {
 					nroRecibo: {
 						required: true,
@@ -842,8 +750,9 @@
 						number: "Solo numeros"
 				 	}
 			}
-		}); */
-		
+		}); 
+		//************************************************************** END validacion jquery
+		//************************************************************************************		
 	}); //END ready(function()
 	
 	
@@ -876,44 +785,48 @@
 		$('#reciboFormId').append(tempHidden);
 	};
 	
+	//**** este evento se ejecuta automaticamente cuando se cierra la vtna modal *****
+	$('#modalMensajes').on('hidden.bs.modal', function (e) {
+		$(errObject).focus();
+	});
+	
 	function validaIntegridadDeDatos(){
-		
-		/*if($('#nroRecibo').val() == ''){
+				
+		if($('#nroRecibo').val() == ''|| $('#nroRecibo').val() == null){
 			document.getElementById('textModal').innerHTML = '- Ingrese el Nº de Recibo.';
 			$('#modalMensajes').modal();
-			return '#nroRecibo';
-		}*/
+			errObject = '#nroRecibo';
+			return false;
+		}
 		
-		if($('#nroRecibo').val() == ''){
-			document.getElementById('textModal').innerHTML = '- Ingrese el Nº de Recibo.';
-			$('#modalMensajes').modal();
-			$('#nroRecibo').focus();
+		if(isNaN($('#nroRecibo').val())){
+			document.getElementById('textModal').innerHTML = '- El Nº de Recibo debe ser numérico.';
+			errObject = '#nroRecibo';
+			$('#modalMensajes').modal();			
 			return false;
 		}
 		
 		if($('#fechaRecibo').val() == ''){
-			alert("Ingrese la fecha del Recibo.");
-			$('#fechaRecibo').focus();
+			document.getElementById('textModal').innerHTML = '- Ingrese la fecha del Recibo.';
+			errObject = '#fechaRecibo';
+			$('#modalMensajes').modal();			
 			return false;
 		}
 		
 		if($("#clienteNro").val() == ''){
-			alert("Seleccione un cliente.");
 			$("#modal_cliente").modal();
-			$('#clienteNro').focus();
 			return false;
 		}
 		
 		if($("#facturasMontoTotal").val() == ''){
-			alert("Debe seleccionar al menos una factura.");
 			$("#modal_factura").modal();
-			$('#facturasMontoTotal').focus();
 			return false;
 		}
 		
-		if($('#retencionNumero').val() == '' && $('#efectivoImporte').val() == '' && $('#chequeMontoTotalId').val() == '' && $('#depositoMontoTotal').val() == ''){
-			alert("Debe ingresar al menos un tipo de pago.");
-			$('#retencionNumero').focus();
+		//if($('#retencionNumero').val() == '' && $('#efectivoImporte').val() == 0 && $('#chequeMontoTotalId').val() == '' && $('#depositoMontoTotal').val() == ''){
+		if(($('#retencionNumero').val() == '' || $('#retencionNumero').val() == 0) && ($('#efectivoImporte').val() == 0 || $('#efectivoImporte').val() == '') && ($('#chequeMontoTotalId').val() == '' || $('#chequeMontoTotalId').val() == 0.00) && ($('#depositoMontoTotal').val() == '' || $('#depositoMontoTotal').val() == 0.00)){					
+			document.getElementById('textModal').innerHTML = '- Debe ingresar al menos un tipo de pago.';
+			$('#modalMensajes').modal();
 			return false;
 		}
 
@@ -923,32 +836,50 @@
 	function validaIntegridad_DeCheque(){
 		
 		if($('#chequeBancoID').val() == '-------'){
-			alert("Seleccione el banco.");
-			$('#chequeBancoID').focus();
+			document.getElementById('textModal').innerHTML = '- Seleccione el banco.';
+			errObject = '#chequeBancoID';
+			$('#modalMensajes').modal();
 			return false;
 		}
 		
 		if($('#chequeNroId').val() == ''){
-			alert("Ingrese el número de Cheque.");
-			$('#chequeNroId').focus();
+			document.getElementById('textModal').innerHTML = '- Ingrese el número de Cheque.';
+			errObject = '#chequeNroId';
+			$('#modalMensajes').modal();
+			return false;
+		}
+		if(isNaN($('#chequeNroId').val())){
+			document.getElementById('textModal').innerHTML = '- El nro. de cheque debe ser numérico.';
+			errObject = '#chequeNroId';
+			$('#modalMensajes').modal();			
 			return false;
 		}
 		
+		
 		if($('#chequeImporte').val() == ''){
-			alert("Ingrese el monto del cheque.");
-			$('#chequeImporte').focus();
+			document.getElementById('textModal').innerHTML = '- Ingrese el importe del cheque.';
+			errObject = '#chequeImporte';
+			$('#modalMensajes').modal();
+			return false;
+		}	
+		if(isNaN($('#chequeImporte').val())){
+			document.getElementById('textModal').innerHTML = '- El importe del cheque debe ser numérico.';
+			errObject = '#chequeImporte';
+			$('#modalMensajes').modal();			
 			return false;
 		}
 		
 		if($('#chequeCuitId').val() == ''){
-			alert("Ingrese el Nº de CUIT.");
-			$('#chequeCuitId').focus();
+			document.getElementById('textModal').innerHTML = '- Ingrese el Nº de CUIT.';
+			errObject = '#chequeCuitId';
+			$('#modalMensajes').modal();
 			return false;
 		}
 		
 		if($('#chequeFechaId').val() == ''){
-			alert("Ingrese la fecha del Cheque.");
-			$('#chequeFechaId').focus();
+			document.getElementById('textModal').innerHTML = '- Ingrese la fecha del Cheque.';
+			errObject = '#chequeFechaId';
+			$('#modalMensajes').modal();
 			return false;
 		}
 		
@@ -958,20 +889,29 @@
 	function validaIntegridad_Deposito(){
 		
 		if($('#depositoBancoId').val() == '-------'){
-			alert("Seleccione el banco.");
-			$('#depositoBancoId').focus();
+			document.getElementById('textModal').innerHTML = '- Seleccione el banco.';
+			errObject = '#depositoBancoId';
+			$('#modalMensajes').modal();
 			return false;
 		}
 		
 		if($('#depositoImporteId').val() == ''){
-			alert("Indique el importe del deposito.");
-			$('#depositoImporteId').focus();
+			document.getElementById('textModal').innerHTML = '- Indique el importe del deposito.';
+			errObject = '#depositoImporteId';
+			$('#modalMensajes').modal();
+			return false;
+		}
+		if(isNaN($('#depositoImporteId').val())){
+			document.getElementById('textModal').innerHTML = '- El importe del deposito debe ser numérico.';
+			errObject = '#depositoImporteId';
+			$('#modalMensajes').modal();			
 			return false;
 		}
 		
 		if($('#depositoFechaId').val() == ''){
-			alert("Indique la fecha del deposito.");
-			$('#depositoFechaId').focus();
+			document.getElementById('textModal').innerHTML = '- Indique la fecha del deposito.';
+			errObject = '#depositoFechaId';
+			$('#modalMensajes').modal();
 			return false;
 		}		
 		
@@ -979,19 +919,26 @@
 	};
 	
 	function validaIntegridad_Descuento(){
+		if($('#descuentoDescripcionId').val() == ''){
+			document.getElementById('textModal').innerHTML = '- Indique la descripción del desuento.';
+			errObject = '#descuentoDescripcionId';
+			$('#modalMensajes').modal();
+			return false;
+		}	
 		
 		if($('#descuentoPorcentajeId').val() == ''){
-			alert("Indique el importe del descuento.");
-			$('#descuentoPorcentajeId').focus();
+			document.getElementById('textModal').innerHTML = '- Indique el monto del descuento.';
+			errObject = '#descuentoPorcentajeId';
+			$('#modalMensajes').modal();
 			return false;
 		}
-		
-		if($('#descuentoDescripcionId').val() == ''){
-			alert("Indique la descripción del desuento.");
-			$('#descuentoDescripcionId').focus();
+		if(isNaN($('#descuentoPorcentajeId').val())){
+			document.getElementById('textModal').innerHTML = '- El monto del descuento debe ser numérico.';
+			errObject = '#descuentoPorcentajeId';
+			$('#modalMensajes').modal();			
 			return false;
-		}		
-		
+		}
+				
 		return true;
 	};
 	

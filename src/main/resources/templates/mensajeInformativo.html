@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      
+<head th:include="layout :: headerFragment"></head>
+
+<body>
+
+	<div th:include="layout :: menuFragment"></div>
+	
+	<div class="row" id="successMessage">
+		<div class="col-md-2"></div>
+		<div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success col-md-8" role="alert"></div>
+		<div class="col-md-2"></div>
+	</div>
+
+	<div class="row" id="errorMessage">
+		<div class="col-md-2"></div>
+		<div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger col-md-8" role="alert"></div>
+		<div class="col-md-2"></div>
+	</div>	
+
+	<div th:include="layout :: footerFragment"></div>
+
+</body>
+
+
+<script type="text/javascript">
+	
+	$(document).ready(function(){	
+		// script here
+	});
+	
+</script>
+
+</html>

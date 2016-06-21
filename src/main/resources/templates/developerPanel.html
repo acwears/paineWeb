@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:include="layout :: headerFragment"></head>
+
+<body>
+
+	<div th:include="layout :: menuFragment"></div>
+
+	<div class="row" id="successMessage">
+		<div class="col-md-2"></div>
+		<div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success col-md-8" role="alert"></div>
+		<div class="col-md-2"></div>
+	</div>
+
+	<div class="row" id="errorMessage">
+		<div class="col-md-2"></div>
+		<div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger col-md-8" role="alert"></div>
+		<div class="col-md-2"></div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-1"></div>
+
+		<div class="col-md-10">
+			<div class="panel panel-default">
+				<!-- Default panel contents -->
+				<div class="panel-heading">Usuários Painé</div>
+
+				<!-- Table -->
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>First Name</th>
+							<th>Username</th>
+							<th>Role</th>
+							<th><a th:href="@{/cosmos00/controlPanel/nuevo}" class="btn btn-default">Nuevo Usuário</a></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="usuario : ${usuarios}">
+							<td th:text="${usuario.nombre}"></td>
+							<td th:text="${usuario.email}"></td>
+							<td th:text="${usuario.role}"></td>
+							<td><a th:href="@{/cosmos00/controlPanel/actualizar/} + ${usuario.id}">Actualizar</a></td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="col-md-1"></div>
+
+	</div>
+
+	<div th:include="layout :: footerFragment"></div>
+
+</body>
+
+<script type="text/javascript">
+
+$(document).ready(function (){
+	$("#successMessage").fadeOut(10000);
+	$("#errorMessage").fadeOut(10000);
+});
+	
+</script>
+
+</html>

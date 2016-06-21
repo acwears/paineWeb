@@ -1,15 +1,9 @@
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>	
-	<meta charset="UTF-8">
-	<title>Paine s.a.</title>
-	<meta name="viewport" content="whidt=device-width, user-scalable=no, initial-scale=1.0, maximun-scale=1.0, minimun-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="css/estilos.css">
-</head>
+      
+<head th:include="layout :: headerFragment"></head>
 
 <body>
 <!-- <div id="wrapper"> -->
@@ -33,7 +27,7 @@
 
 	<div class="container">
 		<div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
-			<div th:if="${param.error}">Invalid username or password.</div>
+			<div class="alert alert-danger" role="alert" th:if="${param.error}">Usuário invalido o password inválido</div>
 		</div>
 	</div>
 
@@ -56,18 +50,10 @@
 		</section>
 	</div>
 
-	<footer>
-		<div class="container">
-			<address>
-	            Ruka Painé S.r.l &middot; Av. Los Mayas, 253 &middot; 01714 Buenos Aires
-    	        <br />
-        	    Tel 035774 34711 &middot; Fax 03574 34712
-            </address>
-		</div>
-	</footer>
-<!--</div> FIN WRAPPER -->
-	<script src="js/jquery.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<div th:include="layout :: footerFragment"></div>
+
+	<!--</div> FIN WRAPPER -->
+	
 </body>
 
 </html>

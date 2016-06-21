@@ -1,52 +1,13 @@
-<html xmlns:th="http://www.thymeleaf.org">
-
-<head>	
-	<meta charset="UTF-8">
-	<title>Paine s.a.</title>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
-	<link rel="stylesheet" type="text/css" th:href="@{/css/estilos.css}">
-</head>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      
+<head th:include="layout :: headerFragment"></head>
 
 <body>
-<!-- <div id="wrapper"> -->
-	<header>
-		<div class="container-fluid" id="cabecera">
-			<div class="row">
-				<!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<h1>Ruka Painé S.r.l</h1>
-				</div>-->
 
-				<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11" id="idLineaLogueoBienvenida">
-					<h5 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h5>
-				</div>
-
-				<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1" id="idLineaLogueoSalir">
-					<a th:href="@{/logout}">Salir</a>
-				</div>
-				
-			</div>
-		</div>
-	</header>
-
-	<nav class="navbar navbar-default navColor" id="nav">
-	  <div class="container-fluid">
-	  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-	  		<a class="navbar-brand" href="greeting"><font color="#COLORENHEXA">Home</font></a>
-	  	</div>
-	  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-	  		<a class="navbar-brand" href="ingresar1">Ingresar</a>
-	  	</div>
-	  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-	  		<a class="navbar-brand" href="reciboVer">Ver</a>
-	  	</div>
-	  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-	  		<a class="navbar-brand" href="modificar">Modificar</a>
-	  	</div>
-	  	<div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-		  	<a class="navbar-brand" href="controlPanel">Panel de control</a>
-		</div>
-	  </div>
-	</nav>
+	<div th:include="layout :: menuFragment"></div>
 
 	<div class="container" id="contenido">
 		<div class="row"><!-- COMIENZO recibo, fecha y datos cliente -->
@@ -70,18 +31,12 @@
 		</div>
 	</div>
 
-	<footer>
-		<div class="container">
-			<address>
-	            Ruka Painé S.r.l &middot; Av. Los Mayas, 253 &middot; 01714 Buenos Aires
-    	        <br />
-        	    Tel 035774 34711 &middot; Fax 03574 34712
-            </address>
-		</div>
-	</footer>
-<!--</div>--> <!-- FIN WRAPPER -->
-	<script src="js/jquery.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<div th:include="layout :: footerFragment"></div>
+
 </body>
+
+<style> 
+#mnuHome{color:white;} 
+</style> 
 
 </html>

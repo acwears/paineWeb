@@ -1,204 +1,148 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>	
-	<meta charset="UTF-8">
-	<title>Ruka Painé S.r.l</title>
-	<meta name="viewport" content="whidt=device-width, user-scalable=no, initial-scale=1.0, maximun-scale=1.0, minimun-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="css/estilosControlPanel.css">
-	<link rel="stylesheet" type="text/css" href="css/bootstrap-datepicker.min.css">
-</head>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:include="layout :: headerFragment"></head>
 
 <body>
-	<header>
-		<div class="container-fluid">
-			<div class="row">
-				<!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<h1>Ruka Painé S.r.l</h1>
-				</div> -->
 
-				<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11" id="idLineaLogueoBienvenida">
-					<h5>Bienvenido: Mariano Bertran</h5>
-				</div>
+	<div th:include="layout :: menuFragment"></div>
 
-				<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1" id="idLineaLogueoSalir">
-					<button class="btn btn-link" id="idLogout">Salir</button>
-				</div>
-			</div>
-		</div>
-	</header>
-
-
-	<nav class="navbar navbar-default navColor" id="nav">
-		<div class="container-fluid">
-		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-		  		<a class="navbar-brand" href="greeting">Home</a>
-		  	</div>
-
-		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-		  		<a class="navbar-brand" href="ingresar1">Ingresar</a>
-		  	</div>
-
-		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-		  		<a class="navbar-brand" href="reciboVer">Ver</a>
-		  	</div>
-
-		  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-		  		<a class="navbar-brand" href="modificar">Modificar</a>
-		  	</div>
-		  	
-		  	<div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-		  		<a class="navbar-brand" href="controlPanel"><font color="#COLORENHEXA">Panel de control</font></a>
-		  	</div>
-		</div>
-	</nav>
-		
-	<!-- ***************************************************************************************************** -->
-	<!-- ***************************************************************************************************** -->
-	<!-- ***************************************************************************************************** -->
-	<!-- ***************************************************************************************************** -->
-	<!-- ************************************ COMIENZO contenido ********************************************* -->
 	<div class="container-fluid" id="contenido">
-		<div class="tab-content">
-		<div class="tab-pane active" id="test">
-			<div class="row">
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		        	<span class="input-group-addon" id="basic-addon1">Perfil</span>
-		        </div>
-		        
-		        <div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		        	<span class="input-group-addon" id="basic-addon0">Codigo</span>
-		        </div>
-		        
-		        <div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		        	<span class="input-group-addon" id="basic-addon3">Apellido</span>
-		        </div>
-		        
-		        <div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		        	<span class="input-group-addon" id="basic-addon4">Nombre</span>
-		        </div>
-		        
-		        <div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		        	<span class="input-group-addon" id="basic-addon5">Usuario</span>
-		        </div>
-		        
-		        <div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		        	<span class="input-group-addon" id="basic-addon6">Contraseña</span>
-		        </div>
-			</div>
-			<div class="row" id="idListadoUsuarios">
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-					<select class="form-control" id="cmbPerfil" aria-describedby="basic-addon1">
-			        	<option th:text="-------"></option>
-			        	<option th:each="usuarioVar : ${usuarios}" th:text="${usuarioVar.role}" th:value="${usuarioVar.id}"></option>
-			        </select>
-				</div>
-				
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" id="idDiv">												
-					<input type="miTabPanelText3" id="txtCodigo" aria-describedby="basic-addon0">
-				</div>				
-				
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">												
-					<input type="miTabPanelText3" id="txtApellido" aria-describedby="basic-addon3">
-				</div>
-				
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">								
-					<input type="miTabPanelText3" id="txtNombre" aria-describedby="basic-addon4">
-				</div>
-				
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-					<input type="miTabPanelText3" id="txtUsuario" aria-describedby="basic-addon5">
-				</div>
-				
-				<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-					<input type="miTabPanelText3" id="txtPwd" aria-describedby="basic-addon6">
-				</div>
-				
-				
-								<div class="row">
-					<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
-						<input class="btn btn-primary btn-lg" type="button" value="Guardar recibo" id="idPrueba">								
-	    			</div>
-				</div>
-				
-				
-				
-			</div>
-			</div>
-			</div>
-			
-			
-			
-			
-			
-					
-		
-	</div> <!-- end contenido -->
 
-	<footer>
-		<div class="container-fluid">
-			<address>
-	            Ruka Painé S.r.l &middot; Av. Los Mayas, 253 &middot; 01714 Buenos Aires
-    	        <br />
-        	    Tel 035774 34711 &middot; Fax 03574 34712
-            </address>
+		<div class="row" id="successMessage">
+			<div class="col-md-2"></div>
+			<div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success col-md-8" role="alert"></div>
+			<div class="col-md-2"></div>
 		</div>
-	</footer>
 
-	<script src="js/jquery.js"></script>
-	<script src="js/jquery-validate.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/bootstrap-datepicker.min.js"></script>
-	
-	<!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js"></script> -->
+		<div class="row" id="errorMessage">
+			<div class="col-md-2"></div>
+			<div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger col-md-8" role="alert"></div>
+			<div class="col-md-2"></div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-1"></div>
+
+			<div class="col-md-10">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Usuários Painé</h3>
+					</div>
+					<div class="panel-body">
+						<!-- Table -->
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>First Name</th>
+									<th>Username</th>
+									<th>Role</th>
+									<th><a th:href="@{/controlPanel/nuevo}" class="btn btn-default">Nuevo Usuário</a></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="usuario : ${usuarios}">
+									<td th:text="${usuario.nombre}"></td>
+									<td th:text="${usuario.email}"></td>
+									<td th:text="${usuario.role}"></td>
+									<td><a th:href="@{/controlPanel/actualizar/} + ${usuario.id}">Actualizar</a></td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="col-md-1"></div>
+
+		</div>
+
+		<div class="row">
+			<div class="col-md-1"></div>
+
+			<div class="col-md-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Subir datos</h3>
+					</div>
+					<div class="panel-body">
+						<form class="form-inline">
+
+							<div class="alert alert-success" role="alert" style="display: none;">File uploaded!</div>
+							<div class="alert alert-danger" role="alert" style="display: none;">Error uploading file</div>
+														
+							<div class="form-group">             
+								<input id="fileupload" type="file" name="fileUpload">
+								<p class="help-block">Elegir el archivo a subir</p>
+							</div>
+
+							<div class="progress" style="display: none;">
+								<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+									<span class="sr-only">60% Complete</span>
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<div th:include="layout :: footerFragment"></div>
+
 </body>
 
+<style> 
+#mnuCP{color:white;} 
+</style> 
+
 <script type="text/javascript">
+	$(document).ready(function() {
+		$("#successMessage").fadeOut(10000);
+		$("#errorMessage").fadeOut(10000);
+	});
+</script>
 
-	$(document).ready(function(){	
-		
-		$("#idPrueba").click(function() {
-			var newRecord = '<div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">' + '<input type="miTabPanelText3">' + '</div>';
-			$('#test div:last').after(newRecord);
-			
-			
-			
-			var newdiv = document.createElement('div');
-			newdiv.innerHTML = "Entry " + (counter + 1) + " <br><input type='text' name='myInputs[]'>";
-	        document.getElementById('idDiv').appendChild(newdiv);
-			
-			
-			
-			/*while(i<10){
-	               $('#Postsoutput').prepend('<div id="first'+i+'">'+i+'</div>');
-	               $('#first'+i).hide(1000);
-	               $('#first'+i).show(1000);
-	                i++;
-	                }*/
-			
-			
-			
-			
-			
-			
-			//obj = $('idDiv').form;
-			// creo un elemento <input>
-			  //elem=document.createElement('input');
-
-			  // le pongo tipo
-			  //elem.type='text';
-			  
-			  //elem.name='prueba';
-			  
-			  // le pongo al campo el valor que tiene el control file
-			  //elem.value=$('idDiv').value;
-
-			  // le añado el control al formulario
-			  //obj.appendChild(elem);
-		});
-		
-	}
-	
+<script th:inline="javascript">
+$(function () {
+    $('#fileupload').fileupload({
+    	url: /*[[@{/controlPanel/upload}]]*/,
+        dataType: 'json',
+	    send: function (e, data) {
+			$('.progress').show();
+	    }, 
+	    progress: function (e, data) {
+	        var progress = parseInt(data.loaded / data.total * 100, 10);
+	        $('.progress-bar').css('width', progress + '%');
+	    }, 
+	    always: function (e, data) {
+	    	$('.progress').hide();
+			$('.progress-bar').css('width', '0%');
+	    }, 
+	    done: function (e, data) {
+	    	
+			if(data.result.state === 'ERROR') {
+		    	$('.alert.alert-danger').show();
+		    	$('.alert.alert-danger').fadeOut(5000);
+	    	} else if(data.result.state === 'SUCCESS') {
+		    	$('.alert.alert-success').show();
+		    	$('.alert.alert-success').fadeOut(5000);
+	    	}
+	    }, 
+	    fail: function (e, data) {
+	    	$('.alert.alert-danger').show();
+	    	$('.alert.alert-danger').fadeOut(5000);	    	
+	    }	    
+    });
+});
 </script>
 
 </html>

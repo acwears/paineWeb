@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:include="layout :: headerFragment"></head>
+
+<body>
+
+	<div th:include="layout :: menuFragment"></div>
+
+	<div class="row">
+		<div class="col-md-2"></div>
+
+		<div class="col-md-8">
+			<div class="panel panel-default">
+				<!-- Default panel contents -->
+				<div class="panel-heading">Actualizar Usuário</div>
+				<br>
+				
+				<form action="#" th:action="@{/controlPanel/salvar}" th:object="${usuarioDto}" method="post" class="form-horizontal">
+				
+					<input type="hidden" class="form-control" th:field="${usuarioDto.id}">				
+				
+					<div class="form-group">
+						<label for="inputNombreId" class="col-sm-2 control-label">Nombre</label>
+						<div class="col-sm-10">
+							<input id="inputNombreId" class="form-control" th:field="${usuarioDto.nombre}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputCodigoId" class="col-sm-2 control-label">Codigo</label>
+						<div class="col-sm-10">
+							<input id="inputCodigoId" class="form-control" th:field="${usuarioDto.codigo}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputEmailId" class="col-sm-2 control-label">email</label>
+						<div class="col-sm-10">
+							<input id="inputEmailId" class="form-control" th:field="${usuarioDto.email}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputRoleId" class="col-sm-2 control-label">Role</label>
+						<div class="col-sm-10">
+							<select id="inputRoleId" class="form-control" th:field="${usuarioDto.role}">
+				                <option th:each="roleVar: ${roles}" th:value="${roleVar}" th:text="${roleVar.descripcion}"></option>
+				            </select>							
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputPasswordId" class="col-sm-2 control-label">Password</label>
+						<div class="col-sm-10">
+							<input type="password" id="inputPasswordId" class="form-control" th:field="${usuarioDto.pwd}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputConfirmPasswordId" class="col-sm-2 control-label">Confirm Password</label>
+						<div class="col-sm-10">
+							<input type="password" id="inputConfirmPasswordId" class="form-control" th:field="${usuarioDto.pwdConfirmacion}">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="submit" class="btn btn-default">Salvar</button>
+							<a th:href="@{/controlPanel}" class="btn btn-default">Volver</a>
+						</div>
+					</div>
+				</form>
+
+
+			</div>
+		</div>
+
+		<div class="col-md-2"></div>
+
+	</div>
+
+	<div th:include="layout :: footerFragment"></div>
+
+</body>
+
+<script type="text/javascript">
+
+	
+</script>
+
+</html>

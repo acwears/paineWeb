@@ -2,11 +2,13 @@ package main.java.com.paine.core.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
+import main.java.com.paine.core.model.Recibo;
 import main.java.com.paine.core.model.TpDeposito;
 
 @Repository
@@ -62,5 +64,18 @@ public class TpDepositoRepository extends JDBCRepository{
 					return tpDepositos.size();
 				}
 		});
-	 }	
+	 }
+	 
+	 public void delete(int idReciboDelete){//(List<TpDeposito> tpDepositos, int idReciboDelete) {
+		 
+		  StringBuilder sb = new StringBuilder();
+		  
+		  sb.append(" DELETE ");
+		  sb.append(" FROM tp_deposito ");
+		  sb.append(" WHERE id_recibo = ? ");
+		  		  
+		  Object[] params = new Object[]{idReciboDelete};
+		  
+		  getJdbcTemplate().update(sb.toString(), params);
+	} 	 
 }

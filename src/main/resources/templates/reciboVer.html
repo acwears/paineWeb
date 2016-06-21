@@ -1,58 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>	
-	<meta charset="UTF-8">
-	<title>Ruka Painé S.r.l</title>
-	<meta name="viewport" content="whidt=device-width, user-scalable=no, initial-scale=1.0, maximun-scale=1.0, minimun-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="css/estilos.css">
-</head>
-
-<body>
-	<header>
-		<div class="container-fluid">
-			<div class="row">
-				<!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<h1>Ruka Painé S.r.l</h1>
-				</div>-->
-
-				<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11" id="idLineaLogueoBienvenida">
-					<h5>Bienvenido: Mariano Bertran</h5>
-				</div>
-
-				<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1" id="idLineaLogueoSalir">
-					<button class="btn btn-link" id="idLogout">Salir</button>
-				</div>
-			</div>
-		</div>
-	</header>
-
-
-	<nav class="navbar navbar-default navColor" id="nav">
-	  <div class="container-fluid">
-	  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-	  		<a class="navbar-brand" href="greeting">Home</a>
-	  	</div>
-
-	  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-	  		<a class="navbar-brand" href="ingresar1">Ingresar</a>
-	  	</div>
-
-	  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-	  		<a class="navbar-brand" href="reciboVer"><font color="#COLORENHEXA">Ver</font></a>
-	  	</div>
-
-	  	<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
-	  		<a class="navbar-brand" href="modificar">Modificar</a>
-	  	</div>
-	  	
-	  	<div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-	  		<a class="navbar-brand" href="controlPanel">Panel de control</a>
-	  	</div>	  	
-	  </div>
-	</nav>
-
-	<div class="container" id="contenido"> <!-- COMIENZO contenido -->
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      
+	<div class="container-fluid" id="contenido"> <!-- COMIENZO contenido -->
 		<div class="row"><!-- COMIENZO recibo, fecha y datos cliente -->
 			<div class="row">
 				<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
@@ -89,13 +40,14 @@
 		<div class="row">
 			<div class="row"> 
 	    		<div class="col-xs-12 col-sm-7 col-md-7 col-lg-6">
-					<div class="table-responsive">
-						<table class="table table-bordered" id="tblFactura">
+					 <div class="table-responsive"> 
+				<!--	<div class="panel panel-default"> -->
+						<table class="table table-bordered table-responsive" id="tblFacturaVer">
 						    <thead>
 						        <tr>
-						            <th><font color = "#000000">Factura nro.</font></th>
-						            <th><font color = "#000000">Fecha</font></th>
-						            <th><font color = "#000000">Monto</font></th>
+						            <th><font color = "white">Factura nro.</font></th>
+						            <th><font color = "white">Fecha</font></th>
+						            <th><font color = "white">Monto</font></th>
 						        </tr>
 						    </thead>
 						    
@@ -106,69 +58,45 @@
 									<td th:text="${facturaVar.fecha}"></td>
 									<td th:text="${facturaVar.monto}"></td>									
 								</tr>			
-						    </tbody>
+						    </tbody>			
 						</table>
 					</div>	    		
 				</div>
 				<div class="col-xs-12 col-sm-5 col-md-5 col-lg-6">		
 					<label for="exampleInputEmail1"><font color = "#610B0B">Monto total de facturas agregadas</font></label>
 					<input type="text" class="form-control" id="facturasMontoTotal" readonly="readonly" th:value="${recibo.importeSumaFacturas}">		
+					
+					<br/>
+					
+					
+					
+					<span class="subrayado"><h5>Observaciones</h5></span>
+					<textarea th:text="${recibo.observaciones}" class="form-control" rows="4" placeholder="" id="idObservaciones"></textarea>
+					
 				</div>
 			</div> 
 		</div> <!-- END datos FACTURA -->
-
-		<br>
-
-
-
+		<!--	<hr align="left" noshade="noshade" size="2" width="100%" />  -->
+		
+		
+		
+		
+		
 		<div class="row" id="tipoDePago"> <!-- *** COMIENZO TIPO DE PAGO *** -->
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<span class="subrayado"><h3><font color = "green">Tipo de pago:</font></h3></span>
-	    		</div>
-			</div>
-
-
-
-		    <!-- *** COMIENZO EFECTIVO *** -->
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<span class="subrayado"><h5>EFECTIVO</h5></span>
-				</div>
-			</div>
-    		<div class="row">
-				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="idEfectivo">
-					<label for="exampleInputEmail1" style="margin-left: 0px;"><font color = "green">Importe</font></label>
-					<input type="text" class="form-control" id="idEfectivoImporte" th:value="${recibo.getTpEff().monto}">
-					<br>
-				</div>
-			</div>
-			<hr align="left" noshade="noshade" size="2" width="100%" />
-			<!-- *** FIN EFECTIVO *** -->
-
-
-			<!-- **************************************************************************************** -->
-			<!-- **************************************************************************************** -->
-			<!-- **************************************************************************************** -->
-			<!-- ******************************************************************** COMIENZO CHEQUE *** -->
-
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<hr />
+			<div class="row"> <!-- START CHEQUE, DEPOSITO Y RETENCION -->
+				<!-- COMIENZO CHEQUE -->
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" id="idChequeListado">
 					<span class="subrayado"><h5>CHEQUE</h5></span>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="idChequeListado">
 					<div class="table-responsive">
-						<table class="table table-bordered" id="tableChequeId">
+						<table class="table table-bordered table-responsive" id="tableChequeVer">
 						    <thead>
 						        <tr>
-						            <th><font color = "#000000">Banco</font></th>
-						            <th><font color = "#000000">Importe</font></th>
-						            <th><font color = "#000000">Cheque nro.</font></th>
-						            <th><font color = "#000000">CUIT</font></th>
-						            <th><font color = "#000000">Fecha de deposito</font></th>
+						            <th><font color = "white">Banco</font></th>
+						            <th><font color = "white">Importe</font></th>
+						            <th><font color = "white">Cheque_#</font></th>
+						            <th><font color = "white">CUIT</font></th>
+						            <th><font color = "white">Fecha</font></th>
 						        </tr>
 						    </thead>
 						    
@@ -185,34 +113,18 @@
 					</div>
 					<label for="exampleInputEmail1">Monto total de cheques agregados</label>
 					<input type="text" class="form-control" id="chequeMontoTotalId" readonly="readonly" th:value="${sumaMontoCheques}">
-				</div>
-			</div>
-			<br>
-			<!-- </div> el de efectivo-->
-			<hr align="left" noshade="noshade" size="2" width="100%" />
-			<!-- *** FIN CHEQUE *** -->
-
-			<!-- ******************************************************************************************************* -->
-			<!-- ******************************************************************************************************* -->
-			<!-- ******************************************************************************************************* -->
-			<!-- ******************************************************************************************************* -->
-			<!-- ******************************************************************** COMIENZO DEPOSITO **************** -->
-			
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<span class="subrayado"><h5>DEPOSITO</h5></span>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="idChequeListado">					
+				</div> <!-- *** FIN CHEQUE *** -->
+				
+				<!-- COMIENZO DEPOSITO -->
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" id="idChequeListado">
+					<span class="subrayado"><h5>DEPOSITO</h5></span>					
 					<div class="table-responsive">
-						<table class="table table-bordered" id="tableDepositoID">
+						<table class="table table-bordered table-responsive" id="tableDepositoVer">
 						    <thead>
 						        <tr>
-						            <th><font color = "#000000">Banco</font></th>
-						            <th><font color = "#000000">Importe</font></th>
-						            <th><font color = "#000000">Fecha de depósito</font></th>
+						            <th><font color = "white">Banco</font></th>
+						            <th><font color = "white">Importe</font></th>
+						            <th><font color = "white">Fecha</font></th>
 						        </tr>
 						    </thead>
 							 	<tr th:each="depositoVar : ${recibo.getTpDepositos()}">
@@ -226,34 +138,19 @@
 					</div>
 					<label for="exampleInputEmail1">Monto total depósitos agregados</label>
 					<input type="text" class="form-control" id="depositoMontoTotal" readonly="readonly" th:value="${sumaMontoDepositos}">
-				</div>
-			</div>
-			<br>
-			<hr align="left" noshade="noshade" size="2" width="100%" />
-			<!-- *** FIN DEPOSITO *** -->
-
-			<!-- ******************************************************************************************************* -->
-			<!-- ******************************************************************************************************* -->
-			<!-- ******************************************************************************************************* -->
-			<!-- ******************************************************************************************************* -->
-			<!-- ******************************************************************** COMIENZO DEPOSITO **************** -->
-			
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<span class="subrayado"><h5>RETENCION</h5></span>
-				</div>
-			</div>						
-
-			<div class="row">			
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="idRetencionListado">					
+				</div> <!-- FIN DEPOSITO -->
+				
+				<!-- COMIENZO RETENCION -->
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" id="idRetencionListado">		
+					<span class="subrayado"><h5>RETENCION</h5></span>			
 					<div class="table-responsive">
-						<table class="table table-bordered" id="tableDepositoID">
+						<table class="table table-bordered table-responsive" id="tableRetencionVer">
 						    <thead>
 						        <tr>
-						            <th><font color = "#000000">Retención #</font></th>
-						            <th><font color = "#000000">Importe</font></th>
-						            <th><font color = "#000000">Sucursal</font></th>
-						            <th><font color = "#000000">Año</font></th>
+						            <th><font color = "white">Retención #</font></th>
+						            <th><font color = "white">Importe</font></th>
+						            <th><font color = "white">Sucursal</font></th>
+						            <th><font color = "white">Año</font></th>
 						        </tr>
 						    </thead>
 						 		<tr th:each="retencionVar : ${recibo.getTpRetenciones()}">
@@ -266,17 +163,23 @@
 						    </tbody>
 						</table>
 					</div>
-				</div>
-			</div>
-			<br>
-			<!-- *** FIN RETENCION *** -->
-		</div> <!-- *** END TIPO DE PAGO *** -->
+				</div> <!-- FIN RETENCION -->
+				
+			</div> <!-- FIN CHEQUE, DEPOSITO Y RETENCION -->
+		</div>
 
 		<div class="row"> <!-- *** comienzo descuento e importe total *** -->
-			<hr />
+			<br />
 			<hr align="left" noshade="noshade" size="2" width="100%" />
 
 			<div class="row">
+				<!-- *** COMIENZO EFECTIVO *** -->
+				<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+					<label for="exampleInputEmail1" style="margin-left: 0px;"><font color = "green">Efectivo</font></label>
+					<input type="text" class="form-control" id="idEfectivoImporte" th:value="${recibo.getTpEff().monto}">
+				</div>
+				<!-- *** FIN EFECTIVO *** -->
+					
 				<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
 					<label for="exampleInputEmail1"><font color = "green">Descuento</font></label>
 	    			<input type="text" class="form-control" id="idDescuento" th:value="${recibo.descuento}">
@@ -291,106 +194,7 @@
 					<br>
 	    		</div>
 			</div>
-
-	<!-- 		<div class="row">
-				<br>
-				<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
-					<input class="btn btn-primary btn-lg" type="button" value="Guardar recibo" id="idGuardarRecibo">
-					<br>
-					<br>
-	    		</div>
-			</div> -->
 		</div> <!-- *** END descuento e importe total *** -->
 	</div> <!-- end contenido -->
-
-	<footer>
-		<div class="container">
-			<address>
-	            Ruka Painé S.r.l &middot; Av. Los Mayas, 253 &middot; 01714 Buenos Aires
-    	        <br />
-        	    Tel 035774 34711 &middot; Fax 03574 34712
-            </address>
-		</div>
-	</footer>
-
-	<script src="js/jquery.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-</body>
-
-		<!-- ***********************************************************************************-->
-		<!-- ***********************************************************************************-->
-		<!-- ************************ COMIENZO VENTANA MODAL RECIBO ***************************-->
-				
-					<div class="modal fade" id="modal_recibos" tabindex="-1"  role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true">
-					  <div class="modal-dialog">
-					    <div class="modal-content">
-					     	<div class="modal-header">
-					        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					        	<h4 class="modal-title"><font color = "green">Seleccione el Recibo</font></h4>
-					      	</div>
-
-					      <div class="modal-body">
-					      	<div>
-								<span class="subrayado"><h3>Opciones de busqueda</h3></span>
-							</div>
-				
-					      	<div>
-								<label for="exampleInputEmail1"><h5>Recibo #</h5></label>
-	    						<input type="text" class="form-control" id="mdl_cte_busq_cte_nro">
-	    						
-	    						<label for="exampleInputEmail1"><h5>Cliente #</h5></label>
-	    						<input type="text" class="form-control" id="mdl_cte_busq_cte_nom">
-	    						<br>
-	    						<br>
-	    					</div>
-	    										        
-					        <table class="table table-bordered table-hover table-responsive" id="tableSelectCliente">
-							    <thead>
-							        <tr>
-							            <th><font color = "#000000">Recibo #</font></th>
-							            <th><font color = "#000000">Fecha</font></th>
-							            <th><font color = "#000000">Cliente #</font></th>
-							            <th><font color = "#000000">Nombre</font></th>
-							            <th><font color = "#000000">Importe total</font></th>
-							        </tr>
-							    </thead>
-							    
-								<tbody>
-									<tr th:each="recibosVarTodos : ${recibos}">
-								    <td th:text="${recibosVarTodos.id}" style="display: none;"></td>
-									<td th:text="${recibosVarTodos.numero}"></td>
-								    <td th:text="${recibosVarTodos.fecha}"></td>
-									<td th:text="${recibosVarTodos.getCliente().numeroCliente}"></td>
-									<td th:text="${recibosVarTodos.getCliente().nombre}"></td>
-									<td th:text="${recibosVarTodos.importeTotal}"></td>
-									</tr>
-							    </tbody>
-							</table>
-					      </div>
-
-					      <div class="modal-footer">
-					        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-					      </div>
-					    </div><!-- /.modal-content -->
-					  </div><!-- /.modal-dialog -->
-					</div><!-- /.modal -->	
-	    		<!-- ****** FIN VENTANA MODAL RECIBOS ****** -->
-
-
-<script type="text/javascript">
-	
-	$(document).ready(function(){
-		$("#modal_recibos").modal();
-
-		$("#tableSelectCliente tr").click(function(){
-			var tdArray = $(this).find("td");
-
-			var reciboId = tdArray[0].innerHTML;
-
-			$("#modal_recibos").modal('toggle');
-		});
-	});
-	
-</script>
 
 </html>
