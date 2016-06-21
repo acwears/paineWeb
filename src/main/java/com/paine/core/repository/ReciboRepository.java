@@ -341,6 +341,7 @@ public class ReciboRepository extends JDBCRepository {
 		 //parameters.put("id_usuario", recibo.getUsuarioCriador().getId());
 		 parameters.put("id_usuario", recibo.getUsuario().getId());
 		 parameters.put("fecha_proceso", new java.sql.Date(recibo.getFechaProceso().getTime()));
+		 parameters.put("exportado", "NO");
 		 
 		 SimpleJdbcInsert simpleJdbcInsert = getSimpleJdbcInsert();
 		 simpleJdbcInsert.withTableName("recibo");
