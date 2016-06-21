@@ -61,7 +61,7 @@ public class ModificarReciboController {
 			model.addAttribute("recibos", recibos);
 
 		} catch (Exception e) {
-			log.error("Error interno");
+			log.error("Error interno", e);
 			return "internalError";
 		}
 

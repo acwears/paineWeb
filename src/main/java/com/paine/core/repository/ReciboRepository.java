@@ -1,6 +1,5 @@
 package main.java.com.paine.core.repository;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -204,9 +203,9 @@ public class ReciboRepository extends JDBCRepository {
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append(" SELECT * FROM clientes  ");
-		sb.append(" inner join recibo on recibo.id_cliente = clientes.id ");
-		sb.append(" where recibo.id = ? ");
+		sb.append(" SELECT cl.* FROM clientes cl ");
+		sb.append(" inner join recibo re on re.id_cliente = cl.id ");
+		sb.append(" where re.id = ? ");
 		
 		Object[] params = new Object[]{id_cliente};
 		
@@ -214,7 +213,7 @@ public class ReciboRepository extends JDBCRepository {
 					
 			Cliente cliente = new Cliente();
 			
-			cliente.setId(rs.getInt("clientes.id"));
+			cliente.setId(rs.getInt("id"));
 			cliente.setNumeroCliente(rs.getInt("nro_cliente"));
 			cliente.setNombre(rs.getString("nombre"));
 			
@@ -356,14 +355,14 @@ public class ReciboRepository extends JDBCRepository {
 		public List<Recibo> listarRecibos() {
 
 			StringBuilder sb = new StringBuilder();
-			sb.append(" SELECT * FROM clientes  ");
-			sb.append(" inner join recibo on recibo.id_cliente = clientes.id ");
+			sb.append(" SELECT re.*, cl.id as clienteId, cl.nro_cliente, cl.nombre  FROM clientes cl ");
+			sb.append(" inner join recibo re on re.id_cliente = cl.id ");
 					
 			return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
 				
 				Recibo recibos = new Recibo();
 				
-				recibos.setId(rs.getInt("recibo.id"));
+				recibos.setId(rs.getInt("id"));
 				recibos.setNumero(rs.getInt("nro_recibo"));
 				recibos.setDescuento(rs.getDouble("descuento"));
 				recibos.setFecha(rs.getDate("fecha"));
@@ -374,7 +373,7 @@ public class ReciboRepository extends JDBCRepository {
 				recibos.setFechaProceso(rs.getDate("fecha_proceso"));
 				
 				Cliente cliente = new Cliente();
-				cliente.setId(rs.getInt("clientes.id"));
+				cliente.setId(rs.getInt("id"));
 				cliente.setNumeroCliente(rs.getInt("nro_cliente"));
 				cliente.setNombre(rs.getString("nombre"));
 				
