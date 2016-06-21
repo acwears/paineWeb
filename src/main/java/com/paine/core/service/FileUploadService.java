@@ -2,8 +2,6 @@ package main.java.com.paine.core.service;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
@@ -11,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import main.java.com.paine.core.model.Cliente;
 import main.java.com.paine.core.model.CuentaCorriente;
-import main.java.com.paine.core.repository.ClienteRepository;
 import main.java.com.paine.core.repository.CuentaCorrienteRepository;
 
 
@@ -28,9 +24,6 @@ import main.java.com.paine.core.repository.CuentaCorrienteRepository;
 public class FileUploadService {
 	@Autowired
 	private CuentaCorrienteRepository cuentaCorrienteRepository;
-	
-	@Autowired
-	private ClienteRepository clienteRepository;
 	
 	public void saveFile(MultipartFile fileUpload) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
