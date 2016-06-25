@@ -117,7 +117,7 @@ public class IngresarReciboController {
 	
 			
 			//List<CuentaCorriente> cuentasCorrientes = cuentaCorrienteService.find(Context.loggedUser().getCodigo());
-			List<CuentaCorriente> cuentasCorrientes = cuentaCorrienteRepository.cargarCCByCustomer(Context.loggedUser().getCodigo());
+			List<CuentaCorriente> cuentasCorrientes = cuentaCorrienteRepository.cargarCCByCustomer(clienteNro); //Context.loggedUser().getCodigo());
 			model.addAttribute("cuentasCorrientes", cuentasCorrientes);	
 
 			
@@ -209,20 +209,21 @@ public class IngresarReciboController {
 		// tpRetencionRepository.save(tpRetencion);
 
 		// Criar facturas
-		List<Factura> facturas = new ArrayList<>();
-		for (int i = 0; i < reciboDto.getFacturaNro().length; i++) {
-
-			Factura factura = new Factura();
-
-			factura.setRecibo(recibo);
-			factura.setMonto(reciboDto.getFacturaMonto()[i]);
-			factura.setNumero(reciboDto.getFacturaNro()[i]);
-			factura.setFecha(sdf.parse(reciboDto.getFacturaFecha()[i]));
-
-			facturas.add(factura);
+		if(ArrayUtils.isNotEmpty(reciboDto.getFacturaNro())){
+			List<Factura> facturas = new ArrayList<>();
+			for (int i = 0; i < reciboDto.getFacturaNro().length; i++) {
+	
+				Factura factura = new Factura();
+	
+				factura.setRecibo(recibo);
+				factura.setMonto(reciboDto.getFacturaMonto()[i]);
+				factura.setNumero(reciboDto.getFacturaNro()[i]);
+				factura.setFecha(sdf.parse(reciboDto.getFacturaFecha()[i]));
+	
+				facturas.add(factura);
+			}
+			recibo.setFacturas(facturas);
 		}
-		recibo.setFacturas(facturas);
-		
 		// Salvar facturas
 		// facturaRepository.save(facturas);
 

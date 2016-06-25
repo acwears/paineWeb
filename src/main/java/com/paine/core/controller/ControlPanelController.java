@@ -20,12 +20,13 @@ import org.springframework.web.servlet.ModelAndView;
 import main.java.com.paine.core.dto.view.UsuarioDto;
 import main.java.com.paine.core.model.Role;
 import main.java.com.paine.core.model.Usuario;
+import main.java.com.paine.core.repository.JDBCRepository;
 import main.java.com.paine.core.service.FileUploadService;
 import main.java.com.paine.core.service.UsuarioService;
 import main.java.com.paine.core.util.JsonMessageResult;
 
 @Controller
-public class ControlPanelController {
+public class ControlPanelController{
 	
 	public static final Log log = LogFactory.getLog(ControlPanelController.class);
 	

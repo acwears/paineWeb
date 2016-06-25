@@ -1,11 +1,14 @@
 package main.java.com.paine.core.service;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import main.java.com.paine.core.model.Cliente;
 import main.java.com.paine.core.model.CuentaCorriente;
+import main.java.com.paine.core.model.Recibo;
 import main.java.com.paine.core.repository.CuentaCorrienteRepository;
+import main.java.com.paine.core.repository.ReciboRepository;
 
 
 @Transactional
@@ -24,6 +29,9 @@ import main.java.com.paine.core.repository.CuentaCorrienteRepository;
 public class FileUploadService {
 	@Autowired
 	private CuentaCorrienteRepository cuentaCorrienteRepository;
+	
+	@Autowired
+	private ReciboRepository reciboRepository;
 	
 	public void saveFile(MultipartFile fileUpload) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -94,6 +102,28 @@ public class FileUploadService {
 	        File convFile = new File(multipart.getOriginalFilename());
 	        multipart.transferTo(convFile);
 	        return convFile;
+	}
+	
+	public void exportarRecibos(){
+		List<Recibo> recibos = reciboRepository.recibosParaExportar();
+		
+		String ruta = "C:\\Recibos_Paine\\recibos.txt";
+        File archivo = new File(ruta);
+        BufferedWriter bw;
+        try {
+        	int i=0;
+        	bw = new BufferedWriter(new FileWriter(archivo));
+        	Iterator<Recibo> iter = recibos.iterator();
+			
+			while (iter.hasNext() ) {
+				bw.write(recibos.get(i).getCliente().toString());
+				i++;
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

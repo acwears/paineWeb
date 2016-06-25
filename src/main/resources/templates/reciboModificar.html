@@ -792,6 +792,10 @@
 			var retencionSucursal = $('#retencionSucursal').val();
 			var retencionYear = $('#retencionYear').val();
 			
+			if($('#facturasMontoTotal').val() == 0.00 || $('#facturasMontoTotal').val() == '' || $('#facturasMontoTotal').val() == '0.00'){			
+				reciboImporteSumaFacturas = '0';
+ 			}
+			
 			//creo hidden y lo adiciono al form
 			/*console.log("A:"+reciboNumero);
 			console.log("B:"+reciboClienteId);
@@ -941,10 +945,10 @@
 			return false;
 		}
 		
-		if($("#facturasMontoTotal").val() == ''){
+		/*if($("#facturasMontoTotal").val() == ''){
 			$("#modal_factura").modal();
 			return false;
-		}
+		} no hace falta ingresar una factura*/
 		
 		if(($('#retencionNumero').val() == '' || $('#retencionNumero').val() == 0) && ($('#efectivoImporte').val() == 0 || $('#efectivoImporte').val() == '') && ($('#chequeMontoTotalId').val() == '' || $('#chequeMontoTotalId').val() == 0.00) && ($('#depositoMontoTotal').val() == '' || $('#depositoMontoTotal').val() == 0.00)){
 			document.getElementById('textModal').innerHTML = '- Debe ingresar al menos un tipo de pago.';
@@ -1104,6 +1108,10 @@
 		if($('#facturasMontoTotal').val() != '' && $('#facturasMontoTotal').val() != '0.00'){
 			//$('#balance').val(parseFloat($('#facturasMontoTotal').val()) - (parseFloat($('#montoTotalRecibo').val()) + parseFloat(importeTotalDescuento)));
 			monto = parseFloat($('#facturasMontoTotal').val()) - (parseFloat($('#montoTotalRecibo').val()) + parseFloat(importeTotalDescuento));
+			$('#balance').val(monto.toFixed(2));
+		}
+		else{
+			monto = (0 - parseFloat($('#montoTotalRecibo').val()) + parseFloat(importeTotalDescuento));
 			$('#balance').val(monto.toFixed(2));
 		}
 	}

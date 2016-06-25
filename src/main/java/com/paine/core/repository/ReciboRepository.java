@@ -325,7 +325,37 @@ public class ReciboRepository extends JDBCRepository {
 		  Object[] params = new Object[]{recibo.getNumero(), recibo.getCliente().getId(), recibo.getFecha(), recibo.getDescuento(), recibo.getImporteSumaFacturas(), recibo.getImporteTotal(), recibo.getObservaciones(), 26561556, recibo.getFechaProceso(), recibo.getId()};
 		  
 		  getJdbcTemplate().update(sb.toString(), params);
-		 } 	 
+	 }
+	 
+	 public List<Recibo> recibosParaExportar(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(" SELECT * FROM recibo ");
+		sb.append(" WHERE exportado = 'NO' ");
+				
+		return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
+			
+			Recibo recibos = new Recibo();
+			
+			recibos.setId(rs.getInt("id"));
+			recibos.setNumero(rs.getInt("nro_recibo"));
+			recibos.setDescuento(rs.getDouble("descuento"));
+			recibos.setFecha(rs.getDate("fecha"));
+			recibos.setFechaProceso(rs.getDate("fecha_proceso"));
+			recibos.setImporteSumaFacturas(rs.getDouble("importe_suma_facturas"));
+			recibos.setImporteTotal(rs.getDouble("importe_total"));
+			recibos.setObservaciones(rs.getString("observaciones"));
+			recibos.setFechaProceso(rs.getDate("fecha_proceso"));
+			
+			Cliente cliente = new Cliente();
+			cliente.setId(rs.getInt("id"));
+			cliente.setNumeroCliente(rs.getInt("nro_cliente"));
+			cliente.setNombre(rs.getString("nombre"));
+			
+			recibos.setCliente(cliente);
+			
+			return recibos;
+		});
+	}
 	 
 	 public void save(Recibo recibo) {
 		 
@@ -378,7 +408,7 @@ public class ReciboRepository extends JDBCRepository {
 				cliente.setNombre(rs.getString("nombre"));
 				
 				recibos.setCliente(cliente);
-				
+			
 				return recibos;
 			});
 			

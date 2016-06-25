@@ -214,20 +214,22 @@ public class ModificarReciboController {
 			recibo.setTpCheques(cheques);
 		}
 		// Criar facturas
-		List<Factura> facturas = new ArrayList<>();
-		for (int i = 0; i < reciboDto.getFacturaNro().length; i++) {
-
-			Factura factura = new Factura();
-
-			factura.setRecibo(recibo);
-			factura.setMonto(reciboDto.getFacturaMonto()[i]);
-			factura.setNumero(reciboDto.getFacturaNro()[i]);
-			factura.setFecha(sdf.parse(reciboDto.getFacturaFecha()[i]));
-
-			facturas.add(factura);
+		if (ArrayUtils.isNotEmpty(reciboDto.getFacturaNro())) {
+			List<Factura> facturas = new ArrayList<>();
+			for (int i = 0; i < reciboDto.getFacturaNro().length; i++) {
+	
+				Factura factura = new Factura();
+	
+				factura.setRecibo(recibo);
+				factura.setMonto(reciboDto.getFacturaMonto()[i]);
+				factura.setNumero(reciboDto.getFacturaNro()[i]);
+				factura.setFecha(sdf.parse(reciboDto.getFacturaFecha()[i]));
+	
+				facturas.add(factura);
+			}
+			recibo.setFacturas(facturas);
 		}
-		recibo.setFacturas(facturas);
-
+		
 		// Criar descuentos
 		if (ArrayUtils.isNotEmpty(reciboDto.getDescuentoPorcentaje())) {
 			List<Descuento> descuentos = new ArrayList<>();
