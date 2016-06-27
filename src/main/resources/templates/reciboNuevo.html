@@ -30,6 +30,7 @@
 					<span class="input-group-addon" id="basic-addon16">Fecha</span>
     				<input type="miTabPanelText2" class="form-control" id="fechaRecibo" aria-describedby="basic-addon16">
     			</div>
+    			<input type="miTabPanelText2" class="form-control" id="fechaActual" style="display: none;" readonly="readonly">
             </div>                                
 
     		<div class="col-xs-12 col-sm-6 col-md-2 col-lg-2 col-lg-offset-2">	    			
@@ -501,6 +502,13 @@
 			//inline: true,
             //sideBySide: true
 		});
+		$('#fechaActual').datepicker({
+			format: 'dd/mm/yyyy',
+			//inline: true,
+            //sideBySide: true
+		}).datepicker("setDate", new Date());		
+		
+		
 		$('#chequeFechaId').datepicker({
 			format: 'dd/mm/yyyy'
 		});
@@ -681,7 +689,7 @@
 			var reciboImporteTotal = $('#montoTotalRecibo').val();
 			var reciboObservaciones = $('#idObservaciones').val();
 			var reciboUsuario = $('#idObservaciones').val();
-			var reciboFechaProceso = $('#fechaRecibo').val(); //"23/12/2015"; //$('#idObservaciones').val();
+			var reciboFechaProceso = $('#fechaActual').val(); //$('#fechaRecibo').val(); //"23/12/2015"; //$('#idObservaciones').val();
 			var reciboTotalDescuento = $('#importeTotalDescuento').val(); // $('#reciboTotalDescuento').val();
 			
 			var efectivoImporte = $('#efectivoImporte').val();

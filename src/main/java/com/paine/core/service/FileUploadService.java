@@ -104,8 +104,8 @@ public class FileUploadService {
 	        return convFile;
 	}
 	
-	public void exportarRecibos(){
-		List<Recibo> recibos = reciboRepository.recibosParaExportar();
+	public void exportarRecibos(List<Recibo> recibos){
+		//List<Recibo> recibos = reciboRepository.recibosParaExportar();
 		
 		String ruta = "C:\\Recibos_Paine\\recibos.txt";
         File archivo = new File(ruta);

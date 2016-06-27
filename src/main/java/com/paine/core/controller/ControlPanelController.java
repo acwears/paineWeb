@@ -18,15 +18,19 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import main.java.com.paine.core.dto.view.UsuarioDto;
+import main.java.com.paine.core.model.Recibo;
 import main.java.com.paine.core.model.Role;
 import main.java.com.paine.core.model.Usuario;
 import main.java.com.paine.core.repository.JDBCRepository;
+import main.java.com.paine.core.repository.ReciboRepository;
 import main.java.com.paine.core.service.FileUploadService;
 import main.java.com.paine.core.service.UsuarioService;
 import main.java.com.paine.core.util.JsonMessageResult;
 
 @Controller
 public class ControlPanelController{
+	@Autowired
+	private ReciboRepository reciboRepository;
 	
 	public static final Log log = LogFactory.getLog(ControlPanelController.class);
 	
@@ -57,6 +61,17 @@ public class ControlPanelController{
 		return "salvarUsuario";
 	}
 
+	@Secured({ "ROLE_ADMIN" })
+	@RequestMapping("/controlPanel/exportarRecibos")
+	public String exportarRecibos(Model model) {
+		
+		List<Recibo> recibos = reciboRepository.recibosParaExportar();
+		fileUploadService.exportarRecibos(recibos);
+		reciboRepository.modifyExportados(recibos);
+		//model.addAttribute("roles", Role.values());
+		return "controlPanel";
+	}
+	
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping("/controlPanel/actualizar/{usuarioId}")
 	public String mostrarActualizar(@PathVariable Integer usuarioId, Model model) {

@@ -327,6 +327,18 @@ public class ReciboRepository extends JDBCRepository {
 		  getJdbcTemplate().update(sb.toString(), params);
 	 }
 	 
+	 public void modifyExportados(List<Recibo> recibo) {
+		 
+		  StringBuilder sb = new StringBuilder();
+		  sb.append(" UPDATE recibo ");
+		  sb.append(" SET exportado = ? ");
+		  sb.append(" WHERE id = ? ");
+		  
+		  Object[] params = new Object[]{"SI", recibo.get(0).getId()}; //esto esta mal
+		  
+		  getJdbcTemplate().update(sb.toString(), params);
+	 }
+	 
 	 public List<Recibo> recibosParaExportar(){
 		StringBuilder sb = new StringBuilder();
 		sb.append(" SELECT * FROM recibo ");
@@ -378,8 +390,7 @@ public class ReciboRepository extends JDBCRepository {
 		 Number reciboId = simpleJdbcInsert.executeAndReturnKey(parameters);
 		 
 		 recibo.setId(reciboId.intValue());
-	 }
-	 
+	 } 
 	 
 	 //LISTADO DE RECIBOS PARA SELECCIONAR EN EL MENU 'VER'
 		public List<Recibo> listarRecibos() {
