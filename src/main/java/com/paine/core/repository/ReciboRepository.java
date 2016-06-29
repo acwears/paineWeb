@@ -1,15 +1,19 @@
 package main.java.com.paine.core.repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import main.java.com.paine.core.model.Cliente;
+import main.java.com.paine.core.model.CuentaCorriente;
 import main.java.com.paine.core.model.Descuento;
 import main.java.com.paine.core.model.Factura;
 import main.java.com.paine.core.model.Recibo;
@@ -17,6 +21,7 @@ import main.java.com.paine.core.model.TpCheque;
 import main.java.com.paine.core.model.TpDeposito;
 import main.java.com.paine.core.model.TpEff;
 import main.java.com.paine.core.model.TpRetencion;
+import main.java.com.paine.core.util.Context;
 
 @Repository
 public class ReciboRepository extends JDBCRepository {
@@ -327,16 +332,33 @@ public class ReciboRepository extends JDBCRepository {
 		  getJdbcTemplate().update(sb.toString(), params);
 	 }
 	 
-	 public void modifyExportados(List<Recibo> recibo) {
+	 public void modifyExportados(List<Recibo> recibos) {
 		 
 		  StringBuilder sb = new StringBuilder();
 		  sb.append(" UPDATE recibo ");
-		  sb.append(" SET exportado = ? ");
+		  sb.append(" SET exportado = ?, ");
+		  sb.append(" usuario_exportador = ?, ");
+		  sb.append(" fecha_exportacion = ? ");
 		  sb.append(" WHERE id = ? ");
 		  
-		  Object[] params = new Object[]{"SI", recibo.get(0).getId()}; //esto esta mal
 		  
-		  getJdbcTemplate().update(sb.toString(), params);
+		 getJdbcTemplate().batchUpdate(sb.toString(), new BatchPreparedStatementSetter() {
+				
+				@Override
+				public void setValues(PreparedStatement ps, int index) throws SQLException {
+					
+					Recibo rbs = recibos.get(index);
+					
+					Object[] params = new Object[]{"SI", Context.loggedUser().getCodigo(), "aca va fecha actual", rbs.getId()};
+					  
+					getJdbcTemplate().update(sb.toString(), params);
+				}
+				
+				@Override
+				public int getBatchSize() {
+					return recibos.size();
+				}
+		 });
 	 }
 	 
 	 public List<Recibo> recibosParaExportar(){
