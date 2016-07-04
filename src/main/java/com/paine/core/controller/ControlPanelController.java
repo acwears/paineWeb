@@ -1,6 +1,10 @@
 package main.java.com.paine.core.controller;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -18,27 +22,23 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import main.java.com.paine.core.dto.view.UsuarioDto;
-import main.java.com.paine.core.model.Recibo;
 import main.java.com.paine.core.model.Role;
 import main.java.com.paine.core.model.Usuario;
-import main.java.com.paine.core.repository.JDBCRepository;
-import main.java.com.paine.core.repository.ReciboRepository;
-import main.java.com.paine.core.service.FileUploadService;
+import main.java.com.paine.core.service.FileService;
 import main.java.com.paine.core.service.UsuarioService;
+import main.java.com.paine.core.util.Context;
 import main.java.com.paine.core.util.JsonMessageResult;
 
 @Controller
-public class ControlPanelController{
-	@Autowired
-	private ReciboRepository reciboRepository;
-	
+public class ControlPanelController {
+
 	public static final Log log = LogFactory.getLog(ControlPanelController.class);
-	
+
 	@Autowired
 	private UsuarioService usuarioService;
-	
+
 	@Autowired
-	private FileUploadService fileUploadService;
+	private FileService fileService;
 
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping("/controlPanel")
@@ -60,18 +60,53 @@ public class ControlPanelController{
 		model.addAttribute("roles", Role.values());
 		return "salvarUsuario";
 	}
+	
+	@Secured({ "ROLE_ADMIN" })
+	@ResponseBody
+	@RequestMapping("/controlPanel/check/export")
+	public JsonMessageResult hayDatosParaExportar() {
+
+		if(fileService.hayDatosExportacion()) {
+			return JsonMessageResult.success();
+		}
+
+		return JsonMessageResult.error();
+	}	
 
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping("/controlPanel/exportarRecibos")
-	public String exportarRecibos(Model model) {
-		
-		List<Recibo> recibos = reciboRepository.recibosParaExportar();
-		fileUploadService.exportarRecibos(recibos);
-		reciboRepository.modifyExportados(recibos);
-		//model.addAttribute("roles", Role.values());
-		return "controlPanel";
+	public void exportarRecibos(HttpServletResponse response) {
+
+		ServletOutputStream out = null;
+
+		try {
+			
+			response.setContentType("text/plain");
+			response.setHeader("Content-Disposition", "attachment;filename=recibos.txt");
+			out = response.getOutputStream();
+			
+			List<String> datosReciboExportacion = fileService.exportarRecibos(Context.loggedUser());
+			for (String datosRecibo : datosReciboExportacion) {
+				out.println(datosRecibo);
+			}
+
+		} catch (IOException e) {
+
+			log.error("Error exportando los recibos", e);
+
+		} finally {
+
+			try {
+
+				out.flush();
+				out.close();
+
+			} catch (IOException e) {
+				log.error("Error cerrando output stream", e);
+			}
+		}
 	}
-	
+
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping("/controlPanel/actualizar/{usuarioId}")
 	public String mostrarActualizar(@PathVariable Integer usuarioId, Model model) {
@@ -95,9 +130,9 @@ public class ControlPanelController{
 				if (validate(usuarioDto) == false) {
 					return this.listado(null, "Todos los campos son obligatorios en la creación de nuevo usuário");
 				}
-				
+
 				Usuario existeUsuario = usuarioService.findByEmail(usuarioDto.getEmail());
-				if(existeUsuario != null) {
+				if (existeUsuario != null) {
 					return this.listado(null, "El usuário no fue creado porque ya existe!");
 				}
 
@@ -145,7 +180,7 @@ public class ControlPanelController{
 			return this.listado(null, "Error interno");
 		}
 	}
-	
+
 	@Secured({ "ROLE_ADMIN" })
 	@ResponseBody
 	@RequestMapping(value = "/controlPanel/upload")
@@ -154,7 +189,7 @@ public class ControlPanelController{
 		try {
 
 			log.info("Uploading file");
-			
+
 			if (fileUpload == null || fileUpload.isEmpty()) {
 				log.info("File contain is empty, uploading aborted");
 				return JsonMessageResult.error().result("FILE_EMPTY");
@@ -165,7 +200,7 @@ public class ControlPanelController{
 				return JsonMessageResult.error().result("INVALID_FILE_EXTENSION");
 			}
 
-			fileUploadService.saveFile(fileUpload);
+			fileService.saveFile(fileUpload);
 
 		} catch (Exception e) {
 			log.error("Error uploading profile picture");
@@ -173,8 +208,7 @@ public class ControlPanelController{
 		}
 
 		return JsonMessageResult.success();
-	}	
-	
+	}
 
 	private boolean validate(UsuarioDto usuarioDto) {
 

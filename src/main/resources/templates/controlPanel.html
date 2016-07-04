@@ -65,7 +65,7 @@
 		<div class="row">
 			<div class="col-md-1"></div>
 
-			<div class="col-md-4">
+			<div class="col-md-4" id="subir-datos-container">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title">Subir datos</h3>
@@ -77,9 +77,16 @@
 							<div class="alert alert-danger" role="alert" style="display: none;">Error uploading file</div>
 														
 							<div class="form-group">             
-								<input id="fileupload" type="file" name="fileUpload">
+								<label class="btn btn-default btn-file">
+								    Subir datos <input type="file" id="fileupload" name="fileUpload" style="display: none;">
+								</label>							
 								<p class="help-block">Elegir el archivo a subir</p>
 							</div>
+							
+<!-- 							<div class="form-group">              -->
+<!-- 								<input id="fileupload" type="file" name="fileUpload"> -->
+<!-- 								<p class="help-block">Elegir el archivo a subir</p> -->
+<!-- 							</div> -->
 
 							<div class="progress" style="display: none;">
 								<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
@@ -92,17 +99,25 @@
 				</div>
 			</div>
 
-			<div class="col-md-4">
+			<div class="col-md-4" id="export-container">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title">Exportar Recibos</h3>
 					</div>
 					<div class="panel-body">
-						<form class="form-inline">														
+						<form class="form-inline">
+						
+							<div class="alert alert-success" role="alert" style="display: none;">Datos exportados!</div>
+							<div class="alert alert-danger" role="alert" style="display: none;">No hay datos para exportar</div>
+																											
 							<div class="form-group">             
-								<input th:href="@{/controlPanel/exportarRecibos}" id="importReceipts" type="button" name="importReceipts" value="Exportar">								
-								<p class="help-block">.</p>
+								<button id="export-btn-id" class="btn btn-default">Exportar</button>
+								<p class="help-block">Click para inicial la exportación</p>
+								
+								<!-- Link oculto que hace el download. Es llamado cuando el AJAX responde con suceso -->
+								<a th:href="@{/controlPanel/exportarRecibos}" class="btn btn-default" id="export-link-id" style="display: none;"></a>							
 							</div>
+							
 						</form>
 					</div>
 				</div>
@@ -120,10 +135,34 @@
 #mnuCP{color:white;} 
 </style> 
 
-<script type="text/javascript">
+<script th:inline="javascript">
+
+	var executarExport = false;
+	
 	$(document).ready(function() {
+		
 		$("#successMessage").fadeOut(10000);
 		$("#errorMessage").fadeOut(10000);
+		
+		$('#export-btn-id').click(function(e) {
+			
+			e.preventDefault();
+			
+			$.ajax({
+				url : /*[[@{/controlPanel/check/export}]]*/,
+				type : 'GET',
+				dataType : 'json',
+				success : function(data) {
+					
+					if(data.state === 'SUCCESS') {
+						$('#export-link-id')[0].click();
+					} else {
+				    	$('#export-container .alert.alert-danger').show();
+				    	$('#export-container .alert.alert-danger').fadeOut(5000);
+					}
+				}
+			});
+		});
 	});
 </script>
 
@@ -146,16 +185,16 @@ $(function () {
 	    done: function (e, data) {
 	    	
 			if(data.result.state === 'ERROR') {
-		    	$('.alert.alert-danger').show();
-		    	$('.alert.alert-danger').fadeOut(5000);
+		    	$('#subir-datos-container .alert.alert-danger').show();
+		    	$('#subir-datos-container .alert.alert-danger').fadeOut(5000);
 	    	} else if(data.result.state === 'SUCCESS') {
-		    	$('.alert.alert-success').show();
-		    	$('.alert.alert-success').fadeOut(5000);
+		    	$('#subir-datos-container .alert.alert-success').show();
+		    	$('#subir-datos-container .alert.alert-success').fadeOut(5000);
 	    	}
 	    }, 
 	    fail: function (e, data) {
-	    	$('.alert.alert-danger').show();
-	    	$('.alert.alert-danger').fadeOut(5000);	    	
+	    	$('#subir-datos-container .alert.alert-danger').show();
+	    	$('#subir-datos-container .alert.alert-danger').fadeOut(5000);	    	
 	    }	    
     });
 });

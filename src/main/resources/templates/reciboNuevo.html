@@ -24,7 +24,7 @@
     				<input type="miTabPanelText2" class="form-control" id="nroRecibo" name="nroRecibo" aria-describedby="basic-addon15">
     			</div>
     		</div>
-
+    		
     		<div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
     			<div class="input-group input-group-sm">
 					<span class="input-group-addon" id="basic-addon16">Fecha</span>
@@ -495,29 +495,35 @@
 
 <script type="text/javascript">
 	var errObject ='';
+	var ajaxExecuted;
 	
 	$(document).ready(function(){	
+		
 		$('#fechaRecibo').datepicker({
-			format: 'dd/mm/yyyy',
-			//inline: true,
-            //sideBySide: true
+			format: 'dd/mm/yyyy'
 		});
+		
 		$('#fechaActual').datepicker({
-			format: 'dd/mm/yyyy',
-			//inline: true,
-            //sideBySide: true
+			format: 'dd/mm/yyyy'
 		}).datepicker("setDate", new Date());		
 		
 		
 		$('#chequeFechaId').datepicker({
 			format: 'dd/mm/yyyy'
 		});
+		
 		$('#depositoFechaId').datepicker({
 			format: 'dd/mm/yyyy'
 		});
 		
 		
-		$("#mostrar_mdl_factura").click(function(){
+		$("#mostrar_mdl_factura").click(function() {
+			
+			// Do not call ajax again if it already was called				
+			if(ajaxExecuted) {
+				$("#modal_factura").show();
+				return;
+			}
 			
 			var clienteNro = $("#clienteNro").val();
 			
@@ -529,11 +535,11 @@
 				success : function(data) {
 					$('#modal_factura').html(data);
 					$("#modal_factura").modal();
-		 			//$("#modal_recibos").modal('toggle');
+		 			ajaxExecuted = true;
 				},
 				error : function() {
 					// Aqui código cuando servidor retorna error
-				},
+				}
 			});
 		});
 		
@@ -564,6 +570,8 @@
 			$("#clienteNro").val(clienteNumero);
 			$("#clienteNombre").val(clienteNombre);
 			$("#clienteId").val(clienteId);
+			
+			ajaxExecuted = false;
 		});
 
 		$("#depositoBtnAgregarId").click(function() {
@@ -1099,7 +1107,75 @@
 		
 		$('.' + idHidden).remove();
 		elementoTR.remove();
-	}	
+		
+		// Enable factura of facturaTblModal, page ccSlectedCustomer.html
+		var facturaNro = $(elementoTR).find('.facturaNro').text();
+		$("#facturaTblModal").find('.hidden-td-' + facturaNro).text('enable');
+		$("#facturaTblModal").find('.hidden-td-' + facturaNro).closest('tr').removeProp('style');
+	};
+	
+	// -------------------------------------------------------------------------------------------
+	// Funcion para editar facturas
+	var valorAnt;
+	var editingValue = false;
+	function editarMontoFactura(editBtn) {
+		
+		var editBtnClass = $(editBtn).attr('class');
+		
+		// No permitir editar 2 valores al mismo tiempo, 
+		// porque el código no está preparado para eso.
+		if(editBtnClass == 'btn btn-success' && editingValue) {
+			return;
+		}
+		
+		if(editBtnClass == 'btn btn-success') {
+			
+			$(editBtn).removeClass('btn btn-success');
+			$(editBtn).addClass('btn btn-warning');
+			
+			// Hide eliminar buttons
+			$('#tblFactura tr').each(function() {
+				$(this).find('.btn-danger').parent('td').hide();
+			});
+			
+			var elementoTR = $(editBtn).closest('tr');
+			var montoFactura = $(elementoTR).find('.montoFac').text();
+			$(elementoTR).find('.montoFac').html('<input type="text" class="montoFacInp" onkeypress="return saveOnKeyPress(event)" style="color: black;" value="' + montoFactura + '"/>');
+			valorAnt = montoFactura;
+			editingValue = true;
+			
+		} else {
+			
+			$(editBtn).removeClass('btn btn-warning');
+			$(editBtn).addClass('btn btn-success');
+			
+			// Show eliminar buttons
+			$('#tblFactura tr').each(function() {
+				$(this).find('.btn-danger').parent('td').show();
+			});
+			
+			var elementoTR = $(editBtn).closest('tr');
+			var montoFactura = $(elementoTR).find('.montoFacInp').val();
+			$(elementoTR).find('.montoFac').html(montoFactura);
+			
+			atualizarMontoTotalFactura(valorAnt, montoFactura);
+			editingValue = false;
+		}
+	};
+	
+	function atualizarMontoTotalFactura(valorAnt, valorNuevo) {
+		var valorTotal = parseFloat($('#facturasMontoTotal').val());
+		valorTotal = valorTotal - parseFloat(valorAnt);
+		valorTotal = valorTotal + parseFloat(valorNuevo);
+		$('#facturasMontoTotal').val(valorTotal.toFixed(2));
+	};
+	
+	function saveOnKeyPress(e) {
+	    if(e.keyCode == 13) {
+	        editarMontoFactura($('#tblFactura .btn-warning'));
+	    }
+	};
+	
 </script>
 
 </html>

@@ -29,6 +29,7 @@
 								    
 									<tbody>
 										<tr th:each="ccVar : ${cuentasCorrientes}">
+											<td th:attr="class='hidden-td-' + ${ccVar.nro_factura}" style="display: none;"></td>
 											<td th:text="${ccVar.nro_factura}"></td>
 											<td th:text="${ccVar.id}"></td>
 											<td th:text="${ccVar.nombre}"></td>
@@ -55,21 +56,28 @@
 	$(document).ready(function(){
 
 		$("#facturaTblModal tr").click(function(){
+			
+ 			var isDisabled = $(this).find('td').first().text();
+ 			if(isDisabled == 'disabled') {
+ 				return;
+ 			}
+			
 			var facturaSumaImportes = 0;
 			var tdArray = $(this).find("td");
 			
 			var idHiddenDate=new Date();
 			var idHiddenDate2 = idHiddenDate.getTime().toString();
 			
-			var facturaNro = tdArray[0].innerHTML; //"123A"; //$(this).text();
-			var facturaFecha = tdArray[3].innerHTML;
-			var facturaMonto = tdArray[5].innerHTML;
+			var facturaNro = tdArray[1].innerHTML; //"123A"; //$(this).text();
+			var facturaFecha = tdArray[4].innerHTML;
+			var facturaMonto = tdArray[6].innerHTML;
 			
-			var newRecord = '<tr><td>' + facturaNro + '</td>';
+			var newRecord = '<tr><td class="facturaNro">' + facturaNro + '</td>';
 			newRecord = newRecord + '<td>' + facturaFecha + '</td>';
 			newRecord = newRecord + '<td class="montoFac">' + facturaMonto + '</td>';
 			newRecord = newRecord + '<td class="idParaHidden" style="display: none;">' + idHiddenDate2 + '</td>';
-			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
+			newRecord = newRecord + '<td><button type="button" class="btn btn-success" aria-label="Left Align" onclick="editarMontoFactura(this)"/></button></td>';
+			newRecord = newRecord + '<td><button type="button" class="btn btn-danger" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
 			
 			$('#tblFactura tr:last').after(newRecord);
 		
@@ -82,6 +90,9 @@
  			calcularMontoTotalRecibo();
  			//calcularImporte_Descuento();
  			calcularBalance();
+ 			
+ 			$(this).find('td').first().text('disabled');
+ 			$(this).prop('style', 'background-color: gray');
 		});
 	});
 	</script>

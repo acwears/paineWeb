@@ -6,19 +6,6 @@ import java.util.List;
 
 public class Recibo extends Bean {
 
-	/* private double rbo_nro_pk; */
-	//private String name;
-	//private double rbo_fk_cte_nro;
-	
-	//private String rbo_fecha;
-	//private long rbo_descuento;
-	//private double rbo_importe_suma_facturas;
-	//private double rbo_importe_total;
-	//private String rbo_observaciones;
-
-	/* dsfdsafdsafds */
-	/* gdfdasfadsfdsbb */
-	
 	private int numero;
 	private Date fecha;
 	private double descuento;

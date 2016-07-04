@@ -64,7 +64,6 @@ public class IngresarReciboController {
 	public String ingresar(@RequestParam(value = "name", required = false, defaultValue = "World") String name,
 			Model model) {
 		
-		System.out.println("*** We are in ingresar controller ***");
 		log.info("THIS IS THE LOGGER *** We are in ingresar controller ***");
 		int idRecibo = 2222;
 
@@ -97,42 +96,25 @@ public class IngresarReciboController {
 			model.addAttribute("reciboDto", new ReciboDto());
 			
 		} catch (Exception e) {
-			e.printStackTrace(System.out);
-			System.out.println(e.getMessage());
-			System.out.println("*** There is exception! ***");
-			log.info("THIS IS THE LOGGER *** There is exception! ***");
-			log.info(e.getMessage());
-			log.info(e);
+			log.info("THIS IS THE LOGGER *** There is exception! ***", e);
 		}
 
-		// model.addAttribute("name", name);
 		return "reciboNuevo";
 	}
 
 	@RequestMapping("/listarCCByCustomer")
 	public String listarCCByCustomer(@RequestParam Integer clienteNro, Model model) {
 		
-
 		try {
 	
-			
-			//List<CuentaCorriente> cuentasCorrientes = cuentaCorrienteService.find(Context.loggedUser().getCodigo());
-			List<CuentaCorriente> cuentasCorrientes = cuentaCorrienteRepository.cargarCCByCustomer(clienteNro); //Context.loggedUser().getCodigo());
+			List<CuentaCorriente> cuentasCorrientes = cuentaCorrienteRepository.cargarCCByCustomer(clienteNro);
 			model.addAttribute("cuentasCorrientes", cuentasCorrientes);	
-
-			
 			model.addAttribute("reciboDto", new ReciboDto());
 			
 		} catch (Exception e) {
-			e.printStackTrace(System.out);
-			System.out.println(e.getMessage());
-			System.out.println("*** There is exception! ***");
-			log.info("THIS IS THE LOGGER *** There is exception! ***");
-			log.info(e.getMessage());
-			log.info(e);
+			log.info("THIS IS THE LOGGER *** There is exception! ***", e);
 		}
 
-		// model.addAttribute("name", name);
 		return "ccSelectedCustomer";
 	}
 	
