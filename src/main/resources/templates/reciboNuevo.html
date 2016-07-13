@@ -62,7 +62,7 @@
 					  	</div>
 
 						<div class="modal-body">
-							<div>
+						<!--	<div>
 								<span class="subrayado"><h3>Tipos de busqueda</h3></span>
 							</div>
 
@@ -74,10 +74,10 @@
 								<input type="text" class="form-control" id="mdl_cte_busq_cte_nom">
 								<br>
 								<br>
-							</div>
+							</div> -->
 								        
-							<!-- <table class="table table-bordered table-hover table-responsive" id="idTableSelectCte"> -->
-							<table class="display" cellspacing="0" width="100%" id="idTableSelectCte">
+							<!-- <table class="table table-bordered table-hover table-responsive" id="idTableSelectCte1"> -->
+							<table class="display" cellspacing="0" width="100%" id="idTableSelectCte1">
 							    <thead>
 							        <tr>
 							            <th style="font-weight:bold;">Cliente nro.</font></th>
@@ -98,7 +98,7 @@
 
 					  	<div class="modal-footer">
 					    	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-					    	<button type="button" class="btn btn-primary">Seleccionar</button>
+					    	<!-- <button type="button" class="btn btn-primary">Seleccionar</button> -->
 					  	</div>
 					</div><!-- *** FIN modal-content ***-->
 				</div><!-- *** FIN modal-dialog ***-->
@@ -561,9 +561,9 @@
 	    	//alert(monto);
 	    });
 	    
-	   $("#idTableSelectCte").dataTable();
+	  $("#idTableSelectCte1").dataTable();
 	    
-		$("#idTableSelectCte tr").click(function(){
+		$("#idTableSelectCte1 tr").click(function(){
 			var tdArray = $(this).find("td");
 
 			var clienteId = tdArray[0].innerHTML;
