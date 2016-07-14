@@ -80,8 +80,9 @@
 							<table class="display" cellspacing="0" width="100%" id="idTableSelectCte1">
 							    <thead>
 							        <tr>
-							            <th style="font-weight:bold;">Cliente nro.</font></th>
-							            <th style="font-weight:bold;">Nombre</font></th>
+							        	<th style="display: none;"></th>
+							            <th style="font-weight:bold;">Cliente nro.</th>
+							            <th style="font-weight:bold;">Nombre</th>
 							        </tr>
 							    </thead>
 							    
@@ -562,20 +563,16 @@
 	    });
 	    
 	  $("#idTableSelectCte1").dataTable();
+	
+	  $('#idTableSelectCte1').on( 'draw.dt', function () {
+		  
+		  $(this).find('tr').bind("click", function(){
+				selectRow(this);
+			});		  
+	  } );	  
 	    
 		$("#idTableSelectCte1 tr").click(function(){
-			var tdArray = $(this).find("td");
-
-			var clienteId = tdArray[0].innerHTML;
-			var clienteNumero = tdArray[1].innerHTML;
-			var clienteNombre = tdArray[2].innerHTML;
-			$("#modal_cliente").modal('toggle');
-			
-			$("#clienteNro").val(clienteNumero);
-			$("#clienteNombre").val(clienteNombre);
-			$("#clienteId").val(clienteId);
-			
-			ajaxExecuted = false;
+			selectRow(this);
 		});
 
 		$("#depositoBtnAgregarId").click(function() {
@@ -794,6 +791,24 @@
 		//************************************************************************************		
 	}); //END ready(function()
 	
+			
+    // ------------------------------------------------------------------------------------------
+	// Selecciona un cliente desde el pop up
+	// y lo manda al formulario
+	selectRow = function(aThis) {
+		var tdArray = $(aThis).find("td");
+
+		var clienteId = tdArray[0].innerHTML;
+		var clienteNumero = tdArray[1].innerHTML;
+		var clienteNombre = tdArray[2].innerHTML;
+		$("#modal_cliente").modal('hide');
+		
+		$("#clienteNro").val(clienteNumero);
+		$("#clienteNombre").val(clienteNombre);
+		$("#clienteId").val(clienteId);
+		
+		ajaxExecuted = false;		
+	};
 	
 	
 	crearHidden = function(nameVar, valueVar){
