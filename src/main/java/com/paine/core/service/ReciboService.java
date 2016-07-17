@@ -74,6 +74,7 @@ public class ReciboService {
     		tpr.setAnio(0);
     		tpr.setNumero("");
     		tpr.setSucursal("");
+    		tpr.setTipoPago("");
     		recibo.addRetencion(tpr);
     	}
     	

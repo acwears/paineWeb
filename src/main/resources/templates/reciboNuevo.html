@@ -300,7 +300,20 @@
 						<!-- ******************************************************************************************************* -->
 						<!-- ******************************************************************** COMIENZO RETENCION *************** -->					
 						<div role="tabpanel" class="tab-pane" id="idRetencion">
-							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+							<div class="col-xs-12 col-sm-5 col-md-5 col-lg-4">
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon66">Tipo de pago</span>
+									<select class="form-control" id="retencionTipoPago" aria-describedby="basic-addon66">
+										<option>-------</option>
+										<option>Retencion Ganancias</option>
+										<option>Retencion Iva</option>
+										<option>Retencion IIBB Capital</option>
+										<option>Retencion IIBB Buenos Aire</option>
+										<option>Retencion IIBB San Lui</option>
+										<option>Retenicon IIBB Santa Fe</option>
+							        </select>
+								</div>
+								
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="basic-addon9">Retención #</span>
 									<input type="miTabPanelText" id="retencionNumero" aria-describedby="basic-addon9">
@@ -310,8 +323,7 @@
 									<span class="input-group-addon" id="basic-addon10">Importe</span>
 									<input type="miTabPanelText" id="retencionImporte" aria-describedby="basic-addon10">
 								</div>
-							</div>
-							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3" id="idRetencion">
+							
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="basic-addon11">Sucursal</span>
 									<input type="miTabPanelText" id="retencionSucursal" aria-describedby="basic-addon11">
@@ -320,6 +332,29 @@
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="basic-addon12">Año</span>
 									<input type="miTabPanelText" id="retencionYear" aria-describedby="basic-addon12">
+								</div>
+								
+								<br>
+								<button type="button" class="btn btn-default" id="retencionBtnAgregarId">Agregar al listado</button>
+							</div>
+							
+							<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7" id="idRetencionListado">
+								<div class="panel panel-default">
+									<table class="table table-bordered" id="tablaRetencionID">
+									        <tr class="success">
+									        	<th width="60%" style="font-weight:bold;"><font color = "#000000">Tipo de pago</font></th>
+									            <th width="60%" style="font-weight:bold;"><font color = "#000000">Numero</font></th>
+									            <th width="130%" style="font-weight:bold;"><font color = "#000000">Importe</font></th>
+									            <th width="40%" style="font-weight:bold;"><font color = "#000000">Sucursal</font></th>
+									            <th width="40%" style="font-weight:bold;"><font color = "#000000">Año</font></th>								
+									            <th width="40%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>
+									        </tr>
+									</table>
+								</div>
+
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon" id="basic-addon87">Total retenciones</span>
+									<input type="miTabPanelTex" class="form-control" id="retencionMontoTotal" readonly="readonly" aria-describedby="basic-addon87">
 								</div>
 							</div>
 						</div><!-- *** FIN RETENCION *** -->
@@ -442,7 +477,7 @@
 
 							<div class="input-group input-group-sm">
 								<span class="input-group-addon" id="basic-addon32">Retención</span>
-								<input type="miTabPanelText" id="retencionImporteRES" readonly="readonly" aria-describedby="basic-addon33">
+								<input type="miTabPanelText" id="retencionMontoTotalRES" readonly="readonly" aria-describedby="basic-addon33">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
@@ -575,6 +610,42 @@
 			selectRow(this);
 		});
 
+		
+		$("#retencionBtnAgregarId").click(function() {
+			var idHiddenDate = new Date();
+			var idHiddenDate2 = idHiddenDate.getTime().toString();
+			
+			if(!validaIntegridad_Retencion()){return;}
+			
+			var retencionTipoPago = $('#retencionTipoPago').val();
+			var retencionNumero = $('#retencionNumero').val();
+			var retencionImporte = $('#retencionImporte').val();
+			var retencionSucursal = $('#retencionSucursal').val();
+			var retencionYear = $('#retencionYear').val();
+			
+			var newRecord = '<tr><td>' + $('#retencionTipoPago option:selected').text() + '</td>';
+			newRecord = newRecord + '<td>' + retencionNumero + '</td>';
+			newRecord = newRecord + '<td class="montoRetencion">' + retencionImporte + '</td>';
+			newRecord = newRecord + '<td>' + retencionSucursal + '</td>';
+			newRecord = newRecord + '<td>' + retencionYear + '</td>';
+			newRecord = newRecord + '<td class="idParaHidden" style="display: none;">' + idHiddenDate2 + '</td>';
+			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
+			
+			$('#tablaRetencionID tr:last').after(newRecord);
+					
+			crearHiddenB('retencionTipoPago', retencionTipoPago, idHiddenDate2);
+			crearHiddenB('retencionNumero', retencionNumero, idHiddenDate2);
+			crearHiddenB('retencionImporte', retencionImporte, idHiddenDate2);
+			crearHiddenB('retencionSucursal', retencionSucursal, idHiddenDate2);
+			crearHiddenB('retencionYear', retencionYear, idHiddenDate2);
+			
+			//sumo el monto de cada retencion agregada
+ 			sumarMontos("#retencionMontoTotal", retencionImporte);
+ 			calcularMontoTotalRecibo();
+ 			calcularBalance();
+		});
+		
+		
 		$("#depositoBtnAgregarId").click(function() {
 			var idHiddenDate=new Date();
 			var idHiddenDate2 = idHiddenDate.getTime().toString();
@@ -703,10 +774,10 @@
 			
 			var efectivoImporte = $('#efectivoImporte').val();
 			
-			var retencionNumero = $('#retencionNumero').val();
+		/* creo que no	var retencionNumero = $('#retencionNumero').val();
 			var retencionImporte  = $('#retencionImporte').val();
 			var retencionSucursal = $('#retencionSucursal').val();
-			var retencionYear = $('#retencionYear').val();
+			var retencionYear = $('#retencionYear').val(); */
 			
 			if($('#facturasMontoTotal').val() == 0.00 || $('#facturasMontoTotal').val() == '' || $('#facturasMontoTotal').val() == '0.00'){
 				var idHiddenDate=new Date();
@@ -745,12 +816,12 @@
 				crearHidden('efectivoImporte', efectivoImporte);
 			}
 			
-			if(retencionNumero != ''){
+		/* creo que no	if(retencionNumero != ''){
 				crearHidden('retencionNumero', retencionNumero);
 				crearHidden('retencionImporte', retencionImporte);
 				crearHidden('retencionSucursal', retencionSucursal);
 				crearHidden('retencionYear', retencionYear);
-			}
+			} */
 			$('#reciboFormId').submit();
 		});
 		
@@ -762,12 +833,12 @@
 		});
 		
 		
-		$("#retencionImporte").change(function(){
+	/* creo que no va mas	$("#retencionImporte").change(function(){
 			
 			$("#retencionImporteRES").val($("#retencionImporte").val());
 			calcularMontoTotalRecibo();
 			calcularBalance();		
-		});		
+		});		*/
 		
 		//************************************************************************************
 		//************************************************************** BEGIN validacion jquery
@@ -940,6 +1011,46 @@
 		return true;
 	};
 	
+	function validaIntegridad_Retencion(){
+		
+		if($('#retencionTipoPago').val() == '-------'){
+			document.getElementById('textModal').innerHTML = '- Seleccione tipo de pago.';
+			errObject = '#retencionTipoPago';
+			$('#modalMensajes').modal();
+			return false;
+		}
+		
+		if($('#retencionNumero').val() == ''){
+			document.getElementById('textModal').innerHTML = '- Indique el número de retención.';
+			errObject = '#retencionNumero';
+			$('#modalMensajes').modal();
+			return false;
+		}
+		
+		if($('#retencionImporte').val() == ''){
+			document.getElementById('textModal').innerHTML = '- Indique el importe.';
+			errObject = '#retencionImporte';
+			$('#modalMensajes').modal();
+			return false;
+		}
+		
+		if($('#retencionSucursal').val() == ''){
+			document.getElementById('textModal').innerHTML = '- Indique la sucursal.';
+			errObject = '#retencionSucursal';
+			$('#modalMensajes').modal();
+			return false;
+		}
+		
+		if($('#retencionYear').val() == ''){
+			document.getElementById('textModal').innerHTML = '- Indique el año.';
+			errObject = '#retencionYear';
+			$('#modalMensajes').modal();
+			return false;
+		}
+		
+		return true;
+	}
+	
 	function validaIntegridad_Deposito(){
 		
 		if($('#depositoBancoId').val() == '-------'){
@@ -1001,7 +1112,7 @@
 		var chequeImporteTotal = $("#chequeMontoTotalId").val();
 		var efectivoMonto = $("#efectivoImporte").val();
 		var depositoImporteTotal = $("#depositoMontoTotal").val();
-		var retencionImporte = $("#retencionImporte").val();
+		var retencionImporte = $("#retencionMontoTotal").val();
 		
 		if(chequeImporteTotal == ''){chequeImporteTotal = 0}
 		if(efectivoMonto == ''){efectivoMonto = 0}
@@ -1060,6 +1171,13 @@
 		}
 	};
 	
+	function eliminarSoloHidden (botonEliminar) {	
+		var elementoTR = $(botonEliminar).closest('tr');
+		var idHidden = $(elementoTR).find('.idParaHidden').text();		
+			
+		$('.' + idHidden).remove();
+	};
+	
 	function eliminarHidden (botonEliminar) {	
 		
 		var elementoTR = $(botonEliminar).closest('tr');
@@ -1069,11 +1187,13 @@
 		var montoFactura = '';
 		var montoCheque = '';
 		var montoDeposito = '';
+		var montoRetencion= '';
 		var porcentajeDescuento = '';
 		
 		montoFactura = $(elementoTR).find('.montoFac').text();
 		montoCheque = $(elementoTR).find('.montoCheque').text();
 		montoDeposito = $(elementoTR).find('.montoDeposito').text();
+		montoRetencion = $(elementoTR).find('.montoRetencion').text();
 		porcentajeDescuento = $(elementoTR).find('.porcentajeDescuento').text();		
 		
 		//new
@@ -1103,6 +1223,11 @@
 					$('#depositoMontoTotal').val(monto.toFixed(2));
 					$('#depositoMontoTotalRES').val($('#depositoMontoTotal').val());
 				}else{				
+					if(montoRetencion != ''){
+						monto = parseFloat($('#retencionMontoTotal').val()) - parseFloat(montoRetencion);
+						$('#retencionMontoTotal').val(monto.toFixed(2));
+						$('#retencionMontoTotalRES').val($('#retencionMontoTotal').val());
+					}else{
 					//monto = parseFloat($('#reciboTotalDescuento').val()) - parseFloat(porcentajeDescuento);
 					//$('#reciboTotalDescuento').val(monto.toFixed(2));
 					
@@ -1110,6 +1235,7 @@
 					montoDescAux = parseFloat($('#importeTotalDescuento').val()) - parseFloat(porcentajeDescuento); //parseFloat(monto);
 					$('#importeTotalDescuento').val(montoDescAux.toFixed(2));
 					$('#importeTotalDescuentoRES').val($('#importeTotalDescuento').val());
+					}
 				}
 			}
 		}
@@ -1179,6 +1305,18 @@
 			
 			atualizarMontoTotalFactura(valorAnt, montoFactura);
 			editingValue = false;
+			
+			//elimino y vuelvo a crear el hidden
+			var facNumero = $(elementoTR).find('.facturaNro').text();
+			var facFech = $(elementoTR).find('.facturaFecha').text();
+			var idHiddenDate3 = $(elementoTR).find('.idParaHidden').text();
+			
+			eliminarSoloHidden(editBtn);
+			
+			crearHiddenB('facturaNro', facNumero, idHiddenDate3);
+ 			crearHiddenB('facturaFecha', facFech, idHiddenDate3);
+ 			crearHiddenB('facturaMonto', montoFactura, idHiddenDate3);
+ 			//FIN //elimino y vuelvo a crear el hidden
 		}
 	};
 	
@@ -1192,6 +1330,8 @@
 	function saveOnKeyPress(e) {
 	    if(e.keyCode == 13) {
 	        editarMontoFactura($('#tblFactura .btn-warning'));
+	        calcularMontoTotalRecibo();
+			calcularBalance();
 	    }
 	};
 	

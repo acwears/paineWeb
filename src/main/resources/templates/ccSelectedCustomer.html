@@ -45,7 +45,7 @@
 
 					  	<div class="modal-footer">
 					    	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-					    	<button type="button" class="btn btn-primary">Seleccionar</button>
+					    	<!--  <button type="button" class="btn btn-primary">Seleccionar</button> -->
 					  	</div>
 					</div><!-- /.fin modal-content -->
 				</div><!-- /. fin modal-dialog -->
@@ -73,7 +73,7 @@
 			var facturaMonto = tdArray[6].innerHTML;
 			
 			var newRecord = '<tr><td class="facturaNro">' + facturaNro + '</td>';
-			newRecord = newRecord + '<td>' + facturaFecha + '</td>';
+			newRecord = newRecord + '<td class="facturaFecha">' + facturaFecha + '</td>';
 			newRecord = newRecord + '<td class="montoFac">' + facturaMonto + '</td>';
 			newRecord = newRecord + '<td class="idParaHidden" style="display: none;">' + idHiddenDate2 + '</td>';
 			newRecord = newRecord + '<td><button type="button" class="btn btn-success" aria-label="Left Align" onclick="editarMontoFactura(this)"/></button></td>';

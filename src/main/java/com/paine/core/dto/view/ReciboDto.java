@@ -39,6 +39,7 @@ public class ReciboDto {
 	private double[] descuentoPorcentaje;	
 	
 	//Variables del tipo de pago RETENCION
+	private String[] retencionTipoPago;
 	private String[] retencionNumero;
 	private double[] retencionImporte;
 	private String[] retencionSucursal;
@@ -265,5 +266,13 @@ public class ReciboDto {
 
 	public void setReciboId(Integer reciboId) {
 		this.reciboId = reciboId;
+	}
+
+	public String[] getRetencionTipoPago() {
+		return retencionTipoPago;
+	}
+
+	public void setRetencionTipoPago(String[] retencionTipoPago) {
+		this.retencionTipoPago = retencionTipoPago;
 	}
 }

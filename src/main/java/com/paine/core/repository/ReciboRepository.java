@@ -155,6 +155,7 @@ public class ReciboRepository extends JDBCRepository {
 				tpRetencion.setSucursal(rs.getString("sucursal"));
 				tpRetencion.setMonto(rs.getDouble("importe"));
 				tpRetencion.setAnio(rs.getInt("anio"));
+				tpRetencion.setTipoPago(rs.getString("tipo_pago"));
 
 				return tpRetencion;
 			});

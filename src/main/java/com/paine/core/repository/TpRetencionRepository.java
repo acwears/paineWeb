@@ -33,8 +33,8 @@ public class TpRetencionRepository extends JDBCRepository{
 	 
 	 public void save(List<TpRetencion> tpRetenciones) {
 		 StringBuilder sb = new StringBuilder();
-		 sb.append(" INSERT INTO tp_retencion (id_recibo, numero, sucursal, importe, anio) ");
-		 sb.append(" VALUES(?, ?, ?, ?, ?) ");
+		 sb.append(" INSERT INTO tp_retencion (id_recibo, numero, sucursal, importe, anio, tipo_pago) ");
+		 sb.append(" VALUES(?, ?, ?, ?, ?, ?) ");
 	  
 		 getJdbcTemplate().batchUpdate(sb.toString(), new BatchPreparedStatementSetter() {
 			
@@ -48,6 +48,7 @@ public class TpRetencionRepository extends JDBCRepository{
 					ps.setString(3, tpRetencion.getSucursal());
 					ps.setDouble(4, tpRetencion.getMonto());
 					ps.setInt(5, tpRetencion.getAnio());
+					ps.setString(6, tpRetencion.getTipoPago());
 				}
 				
 				@Override

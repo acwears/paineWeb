@@ -12,6 +12,7 @@ public class TpRetencion extends Bean{
 	private String sucursal;
 	private double monto;
 	private int anio;
+	private String tipoPago;
 	
 	public Recibo getRecibo() {
 		return recibo;
@@ -42,5 +43,11 @@ public class TpRetencion extends Bean{
 	}
 	public void setNumero(String numero) {
 		this.numero = numero;
+	}
+	public String getTipoPago() {
+		return tipoPago;
+	}
+	public void setTipoPago(String tipoPago) {
+		this.tipoPago = tipoPago;
 	}	
 }

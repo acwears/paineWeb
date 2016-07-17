@@ -175,13 +175,21 @@ public class IngresarReciboController {
 		//if(StringUtils.isNotEmpty(reciboDto.getRetencionNumero()[0])) {
 		if(ArrayUtils.isNotEmpty(reciboDto.getRetencionImporte())) {
 		//if(StringUtils.isNotEmpty(reciboDto.getRetencionNumero()[0])) {
-			TpRetencion tpRetencion = new TpRetencion();
-			tpRetencion.setRecibo(recibo);
-			tpRetencion.setNumero(reciboDto.getRetencionNumero()[0]);
-			tpRetencion.setMonto(reciboDto.getRetencionImporte()[0]);
-			tpRetencion.setAnio(reciboDto.getRetencionYear()[0]);
-			tpRetencion.setSucursal(reciboDto.getRetencionSucursal()[0]);
-			recibo.addRetencion(tpRetencion);
+			List<TpRetencion> retenciones = new ArrayList<>();
+			for (int i = 0; i < reciboDto.getRetencionNumero().length; i++) {
+				TpRetencion tpRetencion = new TpRetencion();
+				
+				tpRetencion.setRecibo(recibo);
+				tpRetencion.setNumero(reciboDto.getRetencionNumero()[i]);
+				tpRetencion.setMonto(reciboDto.getRetencionImporte()[i]);
+				tpRetencion.setAnio(reciboDto.getRetencionYear()[i]);
+				tpRetencion.setSucursal(reciboDto.getRetencionSucursal()[i]);
+				tpRetencion.setTipoPago(reciboDto.getRetencionTipoPago()[i]);
+				
+				//recibo.addRetencion(tpRetencion);
+				retenciones.add(tpRetencion);
+			}
+			recibo.setTpRetenciones(retenciones);
 		}
 		
 		//tpRetencion.setNumero(reciboDto.getRetencionNumero());

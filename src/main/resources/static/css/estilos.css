@@ -256,7 +256,20 @@ input[type="miTabPanelText3"] {
 	width: 100%;
 }
 
-
+#tablaRetencionID{
+	height: 380px;
+  	overflow-y: auto;
+  	width: 100%;
+  	display: block;
+  	background-color: #2c3e50;
+}
+#tablaRetencionID td{
+	border-bottom: 1px solid white;
+	border-right: 1px solid white;
+	color: white;
+	font-size:12px;
+	width: 100%;
+}
 
 #tableDepositoID{
 	height: 380px;
