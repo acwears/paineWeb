@@ -75,6 +75,9 @@ public class IngresarReciboController {
 			List<Banco> bancos = bancoRepository.cargarBancos();
 			model.addAttribute("bancos", bancos);
 
+			List<Banco> bancosDeposito = bancoRepository.cargarBancosDeposito();
+			model.addAttribute("bancosDeposito", bancosDeposito);
+			
 			if (Context.loggedUser().isAdmin()) {
 				List<Cliente> clientes = clienteRepository.cargarClientes();
 				model.addAttribute("clientes", clientes);

@@ -33,18 +33,11 @@
 			</div>
 
 			<div class="modal-body">
-				<div>
-					<span class="subrayado"><h3>Opciones de busqueda</h3></span>
-				</div>
-				
-				<div>
-					<label for="exampleInputEmail1"><h5>Recibo #</h5></label> <input type="text" class="form-control" id="mdl_cte_busq_cte_nro"> <label
-						for="exampleInputEmail1"><h5>Cliente #</h5></label> <input type="text" class="form-control" id="mdl_cte_busq_cte_nom"> <br> <br>
-				</div>
 
 				<table class="table table-bordered table-hover table-responsive" id="tableSelectCliente">
 					<thead>
 						<tr>
+							<th style="display: none;"></th>
 							<th><font color="#000000">Recibo #</font></th>
 							<th><font color="#000000">Fecha</font></th>
 							<th><font color="#000000">Cliente #</font></th>
@@ -87,12 +80,24 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 
+		$("#tableSelectCliente").dataTable();
+		
+		$("#tableSelectCliente").on( 'draw.dt', function () {
+			 $(this).find('tr').bind("click", function(){
+				selectRow(this);
+			});		 
+		} );
+		
+		$("#tableSelectCliente tr").click(function(){
+			selectRow(this);
+		})
+		
 		$("#modal_recibos").modal({backdrop: 'static', keyboard: false});
 
 		// Funcion para cargar recibo por id
-		$('#tableSelectCliente tbody tr').click(function() {
-
-			var reciboId = $(this).find("td").first().text();
+		//$('#tableSelectCliente tbody tr').click(function() {
+		selectRow = function(aThis) {
+			var reciboId = $(aThis).find("td").first().text();
 			
 			$('.modal-footer').hide();
 			$('.modal-body').html('<p style="color: red;">Cargando recibo...</div>');
@@ -111,7 +116,7 @@
 				},
 			});
 
-		});
+		}; //});
 	});
 </script>
 

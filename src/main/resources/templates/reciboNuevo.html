@@ -182,13 +182,23 @@
 
 						<div role="tabpanel" class="active tab-pane" id="idCheque">
 							<div  class="col-xs-12 col-sm-5 col-md-6 col-lg-4">
-								<div class="input-group input-group-sm">
-							        <span class="input-group-addon" id="basic-addon1">Banco</span>
-									<select class="form-control" id="chequeBancoID" aria-describedby="basic-addon1">
-							        	<option th:text="-------"></option>
-							        	<option th:each="bancoVar : ${bancos}" th:text="${bancoVar.id} + ' - ' +  ${bancoVar.nombre}" th:value="${bancoVar.id}"></option>
-							        </select>
-								</div>
+								<!-- banco nuevo -->
+							<!--  	<table class="table table-bordered table-hover table-condensed table-responsive" id="tablaBancosCheque">
+								    <thead>
+								        <tr>
+								        	<th>Numéro</font></th>
+								            <th>Banco</font></th>
+									    </tr>
+								    </thead>
+								    
+									<tbody>
+										<tr th:each="bancoVar : ${bancos}">
+											<td th:text="${bancoVar.id}"></td>
+											<td th:text="${bancoVar.nombre}"></td>
+										</tr>
+								    </tbody>
+								</table> -->
+								<!-- end banco nuevo -->
 								
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="basic-addon2">Cheque #</span>
@@ -199,7 +209,15 @@
 									<span class="input-group-addon" id="basic-addon3">Importe</span>
 									<input type="miTabPanelText" id="chequeImporte" aria-describedby="basic-addon3">
 								</div>
-
+								
+								<div class="input-group input-group-sm">
+							        <span class="input-group-addon" id="basic-addon1">Banco</span>
+									<select class="form-control" id="chequeBancoID" aria-describedby="basic-addon1">
+							        	<option th:text="-------"></option>
+							        	<option th:each="bancoVar : ${bancos}" th:text="${bancoVar.id} + ' - ' +  ${bancoVar.nombre}" th:value="${bancoVar.id}"></option>
+							        </select>
+								</div>
+								
 								<div class="input-group input-group-sm">
 									<span class="input-group-addon" id="basic-addon4">CUIT</span>
 									<input type="miTabPanelText" id="chequeCuitId" aria-describedby="basic-addon4">
@@ -252,7 +270,7 @@
 									<span class="input-group-addon" id="basic-addon6">Banco</span>
 									<select class="form-control" id="depositoBancoId" aria-describedby="basic-addon6">
 										<option th:text="-------"></option>
-										<option th:each="bancoVar : ${bancos}" th:text="${bancoVar.id} + ' - ' +  ${bancoVar.nombre}" th:value="${bancoVar.id}"></option>
+										<option th:each="bancoVarDep : ${bancosDeposito}" th:text="${bancoVarDep.id} + ' - ' +  ${bancoVarDep.nombre}" th:value="${bancoVarDep.id}"></option>
 							        </select>
 								</div>
 
@@ -491,6 +509,7 @@
 			</div>			
 		</div> <!-- *** END RESUMEN Y BALANCE *** -->
 	</div> <!-- end contenido -->
+	
 	<div th:include="layout :: footerFragment"></div>
 
 </body>
@@ -597,19 +616,25 @@
 	    	//alert(monto);
 	    });
 	    
-	  $("#idTableSelectCte1").dataTable();
+		$("#idTableSelectCte1").dataTable();
 	
-	  $('#idTableSelectCte1').on( 'draw.dt', function () {
-		  
-		  $(this).find('tr').bind("click", function(){
+		$('#idTableSelectCte1').on( 'draw.dt', function () {
+			$(this).find('tr').bind("click", function(){
 				selectRow(this);
 			});		  
-	  } );	  
+		} );	  
 	    
 		$("#idTableSelectCte1 tr").click(function(){
 			selectRow(this);
 		});
-
+		
+		/* $("#tablaBancosCheque").dataTable( {
+			"bPaginate": false,
+			"bLengthChange": false,
+			"bFilter": true,
+			"bSort": false,
+			"bInfo": false,
+			"bAutoWidth": false } ); */
 		
 		$("#retencionBtnAgregarId").click(function() {
 			var idHiddenDate = new Date();
@@ -645,7 +670,8 @@
  			calcularBalance();
 		});
 		
-		
+		document.getElementById("depositoBancoId").selectedIndex=1;
+			
 		$("#depositoBtnAgregarId").click(function() {
 			var idHiddenDate=new Date();
 			var idHiddenDate2 = idHiddenDate.getTime().toString();
@@ -1317,6 +1343,8 @@
  			crearHiddenB('facturaFecha', facFech, idHiddenDate3);
  			crearHiddenB('facturaMonto', montoFactura, idHiddenDate3);
  			//FIN //elimino y vuelvo a crear el hidden
+ 			calcularMontoTotalRecibo();
+			calcularBalance();
 		}
 	};
 	
@@ -1330,8 +1358,6 @@
 	function saveOnKeyPress(e) {
 	    if(e.keyCode == 13) {
 	        editarMontoFactura($('#tblFactura .btn-warning'));
-	        calcularMontoTotalRecibo();
-			calcularBalance();
 	    }
 	};
 	

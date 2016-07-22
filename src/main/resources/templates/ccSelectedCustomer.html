@@ -5,7 +5,7 @@
 
 			<!-- ****** COMIENZO VENTANA MODAL FACTURA ****** -->
 				<div class="modal-dialog">
-					<div class="modal-content">
+					<div class="modal-content" id="contentFactura">
 					 	<div class="modal-header">
 					    	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					    	<h4 class="modal-title"><font color = "green">Seleccione la factura</font></h4>
@@ -16,14 +16,15 @@
 						
 								<table class="table table-bordered table-hover table-condensed table-responsive" id="facturaTblModal">
 								    <thead>
-								        <tr class="success">
-								        	<th><font color = "#000000">Nro. factura</font></th>
-								            <th><font color = "#000000">Cliente nro.</font></th>
-								            <th><font color = "#000000">Nombre</font></th>
-								            <th><font color = "#000000">Fecha factura</font></th>
-								            <th><font color = "#000000">Monto original</font></th>
-								            <th><font color = "#000000">Monto adeudado</font></th>
-								            <th><font color = "#000000">Vencimiento</font></th>
+								        <tr> <!-- class="success" -->
+								        	<th style="display: none;"></th>
+								        	<th>Nro. factura</font></th> <!-- <font color = "#000000"> -->
+								            <th>Cliente nro.</font></th>
+								            <th>Nombre</font></th>
+								            <th>Fecha factura</font></th>
+								            <th>Monto original</font></th>
+								            <th>Monto adeudado</font></th>
+								            <th>Vencimiento</font></th>
 								        </tr>
 								    </thead>
 								    
@@ -55,15 +56,29 @@
 	
 	$(document).ready(function(){
 
+		//buscador ventana facturas
+		$("#facturaTblModal").dataTable();
+	
+		$('#facturaTblModal').on( 'draw.dt', function () {
+			 $(this).find('tr').bind("click", function(){
+				selectRowFactura(this);
+			});		  
+		} );	  
+	    
 		$("#facturaTblModal tr").click(function(){
-			
- 			var isDisabled = $(this).find('td').first().text();
+			selectRowFactura(this);
+		})
+		//end
+		
+		//$("#facturaTblModal tr").click(function(){
+		selectRowFactura = function(aThis) {
+ 			var isDisabled = $(aThis).find('td').first().text();
  			if(isDisabled == 'disabled') {
  				return;
  			}
 			
 			var facturaSumaImportes = 0;
-			var tdArray = $(this).find("td");
+			var tdArray = $(aThis).find("td");
 			
 			var idHiddenDate=new Date();
 			var idHiddenDate2 = idHiddenDate.getTime().toString();
@@ -91,9 +106,10 @@
  			//calcularImporte_Descuento();
  			calcularBalance();
  			
- 			$(this).find('td').first().text('disabled');
- 			$(this).prop('style', 'background-color: gray');
-		});
+ 			$(aThis).find('td').first().text('disabled');
+ 			$(aThis).prop('style', 'background-color: gray');
+		}; 
+//});
 	});
 	</script>
 </html>

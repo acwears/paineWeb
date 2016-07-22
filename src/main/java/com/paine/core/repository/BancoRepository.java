@@ -26,4 +26,22 @@ public class BancoRepository extends JDBCRepository{
 			return banco;
 		});
 	}
+	
+	public List<Banco> cargarBancosDeposito() {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(" SELECT * FROM bancos WHERE paine = 'SI'");
+		
+		return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
+
+			Banco banco = new Banco();
+			
+			banco.setId(rs.getInt("id"));
+			banco.setCodigo(rs.getInt("codigo"));
+			banco.setNombre(rs.getString("nombre"));
+			banco.setAbreviatura(rs.getString("abreviatura"));
+			
+			return banco;
+		});
+	}
 }

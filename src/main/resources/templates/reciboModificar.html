@@ -54,24 +54,12 @@
 					    	<h4 class="modal-title"><font color = "green">Seleccione al cliente</font></h4>
 					  	</div>
 
-						<div class="modal-body">
-							<div>
-								<span class="subrayado"><h3>Tipos de busqueda</h3></span>
-							</div>
-
-							<div>
-								<label for="exampleInputEmail1"><h5>Cliente nro.</h5></label>
-								<input type="text" class="form-control" id="mdl_cte_busq_cte_nro">
-								
-								<label for="exampleInputEmail1"><h5>Nombre</h5></label>
-								<input type="text" class="form-control" id="mdl_cte_busq_cte_nom">
-								<br>
-								<br>
-							</div>
-										        
-							<table class="table table-bordered table-hover table-responsive" id="idTableSelectCte">
+						<div class="modal-body">			        
+							
+							<table class="display" cellspacing="0" width="100%" id="idTableSelectCte1">
 							    <thead>
-							        <tr class="success">
+							        <tr>
+							        	<th style="display: none;"></th>
 							            <th style="font-weight:bold;">Cliente nro.</font></th>
 							            <th style="font-weight:bold;">Nombre</font></th>
 							        </tr>
@@ -88,8 +76,7 @@
 						</div>
 
 					  	<div class="modal-footer">
-					    	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-					    	<button type="button" class="btn btn-primary">Seleccionar</button>
+					    	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>					    	
 					  	</div>
 					</div><!-- *** FIN modal-content ***-->
 				</div><!-- *** FIN modal-dialog ***-->
@@ -119,7 +106,8 @@
 								<td th:text="${#dates.format(facturaVar.fecha, 'dd/MM/yyyy')}"></td>
 								<td th:text="${facturaVar.monto}" class="montoFac"></td>
 								<td class="idParaHidden" style="display: none;" th:text="'fac_' + ${facturaVar.id}"></td>
-								<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td>							
+								<td><button type="button" class="btn btn-success" aria-label="Left Align" onclick="editarMontoFactura(this)"/></button></td>
+								<td><button type="button" class="btn btn-danger" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td>							
 							</tr>
 					        
 					     <!--   <tr style="visibility:hidden; height: 0px;">
@@ -135,51 +123,9 @@
 			</div>
 
 			<!-- ****** COMIENZO VENTANA MODAL FACTURA ****** -->
+			
 			<div class="modal fade" id="modal_factura" tabindex="-1"  role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-					 	<div class="modal-header">
-					    	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					    	<h4 class="modal-title"><font color = "green">Seleccione la factura</font></h4>
-					  	</div>
-
-					  	<div class="modal-body">					      
-							<div class="table-responsive">
-						
-								<table class="table table-bordered table-hover table-condensed table-responsive" id="facturaTblModal">
-								    <thead>
-								        <tr class="success">
-								        	<th><font color = "#000000">Nro. factura</font></th>
-								            <th><font color = "#000000">Cliente nro.</font></th>
-								            <th><font color = "#000000">Nombre</font></th>
-								            <th><font color = "#000000">Fecha factura</font></th>
-								            <th><font color = "#000000">Monto original</font></th>
-								            <th><font color = "#000000">Monto adeudado</font></th>
-								            <th><font color = "#000000">Vencimiento</font></th>
-								        </tr>
-								    </thead>
-								    
-									<tbody>
-										<tr th:each="ccVar : ${cuentasCorrientes}">
-											<td th:text="${ccVar.nro_factura}"></td>
-											<td th:text="${ccVar.id}"></td>
-											<td th:text="${ccVar.nombre}"></td>
-											<td th:text="${#dates.format(ccVar.fecha_factura, 'dd/MM/yyyy')}"></td>
-											<td th:text="${ccVar.monto_original}"></td>
-											<td th:text="${ccVar.monto_adeudado}"></td>
-											<td th:text="${ccVar.fecha_vencimiento}"></td>
-										</tr>
-								    </tbody>
-								</table>
-							</div>
-					  	</div>
-
-					  	<div class="modal-footer">
-					    	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-					    	<button type="button" class="btn btn-primary">Seleccionar</button>
-					  	</div>
-					</div><!-- /.fin modal-content -->
-				</div><!-- /. fin modal-dialog -->
+				<!-- ESTE CONTENIDO LO COMPLETARA AJAX -->
 			</div> <!-- ****** FIN VENTANA MODAL FACTURA ****** -->
 
 			<!-- *********************************************************************************** -->
@@ -641,6 +587,7 @@
 
 <script type="text/javascript">
 	var errObject ='';
+	var ajaxExecuted;
 	
 	$(document).ready(function(){	
 		
@@ -660,6 +607,32 @@
 			format: 'dd/mm/yyyy'
 		});
 		
+		
+		$("#mostrar_mdl_factura").click(function() {
+			
+			// Do not call ajax again if it already was called				
+			if(ajaxExecuted) {
+				$("#modal_factura").show();
+				return;
+			}
+			
+			var clienteNro = $("#clienteNro").val();
+			
+			$.ajax({
+				url : '/listarCCByCustomer',
+				data : 'clienteNro=' + clienteNro,
+				type : 'GET',
+				dataType : 'html',
+				success : function(data) {
+					$('#modal_factura').html(data);
+					$("#modal_factura").modal();
+		 			ajaxExecuted = true;
+				},
+				error : function() {
+					// Aqui código cuando servidor retorna error
+				}
+			});
+		});
 		
 		$("#facturaTblModal tr").click(function(){
 			var facturaSumaImportes = 0;
@@ -699,7 +672,19 @@
 			document.getElementById("tblFactura").deleteRow(1);
 	    });*/
 		
-		$("#idTableSelectCte tr").click(function(){
+		$("#idTableSelectCte1").dataTable();
+		
+		$('#idTableSelectCte1').on( 'draw.dt', function () {
+			$(this).find('tr').bind("click", function(){
+				selectRow(this);
+			});		  
+		} );	  
+	    
+		$("#idTableSelectCte1 tr").click(function(){
+			selectRow(this);
+		});
+	    
+	/*	$("#idTableSelectCte1 tr").click(function(){
 			var tdArray = $(this).find("td");
 
 			var clienteId = tdArray[0].innerHTML;
@@ -710,7 +695,7 @@
 			$("#clienteNro").val(clienteNumero);
 			$("#clienteNombre").val(clienteNombre);
 			$("#clienteId").val(clienteId);
-		});
+		}); */
 
 	    
 		$("#retencionBtnAgregarId").click(function() {
@@ -973,6 +958,20 @@
 		
 	}); //END ready(function()
 	
+	selectRow = function(aThis) {
+		var tdArray = $(aThis).find("td");
+
+		var clienteId = tdArray[0].innerHTML;
+		var clienteNumero = tdArray[1].innerHTML;
+		var clienteNombre = tdArray[2].innerHTML;
+		$("#modal_cliente").modal('hide'); //.modal('toggle');
+		
+		$("#clienteNro").val(clienteNumero);
+		$("#clienteNombre").val(clienteNombre);
+		$("#clienteId").val(clienteId);
+		
+		ajaxExecuted = false;
+	};
 	
 	
 	crearHidden = function(nameVar, valueVar){
@@ -1346,6 +1345,88 @@
 		var facturaNro = $(elementoTR).find('.facturaNro').text();
 		$("#facturaTblModal").find('.hidden-td-' + facturaNro).text('enable');
 		$("#facturaTblModal").find('.hidden-td-' + facturaNro).closest('tr').removeProp('style');
+	};
+	
+	function eliminarSoloHidden (botonEliminar) {	
+		var elementoTR = $(botonEliminar).closest('tr');
+		var idHidden = $(elementoTR).find('.idParaHidden').text();		
+			
+		$('.' + idHidden).remove();
+	};
+	// -------------------------------------------------------------------------------------------
+	// Funcion para editar facturas
+	var valorAnt;
+	var editingValue = false;
+	function editarMontoFactura(editBtn) {
+		
+		var editBtnClass = $(editBtn).attr('class');
+		
+		// No permitir editar 2 valores al mismo tiempo, 
+		// porque el código no está preparado para eso.
+		if(editBtnClass == 'btn btn-success' && editingValue) {
+			return;
+		}
+		
+		if(editBtnClass == 'btn btn-success') {
+			
+			$(editBtn).removeClass('btn btn-success');
+			$(editBtn).addClass('btn btn-warning');
+			
+			// Hide eliminar buttons
+			$('#tblFactura tr').each(function() {
+				$(this).find('.btn-danger').parent('td').hide();
+			});
+			
+			var elementoTR = $(editBtn).closest('tr');
+			var montoFactura = $(elementoTR).find('.montoFac').text();
+			$(elementoTR).find('.montoFac').html('<input type="text" class="montoFacInp" onkeypress="return saveOnKeyPress(event)" style="color: black;" value="' + montoFactura + '"/>');
+			valorAnt = montoFactura;
+			editingValue = true;
+			
+		} else {
+			
+			$(editBtn).removeClass('btn btn-warning');
+			$(editBtn).addClass('btn btn-success');
+			
+			// Show eliminar buttons
+			$('#tblFactura tr').each(function() {
+				$(this).find('.btn-danger').parent('td').show();
+			});
+			
+			var elementoTR = $(editBtn).closest('tr');
+			var montoFactura = $(elementoTR).find('.montoFacInp').val();
+			$(elementoTR).find('.montoFac').html(montoFactura);
+			
+			atualizarMontoTotalFactura(valorAnt, montoFactura);
+			editingValue = false;
+			
+			//elimino y vuelvo a crear el hidden
+			var facNumero = $(elementoTR).find('.facturaNro').text();
+			var facFech = $(elementoTR).find('.facturaFecha').text();
+			var idHiddenDate3 = $(elementoTR).find('.idParaHidden').text();
+			
+			eliminarSoloHidden(editBtn);
+			
+			crearHiddenB('facturaNro', facNumero, idHiddenDate3);
+ 			crearHiddenB('facturaFecha', facFech, idHiddenDate3);
+ 			crearHiddenB('facturaMonto', montoFactura, idHiddenDate3);
+ 			//FIN //elimino y vuelvo a crear el hidden
+	        calcularMontoTotalRecibo();
+			calcularBalance();
+		}
+	};
+	
+	function atualizarMontoTotalFactura(valorAnt, valorNuevo) {
+		var valorTotal = parseFloat($('#facturasMontoTotal').val());
+		valorTotal = valorTotal - parseFloat(valorAnt);
+		valorTotal = valorTotal + parseFloat(valorNuevo);
+		$('#facturasMontoTotal').val(valorTotal.toFixed(2));
+	};
+	
+	function saveOnKeyPress(e) {
+	    if(e.keyCode == 13) {
+	        editarMontoFactura($('#tblFactura .btn-warning'));
+	    }
 	};
 </script>
 
