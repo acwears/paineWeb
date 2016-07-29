@@ -386,6 +386,10 @@ public class ReciboRepository extends JDBCRepository {
 		recibo.setId(reciboId.intValue());
 	}
 
+	/*public List<Recibo> recibosParaExportar2() {
+		return recibo;
+	} */
+	
 	// LISTADO DE RECIBOS PARA SELECCIONAR EN EL MENU 'VER'
 	public List<Recibo> listarRecibos() {
 

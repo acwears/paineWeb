@@ -730,6 +730,12 @@
  			sumarMontos("#retencionMontoTotal", retencionImporte);
  			calcularMontoTotalRecibo();
  			calcularBalance();
+ 			
+ 			$('#retencionTipoPago').val("-------");
+			$('#retencionNumero').val("");
+			$('#retencionImporte').val("");
+			$('#retencionSucursal').val("");
+			$('#retencionYear').val("");
 		});
 	    
 	    
@@ -761,6 +767,10 @@
  			sumarMontos("#depositoMontoTotal", depositoImporteVar);
  			calcularMontoTotalRecibo();
  			calcularBalance();
+ 			
+ 			//$('#depositoBancoId').val("");
+			$('#depositoImporteId').val("");
+			$('#depositoFechaId').val("");
 		});
 		
 		$("#chequeBtnAgregarID").click(function() {
@@ -799,6 +809,12 @@
  			//sumo el monto total del recibo
  			calcularMontoTotalRecibo();
  			calcularBalance();
+ 			
+ 			$('#chequeNroId').val("");
+			$('#chequeBancoID').val("-------");
+			$('#chequeImporte').val("");
+			$('#chequeCuitId').val("");
+			$('#chequeFechaId').val("");
 		});
 		
 		$('#descuentoBtnAgregarId').click(function(){
@@ -831,6 +847,9 @@
  			sumarMontos("#importeTotalDescuento", descuentoPorcentajeVar);
  			//calcularImporte_Descuento(); lo saque el 19/04
  			calcularBalance();
+ 			
+ 			$('#descuentoPorcentajeId').val("");
+			$('#descuentoDescripcionId').val("");
 		});
 		
 		$('#idGuardarRecibo').click(function(){

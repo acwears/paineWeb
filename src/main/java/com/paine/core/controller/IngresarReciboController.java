@@ -123,7 +123,7 @@ public class IngresarReciboController {
 	
 	@RequestMapping("/recibo/salvar")
 	public String salvar(@ModelAttribute("reciboDto") ReciboDto reciboDto, Model model) {
-
+	//public String salvar(@ModelAttribute("reciboDto") ReciboDto reciboDto, Model model) {
 		Recibo recibo = null;
 
 		try {
@@ -132,11 +132,16 @@ public class IngresarReciboController {
 			reciboService.salvar(recibo);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			log.error("Error tratando de guardar el recibo");
+			model.addAttribute("errorMessage", "Se produjo un error al intentar almacenar el recibo");
+			return "mensajeInformativo";
 		}
 
 		// Mostrar mensaje suceso al cliente
-		return "reciboNuevo";
+		model.addAttribute("successMessage", "El recibo fue almacenado!");
+		return "mensajeInformativo";
+		//return "reciboNuevo";
 	}
 
 	private Recibo criarRecibo(ReciboDto reciboDto) throws ParseException {

@@ -64,7 +64,9 @@ public class ReciboService {
     	recibo.setFacturas(facturas);
     	recibo.setTpCheques(cheques);
     	recibo.setTpDepositos(tpDepositos);
+    	recibo.setTpRetenciones(tpRetenciones);
     	
+    	/*
     	if(CollectionUtils.isNotEmpty(tpRetenciones)){
     		recibo.setTpRetenciones(tpRetenciones);
     	}
@@ -77,6 +79,7 @@ public class ReciboService {
     		tpr.setTipoPago("");
     		recibo.addRetencion(tpr);
     	}
+    	*/
     	
     	if(tpEff != null){
     		recibo.setTpEff(tpEff);
