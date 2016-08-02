@@ -147,22 +147,26 @@
 						<table class="table table-bordered table-responsive" id="tableRetencionVer">
 						    <thead>
 						        <tr>
-						            <th><font color = "white">Retención #</font></th>
+						        	<th><font color = "white">Tipo de pago</font></th>
+						            <th><font color = "white">Retención_#</font></th>
 						            <th><font color = "white">Importe</font></th>
-						            <th><font color = "white">Sucursal</font></th>
-						            <th><font color = "white">Año</font></th>
+						     <!--        <th><font color = "white">Sucursal</font></th>
+						            <th><font color = "white">Año</font></th> -->
 						        </tr>
 						    </thead>
 						 		<tr th:each="retencionVar : ${recibo.getTpRetenciones()}">
+									<td th:text="${retencionVar.tipoPago}"></td>
 									<td th:text="${retencionVar.numero}"></td>
 									<td th:text="${retencionVar.monto}"></td>
-									<td th:text="${retencionVar.sucursal}"></td>
-									<td th:text="${retencionVar.anio}"></td>				
+								<!--	<td th:text="${retencionVar.sucursal}"></td>
+									<td th:text="${retencionVar.anio}"></td>			-->	
 								</tr>				    
 							<tbody>
 						    </tbody>
 						</table>
 					</div>
+					<label for="exampleInputEmail1">Monto total de retenciones agregados</label>
+					<input type="text" class="form-control" id="retencionesMontoTotalId" readonly="readonly" th:value="${sumaMontoRetenciones}">
 				</div> <!-- FIN RETENCION -->
 				
 			</div> <!-- FIN CHEQUE, DEPOSITO Y RETENCION -->

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import main.java.com.paine.core.model.Recibo;
 import main.java.com.paine.core.model.TpCheque;
 import main.java.com.paine.core.model.TpDeposito;
+import main.java.com.paine.core.model.TpRetencion;
 import main.java.com.paine.core.service.ReciboService;
 
 @Controller
@@ -51,6 +52,16 @@ public class VerReciboController {
 			Recibo recibo = reciboService.findOne(reciboId);
 			model.addAttribute("recibo", recibo);
 
+			//SUMO EL IMPORTE TOTAL DE LAS RETENCIONES
+			double sumaMontoRetenciones = 0;
+			if (CollectionUtils.isNotEmpty(recibo.getTpRetenciones())) {
+
+				for (TpRetencion retencion : recibo.getTpRetenciones()) {
+					sumaMontoRetenciones = sumaMontoRetenciones + retencion.getMonto();
+				}
+			}
+			model.addAttribute("sumaMontoRetenciones", sumaMontoRetenciones);
+			
 			// SUMO EL IMPORTE TOTAL DE LOS CHEQUES
 			double sumaMontoCheques = 0;
 			if (CollectionUtils.isNotEmpty(recibo.getTpCheques())) {

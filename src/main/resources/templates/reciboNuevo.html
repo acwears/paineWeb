@@ -325,10 +325,7 @@
 										<option>-------</option>
 										<option>Retencion Ganancias</option>
 										<option>Retencion Iva</option>
-										<option>Retencion IIBB Capital</option>
-										<option>Retencion IIBB Buenos Aire</option>
-										<option>Retencion IIBB San Lui</option>
-										<option>Retenicon IIBB Santa Fe</option>
+										<option>Retencion IIBB</option>
 							        </select>
 								</div>
 								
@@ -342,14 +339,14 @@
 									<input type="miTabPanelText" id="retencionImporte" aria-describedby="basic-addon10">
 								</div>
 							
-								<div class="input-group input-group-sm">
+								<div class="input-group input-group-sm" style="display: none;">
 									<span class="input-group-addon" id="basic-addon11">Sucursal</span>
-									<input type="miTabPanelText" id="retencionSucursal" aria-describedby="basic-addon11">
+									<input type="miTabPanelText" id="retencionSucursal" aria-describedby="basic-addon11" value="-">
 								</div>
 
-								<div class="input-group input-group-sm">
+								<div class="input-group input-group-sm" style="display: none;">
 									<span class="input-group-addon" id="basic-addon12">Año</span>
-									<input type="miTabPanelText" id="retencionYear" aria-describedby="basic-addon12">
+									<input type="miTabPanelText" id="retencionYear" aria-describedby="basic-addon12" value="0">
 								</div>
 								
 								<br>
@@ -363,8 +360,8 @@
 									        	<th width="60%" style="font-weight:bold;"><font color = "#000000">Tipo de pago</font></th>
 									            <th width="60%" style="font-weight:bold;"><font color = "#000000">Numero</font></th>
 									            <th width="130%" style="font-weight:bold;"><font color = "#000000">Importe</font></th>
-									            <th width="40%" style="font-weight:bold;"><font color = "#000000">Sucursal</font></th>
-									            <th width="40%" style="font-weight:bold;"><font color = "#000000">Año</font></th>								
+									            <!-- <th width="40%" style="font-weight:bold;"><font color = "#000000">Sucursal</font></th>
+									            <th width="40%" style="font-weight:bold;"><font color = "#000000">Año</font></th>		 -->						
 									            <th width="40%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>
 									        </tr>
 									</table>
@@ -653,8 +650,8 @@
 			var newRecord = '<tr><td>' + $('#retencionTipoPago option:selected').text() + '</td>';
 			newRecord = newRecord + '<td>' + retencionNumero + '</td>';
 			newRecord = newRecord + '<td class="montoRetencion">' + retencionImporte + '</td>';
-			newRecord = newRecord + '<td>' + retencionSucursal + '</td>';
-			newRecord = newRecord + '<td>' + retencionYear + '</td>';
+			//newRecord = newRecord + '<td>' + retencionSucursal + '</td>';
+			//newRecord = newRecord + '<td>' + retencionYear + '</td>';
 			newRecord = newRecord + '<td class="idParaHidden" style="display: none;">' + idHiddenDate2 + '</td>';
 			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
 			
@@ -674,8 +671,8 @@
  			$('#retencionTipoPago').val("-------");
 			$('#retencionNumero').val("");
 			$('#retencionImporte').val("");
-			$('#retencionSucursal').val("");
-			$('#retencionYear').val("");
+			//$('#retencionSucursal').val("");
+			//$('#retencionYear').val("");
 		});
 		
 		document.getElementById("depositoBancoId").selectedIndex=1;
@@ -996,7 +993,7 @@
 		} no hace falta ingresar una factura*/
 		
 		//if($('#retencionNumero').val() == '' && $('#efectivoImporte').val() == 0 && $('#chequeMontoTotalId').val() == '' && $('#depositoMontoTotal').val() == ''){
-		if(($('#retencionNumero').val() == '' || $('#retencionNumero').val() == 0) && ($('#efectivoImporte').val() == 0 || $('#efectivoImporte').val() == '') && ($('#chequeMontoTotalId').val() == '' || $('#chequeMontoTotalId').val() == 0.00) && ($('#depositoMontoTotal').val() == '' || $('#depositoMontoTotal').val() == 0.00)){					
+		if(($('#retencionMontoTotal').val() == '' || $('#retencionMontoTotal').val() == 0) && ($('#efectivoImporte').val() == 0 || $('#efectivoImporte').val() == '') && ($('#chequeMontoTotalId').val() == '' || $('#chequeMontoTotalId').val() == 0.00) && ($('#depositoMontoTotal').val() == '' || $('#depositoMontoTotal').val() == 0.00)){					
 			document.getElementById('textModal').innerHTML = '- Debe ingresar al menos un tipo de pago.';
 			$('#modalMensajes').modal();
 			return false;
@@ -1081,7 +1078,7 @@
 			return false;
 		}
 		
-		if($('#retencionSucursal').val() == ''){
+		/* if($('#retencionSucursal').val() == ''){
 			document.getElementById('textModal').innerHTML = '- Indique la sucursal.';
 			errObject = '#retencionSucursal';
 			$('#modalMensajes').modal();
@@ -1093,7 +1090,7 @@
 			errObject = '#retencionYear';
 			$('#modalMensajes').modal();
 			return false;
-		}
+		} */
 		
 		return true;
 	}

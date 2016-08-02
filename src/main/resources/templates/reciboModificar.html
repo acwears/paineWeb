@@ -257,7 +257,7 @@
 													<input type="hidden" name="retencionTipoPago" th:value="${retencionVar.tipoPago}" th:attr="class='ret_' + ${retencionVar.id}" ></input>
 													<input type="hidden" name="retencionNumero" th:value="${retencionVar.numero}" th:attr="class='ret_' + ${retencionVar.id}" ></input>
 													<input type="hidden" name="retencionImporte" th:value="${retencionVar.monto}" th:attr="class='ret_' + ${retencionVar.id}" ></input>
-													<input type="hidden" name="retencionSucursal" th:value="${retencionVar.sucursal}" th:attr="class='ret_' + ${retencionVar.id}" ></input>
+											   		<input type="hidden" name="retencionSucursal" th:value="${retencionVar.sucursal}" th:attr="class='ret_' + ${retencionVar.id}" ></input>
 													<input type="hidden" name="retencionYear" th:value="${retencionVar.anio}" th:attr="class='ret_' + ${retencionVar.id}" ></input>
 												</div>
 										</form>
@@ -348,10 +348,7 @@
 										<option>-------</option>
 										<option>Retencion Ganancias</option>
 										<option>Retencion Iva</option>
-										<option>Retencion IIBB Capital</option>
-										<option>Retencion IIBB Buenos Aire</option>
-										<option>Retencion IIBB San Lui</option>
-										<option>Retenicon IIBB Santa Fe</option>
+										<option>Retencion IIBB</option>
 							        </select>
 								</div>
 								
@@ -365,14 +362,14 @@
 									<input type="miTabPanelText" id="retencionImporte" aria-describedby="basic-addon10">
 								</div>
 							
-								<div class="input-group input-group-sm">
+								<div class="input-group input-group-sm" style="display: none;">
 									<span class="input-group-addon" id="basic-addon11">Sucursal</span>
-									<input type="miTabPanelText" id="retencionSucursal" aria-describedby="basic-addon11">
+									<input type="miTabPanelText" id="retencionSucursal" aria-describedby="basic-addon11" value="-">
 								</div>
 
-								<div class="input-group input-group-sm">
+								<div class="input-group input-group-sm" style="display: none;">
 									<span class="input-group-addon" id="basic-addon12">Año</span>
-									<input type="miTabPanelText" id="retencionYear" aria-describedby="basic-addon12">
+									<input type="miTabPanelText" id="retencionYear" aria-describedby="basic-addon12" value="0">
 								</div>
 								
 								<br>
@@ -386,8 +383,8 @@
 									        	<th width="60%" style="font-weight:bold;"><font color = "#000000">Tipo de pago</font></th>
 									            <th width="60%" style="font-weight:bold;"><font color = "#000000">Numero</font></th>
 									            <th width="130%" style="font-weight:bold;"><font color = "#000000">Importe</font></th>
-									            <th width="40%" style="font-weight:bold;"><font color = "#000000">Sucursal</font></th>
-									            <th width="40%" style="font-weight:bold;"><font color = "#000000">Año</font></th>								
+									         <!--   <th width="40%" style="font-weight:bold;"><font color = "#000000">Sucursal</font></th>
+									            <th width="40%" style="font-weight:bold;"><font color = "#000000">Año</font></th>		-->						
 									            <th width="40%" style="font-weight:bold; display: none;"><font color = "#000000">idHidden</font></th>
 									        </tr>
 									        
@@ -395,8 +392,8 @@
 												<td th:text="${retencionVar.tipoPago}"></td>
 												<td th:text="${retencionVar.numero}"></td>
 												<td th:text="${retencionVar.monto}" class="montoRetencion"></td>
-												<td th:text="${retencionVar.sucursal}"></td>
-												<td th:text="${retencionVar.anio}"></td>
+										<!-- 		<td th:text="${retencionVar.sucursal}"></td>
+												<td th:text="${retencionVar.anio}"></td> -->
 												<td class="idParaHidden" style="display: none;" th:text="'ret_' + ${retencionVar.id}"></td>
 												<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td>							
 											</tr>
@@ -713,8 +710,8 @@
 			var newRecord = '<tr><td>' + $('#retencionTipoPago option:selected').text() + '</td>';
 			newRecord = newRecord + '<td>' + retencionNumero + '</td>';
 			newRecord = newRecord + '<td class="montoRetencion">' + retencionImporte + '</td>';
-			newRecord = newRecord + '<td>' + retencionSucursal + '</td>';
-			newRecord = newRecord + '<td>' + retencionYear + '</td>';
+			//newRecord = newRecord + '<td>' + retencionSucursal + '</td>';
+			//newRecord = newRecord + '<td>' + retencionYear + '</td>';
 			newRecord = newRecord + '<td class="idParaHidden" style="display: none;">' + idHiddenDate2 + '</td>';
 			newRecord = newRecord + '<td><button type="button" class="btn btn-default" aria-label="Left Align" onclick="eliminarHidden(this)"/></button></td></tr>';
 			
@@ -734,8 +731,8 @@
  			$('#retencionTipoPago').val("-------");
 			$('#retencionNumero').val("");
 			$('#retencionImporte').val("");
-			$('#retencionSucursal').val("");
-			$('#retencionYear').val("");
+			//$('#retencionSucursal').val("");
+			//$('#retencionYear').val("");
 		});
 	    
 	    
@@ -1145,19 +1142,19 @@
 			return false;
 		}
 		
-		if($('#retencionSucursal').val() == ''){
+		/* if($('#retencionSucursal').val() == ''){
 			document.getElementById('textModal').innerHTML = '- Indique la sucursal.';
 			errObject = '#retencionSucursal';
 			$('#modalMensajes').modal();
 			return false;
-		}
+		} */
 		
-		if($('#retencionYear').val() == ''){
+		/* if($('#retencionYear').val() == ''){
 			document.getElementById('textModal').innerHTML = '- Indique el año.';
 			errObject = '#retencionYear';
 			$('#modalMensajes').modal();
 			return false;
-		}
+		} */
 		
 		return true;
 	}

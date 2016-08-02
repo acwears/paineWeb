@@ -19,16 +19,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import main.java.com.paine.core.model.Banco;
 import main.java.com.paine.core.model.Cliente;
 import main.java.com.paine.core.model.CuentaCorriente;
 import main.java.com.paine.core.model.Recibo;
+import main.java.com.paine.core.model.TipoDePago;
 import main.java.com.paine.core.model.TpCheque;
 import main.java.com.paine.core.model.TpDeposito;
 import main.java.com.paine.core.model.TpEff;
 import main.java.com.paine.core.model.TpRetencion;
 import main.java.com.paine.core.model.Usuario;
+import main.java.com.paine.core.repository.BancoRepository;
 import main.java.com.paine.core.repository.CuentaCorrienteRepository;
 import main.java.com.paine.core.repository.ReciboRepository;
+import main.java.com.paine.core.repository.TipoDePagoRepository;
 
 @Transactional
 @Service
@@ -43,6 +47,12 @@ public class FileService {
 
 	@Autowired
 	private ReciboRepository reciboRepository;
+	
+	@Autowired
+	private BancoRepository bancoRepository;
+	
+	@Autowired
+	private TipoDePagoRepository tipoDePagoRepository;
 
 	public void saveFile(MultipartFile fileUpload) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -170,12 +180,17 @@ public class FileService {
 			}
 			
 			//DEPOSITO:
+			String fechaDepositoStr;
 			for(TpDeposito depositoss : reciboCompleto.getTpDepositos()){
+				fechaDepositoStr = sdf.format(depositoss.getFecha());
+				
 				cabeceraTR2(recibo.getNumero(), "14", "121201", depositoss.getMonto());
 				
-				sb.append("A"); //pago de terceros, A ó B VER
-				sb.append(StringUtils.leftPad(Integer.toString(depositoss.getBanco().getCodigo()),11,"0"));
-				sb.append("071"); //Serie, VER
+				//sb.append("A"); //pago de terceros, A ó B VER
+				//sb.append(StringUtils.leftPad(Integer.toString(depositoss.getBanco().getCodigo()),11,"0"));
+				sb.append("                                  ");
+				sb.append(fechaDepositoStr);
+				//sb.append("071"); //Serie, VER
 				fileLines.add(sb.toString());
 			}
 			
@@ -183,33 +198,45 @@ public class FileService {
 			String fechaChequeStr;
 			for(TpCheque cheques : reciboCompleto.getTpCheques()){
 				
+				//*** busco el nombre del banco
+				Banco banco = new Banco();
+				banco = bancoRepository.findOne(cheques.getBanco().getId());
+				//** end busco nombre banco
+				
 				fechaChequeStr = sdf.format(cheques.getFechaDeposito());
 				cabeceraTR2(recibo.getNumero(), "03", "121002", cheques.getMonto());
 				
-				sb.append("                                  ");
+				sb.append(StringUtils.leftPad(banco.getAbreviatura(),11," "));
 				sb.append(StringUtils.leftPad(Integer.toString(cheques.getNumero()), 8, "0"));
 				sb.append(StringUtils.leftPad(cheques.getCuit(), 11, "0"));
+				sb.append("    ");
 				sb.append(fechaChequeStr);
 				fileLines.add(sb.toString());
 			}
 			
-			//RETENCION
-			for(TpRetencion retenciones : reciboCompleto.getTpRetenciones()){
+			//RETENCION scar
+			/*for(TpRetencion retenciones : reciboCompleto.getTpRetenciones()){
 				
-				cabeceraTR2(recibo.getNumero(), "16", "133301", retenciones.getMonto());
+				//traigo el codigo de imputacion
+				TipoDePago tipoPago = new TipoDePago();
+				tipoPago = tipoDePagoRepository.findOne(retenciones.getTipoPago());
+				//end
+				
+				//cabeceraTR2(recibo.getNumero(), "16", "133301", retenciones.getMonto());
+				cabeceraTR2(recibo.getNumero(), tipoPago.getCodigo(), tipoPago.getImputacion(), retenciones.getMonto());
 				
 				sb.append("                                  ");
 				sb.append("16"); //tipo de pago, sacar de tabla tipo de pagos
-				sb.append(StringUtils.leftPad(retenciones.getSucursal(), 4, "0"));
+				//sb.append(StringUtils.leftPad(retenciones.getSucursal(), 4, "0"));
 				sb.append(StringUtils.leftPad(Integer.toString(retenciones.getAnio()), 4, "0"));
 				sb.append(StringUtils.leftPad(retenciones.getNumero(), 4, "0"));
-				sb.append("REG"); //regimen, ver si va
-				sb.append("BASECALCU"); //base calculo, ver si va
-				sb.append("PORCE"); //porcentaje, ver si va
-				sb.append("JU"); //juris, ver si va
+				//sb.append("REG"); //regimen, ver si va
+				//sb.append("BASECALCU"); //base calculo, ver si va
+				//sb.append("PORCE"); //porcentaje, ver si va
+				//sb.append("JU"); //juris, ver si va
 				
 				fileLines.add(sb.toString());
-			}
+			}*/
 		}
 
 		reciboRepository.modifyExportados(recibos, usuario);

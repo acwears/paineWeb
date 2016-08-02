@@ -44,4 +44,24 @@ public class BancoRepository extends JDBCRepository{
 			return banco;
 		});
 	}
+	
+	public Banco findOne(double id) {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(" SELECT * FROM bancos WHERE id = ? ");
+		Object[] params = new Object[]{id};
+		
+		return getJdbcTemplate().queryForObject(sb.toString(), params, (rs, rowNum) -> {
+
+			Banco banco = new Banco();
+			
+			banco.setId(rs.getInt("id"));
+			banco.setCodigo(rs.getInt("codigo"));
+			banco.setNombre(rs.getString("nombre"));
+			banco.setAbreviatura(rs.getString("abreviatura"));
+			
+			return banco;
+		});
+	}
+	
 }
