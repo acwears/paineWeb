@@ -106,7 +106,7 @@ public class FileService {
 
 				CCs.add(cuentaCorriente);
 			}
-
+			cuentaCorrienteRepository.delete();
 			cuentaCorrienteRepository.saveCC(CCs);
 
 		} catch (Exception ex) {

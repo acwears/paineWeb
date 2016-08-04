@@ -138,4 +138,16 @@ public class CuentaCorrienteRepository extends JDBCRepository{
 				}
 		});
 	}
+	
+	 public void delete(){
+		 
+		  StringBuilder sb = new StringBuilder();
+		  
+		  sb.append(" DELETE ");
+		  sb.append(" FROM cc ");
+		  		  
+		  //Object[] params = new Object[]{1};
+		  
+		  getJdbcTemplate().update(sb.toString());
+	}
 }
