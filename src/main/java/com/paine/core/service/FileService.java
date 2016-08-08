@@ -97,7 +97,14 @@ public class FileService {
 				cuentaCorriente.setNro_factura(lineArray[3]);
 				cuentaCorriente.setMonto_original(Double.parseDouble(lineArray[4]));
 				cuentaCorriente.setMonto_adeudado(Double.parseDouble(lineArray[5]));
-				cuentaCorriente.setSuma_deuda(Double.parseDouble(lineArray[6]));
+				
+				if(StringUtils.isEmpty(lineArray[6])){
+					cuentaCorriente.setSuma_deuda(0);
+				}
+				else{
+					cuentaCorriente.setSuma_deuda(Double.parseDouble(lineArray[6]));
+				}
+				
 				cuentaCorriente.setFecha_vencimiento(sdf.parse(lineArray[7]));
 
 				Cliente cliente = new Cliente();

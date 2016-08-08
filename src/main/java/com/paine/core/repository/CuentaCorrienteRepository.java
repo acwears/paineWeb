@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
@@ -128,6 +129,7 @@ public class CuentaCorrienteRepository extends JDBCRepository{
 					ps.setDate(4, new java.sql.Date(cc.getFecha_factura().getTime()));
 					ps.setDouble(5, cc.getMonto_original());
 					ps.setDouble(6, cc.getMonto_adeudado());
+					//if(ArrayUtils.isEmpty(cc.getSuma_deuda())){}
 					ps.setDouble(7, cc.getSuma_deuda());
 					ps.setDate(8, new java.sql.Date(cc.getFecha_vencimiento().getTime()));
 				}
