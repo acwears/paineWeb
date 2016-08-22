@@ -101,6 +101,20 @@ public class ReciboService {
 		return recibos;
 	}
 	
+	public List<Recibo> recibosNoEnviados(){
+		List<Recibo> recibos = reciboRepository.recibosEnEsperaDeEnvio();
+		return recibos;
+	}
+	
+	public List<Recibo> lotesEnviados(){
+		List<Recibo> recibos = reciboRepository.lotesEnviados();
+		return recibos;
+	}
+	
+	public void salvarLote(List<Integer> listado){
+		reciboRepository.salvarLote(listado, reciboRepository.maxLote());
+	}
+	
 	public void salvar(Recibo recibo) {
 		  
 		reciboRepository.save(recibo);

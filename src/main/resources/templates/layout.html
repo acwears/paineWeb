@@ -59,7 +59,15 @@
 				<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1">
 					<a class="navbar-brand" th:href="@{/listarRecibosModificar}" id="mnuModif">Modificar</a>
 				</div>
-
+				
+				<div sec:authorize="hasRole('ROLE_VENDEDOR')" class="col-xs-12 col-sm-4 col-md-2 col-lg-1">
+					<a class="navbar-brand" th:href="@{/envioLotes}" id="mnuLoteEnvio">Enviar Lote</a>
+				</div>
+				
+				<div sec:authorize="hasRole('ROLE_VENDEDOR')" class="col-xs-12 col-sm-4 col-md-2 col-lg-1">
+					<a class="navbar-brand" th:href="@{/verLotes}" id="mnuLoteVer">Ver Lotes</a>
+				</div>
+				
 				<div sec:authorize="hasRole('ROLE_ADMIN')" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
 					<a class="navbar-brand" th:href="@{/controlPanel}" id="mnuCP">Panel de control</a>
 				</div>
