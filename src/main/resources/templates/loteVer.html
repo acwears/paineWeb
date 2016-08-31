@@ -25,6 +25,8 @@
 							<th><font color="#000000">Cliente #</font></th>
 							<th><font color="#000000">Nombre</font></th>
 							<th><font color="#000000">Importe total</font></th>
+							<th><font color="#000000">Lote</font></th>
+							<th><font color="#000000">Estado</font></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -35,6 +37,8 @@
 							<td th:text="${varRecibosSinEnviar.getCliente().numeroCliente}"></td>
 							<td th:text="${varRecibosSinEnviar.getCliente().nombre}"></td>
 							<td th:text="${varRecibosSinEnviar.importeTotal}"></td>
+							<td th:text="${varRecibosSinEnviar.lote}"></td>
+							<td th:text="${varRecibosSinEnviar.estadoLote}"></td>
 						</tr>
 					</tbody>
 				</table>

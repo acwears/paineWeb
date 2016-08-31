@@ -13,7 +13,10 @@ public class Recibo extends Bean {
 	private Date fechaProceso;
 	private double importeSumaFacturas;
 	private double importeTotal;
-	
+	private String estadoLote;
+	private String usuarioGeneradorLote;
+	private int lote;
+	private Date fechaLote;
 	
 	private Cliente cliente;
 	private List<Factura> facturas; /* rbo_fk_fac_nro; */
@@ -203,5 +206,37 @@ public class Recibo extends Bean {
 
 	public void setFechaProceso(Date fechaProceso) {
 		this.fechaProceso = fechaProceso;
+	}
+
+	public String getUsuarioGeneradorLote() {
+		return usuarioGeneradorLote;
+	}
+
+	public void setUsuarioGeneradorLote(String usuarioGeneradorLote) {
+		this.usuarioGeneradorLote = usuarioGeneradorLote;
+	}
+
+	public int getLote() {
+		return lote;
+	}
+
+	public void setLote(int lote) {
+		this.lote = lote;
+	}
+
+	public Date getFechaLote() {
+		return fechaLote;
+	}
+
+	public void setFechaLote(Date fechaLote) {
+		this.fechaLote = fechaLote;
+	}
+
+	public String getEstadoLote() {
+		return estadoLote;
+	}
+
+	public void setEstadoLote(String estadoLote) {
+		this.estadoLote = estadoLote;
 	}
 }

@@ -1,11 +1,14 @@
 package main.java.com.paine.core.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,6 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import main.java.com.paine.core.dto.view.LoteDto;
+import main.java.com.paine.core.dto.view.LotesAExportarDto;
 import main.java.com.paine.core.dto.view.UsuarioDto;
 import main.java.com.paine.core.model.Role;
 import main.java.com.paine.core.model.Usuario;
@@ -75,19 +80,26 @@ public class ControlPanelController {
 
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping("/controlPanel/exportarRecibos")
-	public void exportarRecibos(HttpServletResponse response) {
+	public void exportarRecibos(HttpServletResponse response, @ModelAttribute("lotesAExportarDto") LotesAExportarDto lotesAExportarDto, Model model) throws ParseException {
 
 		ServletOutputStream out = null;
 
+		List<Integer> listadoLotesId = new ArrayList<>();
+		
 		try {
 			
-			response.setContentType("text/plain");
-			response.setHeader("Content-Disposition", "attachment;filename=recibos.txt");
-			out = response.getOutputStream();
+			listadoLotesId = lotesParaExportar(lotesAExportarDto);
 			
-			List<String> datosReciboExportacion = fileService.exportarRecibos(Context.loggedUser());
-			for (String datosRecibo : datosReciboExportacion) {
-				out.println(datosRecibo);
+			for (int i = 0; i < listadoLotesId.size(); i++) {
+			
+				response.setContentType("text/plain");
+				response.setHeader("Content-Disposition", "attachment;filename=recibos.txt");
+				out = response.getOutputStream();
+				
+				List<String> datosReciboExportacion = fileService.exportarRecibos(Context.loggedUser());
+				for (String datosRecibo : datosReciboExportacion) {
+					out.println(datosRecibo);
+				}
 			}
 
 		} catch (IOException e) {
@@ -105,6 +117,17 @@ public class ControlPanelController {
 				log.error("Error cerrando output stream", e);
 			}
 		}
+	}
+	
+	private List<Integer> lotesParaExportar (LotesAExportarDto lotesAExportarDto) throws ParseException {
+		List<Integer> listadoLoteId = new ArrayList<>();
+		
+		if(ArrayUtils.isNotEmpty(lotesAExportarDto.getLoteId())) {
+			for (int i = 0; i < lotesAExportarDto.getLoteId().length; i++) {
+				listadoLoteId.add(lotesAExportarDto.getLoteId()[i]);
+			}
+		}
+		return listadoLoteId;
 	}
 
 	@Secured({ "ROLE_ADMIN" })

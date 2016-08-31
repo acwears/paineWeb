@@ -44,12 +44,13 @@ public class LoteEnvioController {
 			log.error("Error interno");
 			return "internalError";
 		}
-
+		
 		return "loteEnvio";
 	}
 	
 	@RequestMapping("/salvarLote")
 	public String salvar(@ModelAttribute("loteDto") LoteDto loteDto, Model model) {
+		int nroLote = reciboRepository.maxLote();
 		List<Integer> listadoRecibosId = new ArrayList<>();
 		
 		try {
@@ -65,7 +66,7 @@ public class LoteEnvioController {
 			return "mensajeInformativo";
 		}
 		
-		model.addAttribute("successMessage", "El Lote fue enviado!");
+		model.addAttribute("successMessage", "El Lote " + nroLote + " fue enviado con exito!");
 		return "mensajeInformativo";
 	}
 	
@@ -94,6 +95,48 @@ public class LoteEnvioController {
 		}
 
 		return "loteVer";
+	}
+	
+	//******************************************************************************************
+	//****************** COMIENZO EXPORTACION DE LOTES *****************************************
+	//******************************************************************************************
+	
+	@RequestMapping("/cargarLotes")
+	public String cargarLotes(Model model) {
+		
+		try {
+
+			List<Recibo> recibos = reciboService.recibosNoExportados();
+			model.addAttribute("recibos", recibos);
+			
+			//int nroLote = reciboRepository.maxLote();
+			//model.addAttribute("nroLote", nroLote);
+
+		} catch (Exception e) {
+			log.error("Error interno");
+			return "internalError";
+		}
+		
+		return "loteExportar";
+	}
+	
+	@RequestMapping("/exportarLotes")
+	public String exportarLotes(@ModelAttribute("loteDto") LoteDto loteDto, Model model) {
+		int nroLote = reciboRepository.maxLote();
+		List<Integer> listadoRecibosId = new ArrayList<>();
+		
+		try {
+			listadoRecibosId = recibosParaLotear(loteDto);
+			reciboService.salvarLote(listadoRecibosId);
+			
+		} catch (Exception e) {
+			log.error("Error tratando de guardar el recibo");
+			model.addAttribute("errorMessage", "Se produjo un error al intentar enviar el Lote");
+			return "mensajeInformativo";
+		}
+		
+		model.addAttribute("successMessage", "El Lote " + nroLote + " fue enviado con exito!");
+		return "mensajeInformativo";
 	}
 	
 }

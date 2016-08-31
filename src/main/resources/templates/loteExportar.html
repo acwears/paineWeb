@@ -12,37 +12,35 @@
 	<div id="container">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">Recibos cargados</h3>
+				<h3 class="panel-title">Lotes cargados</h3>
 			</div>
 			<div class="panel-body">
 				<!-- Table -->
-				<table class="table table-hover" id="tblRecibos">
+				<table class="table table-hover" id="tblLotes">
 					<thead>
 						<tr>
 							<th style="display: none;"></th>
-							<th><font color="#000000">Recibo #</font></th>
+							<th><font color="#000000">Lote #</font></th>
 							<th><font color="#000000">Fecha</font></th>
-							<th><font color="#000000">Cliente #</font></th>
+							<th><font color="#000000">Vendedor</font></th>
 							<th><font color="#000000">Nombre</font></th>
-							<th><font color="#000000">Importe total</font></th>
-							<th><font color="#000000">Lote</font></th>
+							<th><font color="#000000">Exportar</font></th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="varRecibosSinEnviar : ${recibos}">
-							<td class="miId" th:text="${varRecibosSinEnviar.id}" style="display: none;"></td>
-							<td th:text="${varRecibosSinEnviar.numero}"></td>
-							<td th:text="${varRecibosSinEnviar.fecha}"></td>
-							<td th:text="${varRecibosSinEnviar.getCliente().numeroCliente}"></td>
-							<td th:text="${varRecibosSinEnviar.getCliente().nombre}"></td>
-							<td th:text="${varRecibosSinEnviar.importeTotal}"></td>
+						<tr th:each="varRecibosSinExportar : ${recibos}">
+							<td th:text="${varRecibosSinExportar.id}" style="display: none;"></td>
+							<td class="miId" th:text="${varRecibosSinExportar.lote}"></td>
+							<td th:text="${varRecibosSinExportar.fechaLote}"></td>
+							<td th:text="${varRecibosSinExportar.getUsuario().id}"></td>
+							<td th:text="${varRecibosSinExportar.getUsuario().id}"></td>
 							<td><input type="checkbox" name="myTextEditBox" value="checked" style="margin-left:auto; margin-right:auto;"></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
-		<input class="btn btn-primary btn-lg" type="button" value="Enviar Lote" id="idEnviarLote">
+		<input class="btn btn-primary btn-lg" type="button" value="Exportar recibos" id="idExportarLote">
 		<br>
 		<br>
 	<!-- 	<input th:value="${nroLote}" id="idNroLote" readonly="readonly" width="50px">  -->
@@ -50,13 +48,13 @@
 
 	<div th:include="layout :: footerFragment"></div>
 	
-	<form action="#" th:action="@{/salvarLote}" th:object="${loteDto}" method="post" id="reciboFormId">
+	<form action="#" th:action="@{/controlPanel/exportarRecibos}" th:object="${lotesAExportarDto}" method="post" id="reciboFormId">
 	</form>
 	
 </body>
 
 <style> 
-#mnuLoteEnvio{color:white;} 
+#mnuLoteExportar{color:white;} 
 </style> 
 
 <script type="text/javascript">
@@ -65,27 +63,27 @@ $(document).ready(function(){
 	$("#successMessage").fadeOut(10000);
 	$("#errorMessage").fadeOut(10000);
 	
-	$("#idEnviarLote").click(function(){
-		var noSeleccionoRecibo = true;
+	$("#idExportarLote").click(function(){
+		var noSeleccionoLote = true;
 		
-		$('#tblRecibos').find('tr').each(function () {
+		$('#tblLotes').find('tr').each(function () {
 	        var row = $(this);
 	        if (row.find('input[type="checkbox"]').is(':checked')) {
-	        	noSeleccionoRecibo = false;
+	        	noSeleccionoLote = false;
 	        	var idHiddenDate = new Date();
 				var idHiddenDate2 = idHiddenDate.getTime().toString();
 				
-	        	var reciboId = $(this).find('.miId').text();
+	        	var loteId = $(this).find('.miId').text();
 	        	//alert('this checkbox is checked');
 	            //alert($(this).find('td').text());//esta linea que me traiga el valor de la primera celda
 	            //alert($(this).find('.miId').text());
 	            
-	            crearHiddenB('reciboId', reciboId, idHiddenDate2);
+	            crearHiddenB('loteId', loteId, idHiddenDate2);
 	        }
 	    });
 		
-		if(noSeleccionoRecibo){
-			alert("Debe seleccionar al menos un recibo!");
+		if(noSeleccionoLote){
+			alert("Debe seleccionar al menos un lote!");
 			return;
 		}
 		

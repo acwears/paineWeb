@@ -336,13 +336,13 @@ public class ReciboRepository extends JDBCRepository {
 		StringBuilder sb = new StringBuilder();
 		sb.append(" UPDATE recibo ");
 		sb.append(" SET exportado = ?, ");
-		sb.append(" usuario_exportador = ?, ");
-		sb.append(" fecha_exportacion = ?, ");
+		sb.append(" usuario_generador_lote = ?, ");
+		sb.append(" fecha_lote = ?, ");
 		sb.append(" lote = ? ");
 		sb.append(" WHERE id = ? ");
 		
 		for (int i = 0; i < listado.size(); i++) {
-			Object[] params = new Object[] { "ENVIADO", Context.loggedUser().getCodigo(), new Date(), lote, listado.get(i) };
+			Object[] params = new Object[] { "ENVIADO", Context.loggedUser().getId(), new Date(), lote, listado.get(i) };
 			getJdbcTemplate().update(sb.toString(), params);
 		}
 	}
@@ -411,12 +411,50 @@ public List<Recibo> recibosEnEsperaDeEnvio() {
 		});
 	}
 
+public List<Recibo> recibosEnEsperaDeExportacion() {
+	
+	StringBuilder sb = new StringBuilder(); // cambiar el join de cl por el de usuario
+	sb.append(" SELECT re.*, cl.id as idCliente, cl.nro_cliente, cl.nombre FROM recibo re ");
+	sb.append(" JOIN clientes cl ON cl.id = re.id_cliente ");
+	sb.append(" WHERE re.exportado = 'ENVIADO' ");
+
+	return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
+
+		Recibo recibos = new Recibo();
+		Usuario usuario = new Usuario();
+		
+		recibos.setId(rs.getInt("id"));
+		recibos.setNumero(rs.getInt("nro_recibo"));
+		recibos.setDescuento(rs.getDouble("descuento"));
+		recibos.setFecha(rs.getDate("fecha"));
+		recibos.setFechaProceso(rs.getDate("fecha_proceso"));
+		recibos.setImporteSumaFacturas(rs.getDouble("importe_suma_facturas"));
+		recibos.setImporteTotal(rs.getDouble("importe_total"));
+		recibos.setObservaciones(rs.getString("observaciones"));
+		recibos.setFechaProceso(rs.getDate("fecha_proceso"));
+		recibos.setLote(rs.getInt("lote"));
+		recibos.setFechaLote(rs.getDate("fecha_lote"));
+
+		Cliente cliente = new Cliente();
+		cliente.setId(rs.getInt("idCliente"));
+		cliente.setNumeroCliente(rs.getInt("nro_cliente"));
+		cliente.setNombre(rs.getString("nombre"));
+
+		recibos.setCliente(cliente);
+
+		usuario.setId(rs.getInt("id_usuario"));
+		recibos.setUsuario(usuario);
+		
+		return recibos;
+	});
+}
+
 public List<Recibo> lotesEnviados() {
 	
 	StringBuilder sb = new StringBuilder();
 	sb.append(" SELECT re.*, cl.id as idCliente, cl.nro_cliente, cl.nombre FROM recibo re ");
 	sb.append(" JOIN clientes cl ON cl.id = re.id_cliente ");
-	sb.append(" WHERE re.lote <> 0 AND id_usuario = " + Context.loggedUser().getId());
+	sb.append(" WHERE re.lote <> 0 AND id_usuario = " + Context.loggedUser().getId() + " ORDER BY lote DESC");
 
 	return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
 
@@ -431,7 +469,11 @@ public List<Recibo> lotesEnviados() {
 		recibos.setImporteTotal(rs.getDouble("importe_total"));
 		recibos.setObservaciones(rs.getString("observaciones"));
 		recibos.setFechaProceso(rs.getDate("fecha_proceso"));
-
+		recibos.setFechaLote(rs.getDate("fecha_lote"));
+		recibos.setLote(rs.getInt("lote"));
+		recibos.setUsuarioGeneradorLote("usuario_generador_lote");
+		recibos.setEstadoLote(rs.getString("exportado"));
+		
 		Cliente cliente = new Cliente();
 		cliente.setId(rs.getInt("idCliente"));
 		cliente.setNumeroCliente(rs.getInt("nro_cliente"));

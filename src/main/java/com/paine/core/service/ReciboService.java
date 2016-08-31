@@ -115,6 +115,11 @@ public class ReciboService {
 		reciboRepository.salvarLote(listado, reciboRepository.maxLote());
 	}
 	
+	public List<Recibo> recibosNoExportados(){
+		List<Recibo> recibos = reciboRepository.recibosEnEsperaDeExportacion();
+		return recibos;
+	}
+	
 	public void salvar(Recibo recibo) {
 		  
 		reciboRepository.save(recibo);
