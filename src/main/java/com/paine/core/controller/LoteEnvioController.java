@@ -120,7 +120,7 @@ public class LoteEnvioController {
 		return "loteExportar";
 	}
 	
-	@RequestMapping("/exportarLotes")
+	@RequestMapping("/exportarLotes") //este no lo uso, los exporta a llos lotes de controlpanelcontroller
 	public String exportarLotes(@ModelAttribute("loteDto") LoteDto loteDto, Model model) {
 		int nroLote = reciboRepository.maxLote();
 		List<Integer> listadoRecibosId = new ArrayList<>();

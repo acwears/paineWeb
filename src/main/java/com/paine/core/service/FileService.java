@@ -142,7 +142,7 @@ public class FileService {
 	 * @return
 	 */
 	public boolean hayDatosExportacion() {
-		List<Recibo> recibos = reciboRepository.recibosParaExportar();
+		List<Recibo> recibos = reciboRepository.recibosParaExportar(0); //este control no va con el cambio de exportacion por lotes
 		return CollectionUtils.isNotEmpty(recibos);
 	}
 
@@ -152,11 +152,11 @@ public class FileService {
 	 * 
 	 * @return
 	 */
-	public List<String> exportarRecibos(Usuario usuario) {
+	public List<String> exportarRecibos(Usuario usuario, int lote) {
 		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
 		String fechaReciboStr;
 		
-		List<Recibo> recibos = reciboRepository.recibosParaExportar();
+		List<Recibo> recibos = reciboRepository.recibosParaExportar(lote);
 
 		if (CollectionUtils.isEmpty(recibos)) {
 			return null;
@@ -267,7 +267,7 @@ public class FileService {
 	
 	public List<String> exportarRecibos______LEO(Usuario usuario) {
 
-		List<Recibo> recibos = reciboRepository.recibosParaExportar();
+		List<Recibo> recibos = reciboRepository.recibosParaExportar(0);
 
 		if (CollectionUtils.isEmpty(recibos)) {
 			return null;

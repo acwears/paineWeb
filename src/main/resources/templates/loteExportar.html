@@ -32,15 +32,15 @@
 							<td th:text="${varRecibosSinExportar.id}" style="display: none;"></td>
 							<td class="miId" th:text="${varRecibosSinExportar.lote}"></td>
 							<td th:text="${varRecibosSinExportar.fechaLote}"></td>
-							<td th:text="${varRecibosSinExportar.getUsuario().id}"></td>
-							<td th:text="${varRecibosSinExportar.getUsuario().id}"></td>
+							<td th:text="${varRecibosSinExportar.getUsuario().codigo}"></td>
+							<td th:text="${varRecibosSinExportar.getUsuario().nombre}"></td>
 							<td><input type="checkbox" name="myTextEditBox" value="checked" style="margin-left:auto; margin-right:auto;"></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
-		<input class="btn btn-primary btn-lg" type="button" value="Exportar recibos" id="idExportarLote">
+		<input class="btn btn-primary btn-lg" type="button" value="Exportar lotes" id="idExportarLote">
 		<br>
 		<br>
 	<!-- 	<input th:value="${nroLote}" id="idNroLote" readonly="readonly" width="50px">  -->

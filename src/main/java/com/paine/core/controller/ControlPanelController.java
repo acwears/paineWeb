@@ -91,12 +91,15 @@ public class ControlPanelController {
 			listadoLotesId = lotesParaExportar(lotesAExportarDto);
 			
 			for (int i = 0; i < listadoLotesId.size(); i++) {
-			
+				String sLote;
+				sLote = listadoLotesId.get(i).toString();
+				sLote = "attachment;lote" + sLote + "=recibos.txt";
 				response.setContentType("text/plain");
-				response.setHeader("Content-Disposition", "attachment;filename=recibos.txt");
+				//response.setHeader("Content-Disposition", "attachment;filename=recibos.txt");
+				response.setHeader("Content-Disposition", sLote);
 				out = response.getOutputStream();
 				
-				List<String> datosReciboExportacion = fileService.exportarRecibos(Context.loggedUser());
+				List<String> datosReciboExportacion = fileService.exportarRecibos(Context.loggedUser(), listadoLotesId.get(i));
 				for (String datosRecibo : datosReciboExportacion) {
 					out.println(datosRecibo);
 				}

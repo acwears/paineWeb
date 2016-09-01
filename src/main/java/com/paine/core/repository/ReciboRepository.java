@@ -347,13 +347,21 @@ public class ReciboRepository extends JDBCRepository {
 		}
 	}
 
-	public List<Recibo> recibosParaExportar() {
+	public List<Recibo> recibosParaExportar(int lote) {
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append(" SELECT re.*, cl.id as idCliente, cl.nro_cliente, cl.nombre FROM recibo re ");
-		sb.append(" JOIN clientes cl ON cl.id = re.id_cliente ");
-		sb.append(" WHERE re.exportado = 'NO' ");
-
+		
+		if (lote != 0){
+			sb.append(" SELECT re.*, cl.id as idCliente, cl.nro_cliente, cl.nombre FROM recibo re ");
+			sb.append(" JOIN clientes cl ON cl.id = re.id_cliente ");
+			sb.append(" WHERE re.exportado = 'ENVIADO' AND re.lote =" + lote);
+		}
+		else{
+			sb.append(" SELECT re.*, cl.id as idCliente, cl.nro_cliente, cl.nombre FROM recibo re ");
+			sb.append(" JOIN clientes cl ON cl.id = re.id_cliente ");
+			sb.append(" WHERE re.exportado = 'ENVIADO'");
+		}
+		
 		return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
 
 			Recibo recibos = new Recibo();
@@ -367,7 +375,8 @@ public class ReciboRepository extends JDBCRepository {
 			recibos.setImporteTotal(rs.getDouble("importe_total"));
 			recibos.setObservaciones(rs.getString("observaciones"));
 			recibos.setFechaProceso(rs.getDate("fecha_proceso"));
-
+			recibos.setLote(rs.getInt("lote"));
+			
 			Cliente cliente = new Cliente();
 			cliente.setId(rs.getInt("idCliente"));
 			cliente.setNumeroCliente(rs.getInt("nro_cliente"));
@@ -414,8 +423,8 @@ public List<Recibo> recibosEnEsperaDeEnvio() {
 public List<Recibo> recibosEnEsperaDeExportacion() {
 	
 	StringBuilder sb = new StringBuilder(); // cambiar el join de cl por el de usuario
-	sb.append(" SELECT re.*, cl.id as idCliente, cl.nro_cliente, cl.nombre FROM recibo re ");
-	sb.append(" JOIN clientes cl ON cl.id = re.id_cliente ");
+	sb.append(" SELECT DISTINCT re.lote, re.fecha_lote, us.id as idUsuario, us.codigo, us.nombre FROM recibo re ");
+	sb.append(" JOIN usuario us ON us.id = re.id_usuario ");
 	sb.append(" WHERE re.exportado = 'ENVIADO' ");
 
 	return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
@@ -423,26 +432,28 @@ public List<Recibo> recibosEnEsperaDeExportacion() {
 		Recibo recibos = new Recibo();
 		Usuario usuario = new Usuario();
 		
-		recibos.setId(rs.getInt("id"));
-		recibos.setNumero(rs.getInt("nro_recibo"));
-		recibos.setDescuento(rs.getDouble("descuento"));
-		recibos.setFecha(rs.getDate("fecha"));
-		recibos.setFechaProceso(rs.getDate("fecha_proceso"));
-		recibos.setImporteSumaFacturas(rs.getDouble("importe_suma_facturas"));
-		recibos.setImporteTotal(rs.getDouble("importe_total"));
-		recibos.setObservaciones(rs.getString("observaciones"));
-		recibos.setFechaProceso(rs.getDate("fecha_proceso"));
+		//recibos.setId(rs.getInt("id"));
+		//recibos.setNumero(rs.getInt("nro_recibo"));
+		//recibos.setDescuento(rs.getDouble("descuento"));
+		//recibos.setFecha(rs.getDate("fecha"));
+		//recibos.setFechaProceso(rs.getDate("fecha_proceso"));
+		//recibos.setImporteSumaFacturas(rs.getDouble("importe_suma_facturas"));
+		//recibos.setImporteTotal(rs.getDouble("importe_total"));
+		//recibos.setObservaciones(rs.getString("observaciones"));
+		//recibos.setFechaProceso(rs.getDate("fecha_proceso"));
 		recibos.setLote(rs.getInt("lote"));
 		recibos.setFechaLote(rs.getDate("fecha_lote"));
 
-		Cliente cliente = new Cliente();
-		cliente.setId(rs.getInt("idCliente"));
-		cliente.setNumeroCliente(rs.getInt("nro_cliente"));
-		cliente.setNombre(rs.getString("nombre"));
+		//Cliente cliente = new Cliente();
+		//cliente.setId(rs.getInt("idCliente"));
+		//cliente.setNumeroCliente(rs.getInt("nro_cliente"));
+		//cliente.setNombre(rs.getString("nombre"));
 
-		recibos.setCliente(cliente);
+		//recibos.setCliente(cliente);
 
-		usuario.setId(rs.getInt("id_usuario"));
+		usuario.setId(rs.getInt("idUsuario"));
+		usuario.setCodigo(rs.getInt("codigo"));
+		usuario.setNombre(rs.getString("nombre"));
 		recibos.setUsuario(usuario);
 		
 		return recibos;
