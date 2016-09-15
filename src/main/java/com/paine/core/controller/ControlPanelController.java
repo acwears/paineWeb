@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import main.java.com.paine.core.dto.view.LoteDto;
 import main.java.com.paine.core.dto.view.LotesAExportarDto;
 import main.java.com.paine.core.dto.view.UsuarioDto;
 import main.java.com.paine.core.model.Role;
@@ -80,34 +79,33 @@ public class ControlPanelController {
 
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping("/controlPanel/exportarRecibos")
-	public void exportarRecibos(HttpServletResponse response, @ModelAttribute("lotesAExportarDto") LotesAExportarDto lotesAExportarDto, Model model) throws ParseException {
+	public void exportarRecibos(HttpServletResponse response, Integer[] lotes, Model model) throws ParseException {
 
 		ServletOutputStream out = null;
-
-		List<Integer> listadoLotesId = new ArrayList<>();
 		
 		try {
 			
-			listadoLotesId = lotesParaExportar(lotesAExportarDto);
-			
-			for (int i = 0; i < listadoLotesId.size(); i++) {
-				String sLote;
-				sLote = listadoLotesId.get(i).toString();
-				sLote = "attachment;lote" + sLote + "=recibos.txt";
+			for (Integer loteNro : lotes) {
+				
 				response.setContentType("text/plain");
-				//response.setHeader("Content-Disposition", "attachment;filename=recibos.txt");
-				response.setHeader("Content-Disposition", sLote);
+				response.setHeader("Content-Disposition", "attachment;filename=recibos.txt");
+				//response.setHeader("Content-Disposition", sLote);
 				out = response.getOutputStream();
 				
-				List<String> datosReciboExportacion = fileService.exportarRecibos(Context.loggedUser(), listadoLotesId.get(i));
+				List<String> datosReciboExportacion = fileService.exportarRecibos(Context.loggedUser(), loteNro);
 				for (String datosRecibo : datosReciboExportacion) {
 					out.println(datosRecibo);
 				}
 			}
+			
+//			model.addAttribute("successMessage", "El Lote fue exportado con exito!");
+//			return "mensajeInformativo";
 
 		} catch (IOException e) {
 
 			log.error("Error exportando los recibos", e);
+//			model.addAttribute("errorMessage", "Se produjo un error al intentar exportar el Lote");
+//			return "mensajeInformativo";
 
 		} finally {
 
@@ -118,8 +116,12 @@ public class ControlPanelController {
 
 			} catch (IOException e) {
 				log.error("Error cerrando output stream", e);
+//				model.addAttribute("errorMessage", "Se produjo un error al intentar exportar el Lote");
+//				return "mensajeInformativo";
 			}
 		}
+		//model.addAttribute("successMessage", "El Lote fue exportado con exito!");
+		//return "mensajeInformativo";
 	}
 	
 	private List<Integer> lotesParaExportar (LotesAExportarDto lotesAExportarDto) throws ParseException {

@@ -509,7 +509,7 @@ public List<Recibo> lotesEnviados() {
 		// parameters.put("id_usuario", recibo.getUsuarioCriador().getId());
 		parameters.put("id_usuario", recibo.getUsuario().getId());
 		parameters.put("fecha_proceso", new java.sql.Date(recibo.getFechaProceso().getTime()));
-		parameters.put("exportado", "NO");
+		parameters.put("exportado", "EN_ESPERA"); //NO
 
 		SimpleJdbcInsert simpleJdbcInsert = getSimpleJdbcInsert();
 		simpleJdbcInsert.withTableName("recibo");

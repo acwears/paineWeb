@@ -115,7 +115,7 @@
 								<p class="help-block">Click para iniciar la exportación</p>
 								
 								<!-- Link oculto que hace el download. Es llamado cuando el AJAX retorna con suceso -->
-								<a th:href="@{/controlPanel/exportarRecibos}" class="btn btn-default" id="export-link-id" style="display: none;"></a>							
+							<!-- 	<a th:href="@{/controlPanel/exportarRecibos}" class="btn btn-default" id="export-link-id" style="display: none;"></a>			
 							</div>
 							
 						</form>
@@ -148,9 +148,13 @@
 			
 			e.preventDefault();
 			
+			var params = $('#form_donde_estan_los_hidden').serialize();
+			console.log(params);
+			
 			$.ajax({
 				url : /*[[@{/controlPanel/check/export}]]*/,
 				type : 'GET',
+				data: params,
 				dataType : 'json',
 				success : function(data) {
 					

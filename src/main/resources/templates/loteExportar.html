@@ -40,7 +40,15 @@
 				</table>
 			</div>
 		</div>
+		
+		<div class="alert alert-success" role="alert" style="display: none;">Datos exportados!</div>
+		<div class="alert alert-danger" role="alert" style="display: none;">Se produjo un error al intentar exportar los lotes</div>
+							
 		<input class="btn btn-primary btn-lg" type="button" value="Exportar lotes" id="idExportarLote">
+		
+		<!-- Link oculto que hace el download. Es llamado cuando el AJAX retorna con suceso -->
+		<a th:href="@{/controlPanel/exportarRecibos}" class="btn btn-default" id="export-link-id" style="display: none;"></a>
+		
 		<br>
 		<br>
 	<!-- 	<input th:value="${nroLote}" id="idNroLote" readonly="readonly" width="50px">  -->
@@ -58,12 +66,14 @@
 </style> 
 
 <script type="text/javascript">
+var executarExport = false;
+
 $(document).ready(function(){
 	
 	$("#successMessage").fadeOut(10000);
 	$("#errorMessage").fadeOut(10000);
 	
-	$("#idExportarLote").click(function(){
+	/*$("#idExportarLote").click(function(){
 		var noSeleccionoLote = true;
 		
 		$('#tblLotes').find('tr').each(function () {
@@ -88,7 +98,56 @@ $(document).ready(function(){
 		}
 		
 		$('#reciboFormId').submit();
-	});
+	});*/
+	
+	//el de leo
+	$('#idExportarLote').click(function(e) {
+	
+		var noSeleccionoLote = true;
+		
+		$('#tblLotes').find('tr').each(function () {
+	        var row = $(this);
+	        if (row.find('input[type="checkbox"]').is(':checked')) {
+	        	noSeleccionoLote = false;
+	        	var idHiddenDate = new Date();
+				var idHiddenDate2 = idHiddenDate.getTime().toString();
+				
+	        	var loteId = $(this).find('.miId').text();
+	        	//alert('this checkbox is checked');
+	            //alert($(this).find('td').text());//esta linea que me traiga el valor de la primera celda
+	            //alert($(this).find('.miId').text());
+	            
+	            crearHiddenB('lotes', loteId, idHiddenDate2);
+	        }
+	    });
+		
+		if(noSeleccionoLote){
+			alert("Debe seleccionar al menos un lote!");
+			return;
+		}
+		
+		e.preventDefault();
+		
+		var params = $('#reciboFormId').serialize();
+		console.log(params);
+		
+		$.ajax({
+			url: 'controlPanel/exportarRecibos',
+			type : 'POST',
+			data: params,
+			dataType : 'json',
+			success : function(data) {
+				
+				if(data.state === 'SUCCESS') {
+					$('#export-link-id')[0].click();
+				} else {
+			    	$('#export-container .alert.alert-danger').show();
+			    	$('#export-container .alert.alert-danger').fadeOut(5000);
+				}
+			}
+		});
+});
+//end el de leo
 });
 
 crearHiddenB = function(nameVar, valueVar, id){
