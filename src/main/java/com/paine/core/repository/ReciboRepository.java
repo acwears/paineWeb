@@ -36,8 +36,9 @@ public class ReciboRepository extends JDBCRepository {
 
 		Object[] params = new Object[] { id };
 
+		//return getJdbcTemplate().queryForObject(sb.toString(), params, (rs, rowNum) -> {
 		return getJdbcTemplate().queryForObject(sb.toString(), params, (rs, rowNum) -> {
-
+			
 			Recibo recibo = new Recibo();
 
 			recibo.setId(rs.getInt("id"));

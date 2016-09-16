@@ -73,35 +73,8 @@ $(document).ready(function(){
 	$("#successMessage").fadeOut(10000);
 	$("#errorMessage").fadeOut(10000);
 	
-	/*$("#idExportarLote").click(function(){
-		var noSeleccionoLote = true;
-		
-		$('#tblLotes').find('tr').each(function () {
-	        var row = $(this);
-	        if (row.find('input[type="checkbox"]').is(':checked')) {
-	        	noSeleccionoLote = false;
-	        	var idHiddenDate = new Date();
-				var idHiddenDate2 = idHiddenDate.getTime().toString();
-				
-	        	var loteId = $(this).find('.miId').text();
-	        	//alert('this checkbox is checked');
-	            //alert($(this).find('td').text());//esta linea que me traiga el valor de la primera celda
-	            //alert($(this).find('.miId').text());
-	            
-	            crearHiddenB('loteId', loteId, idHiddenDate2);
-	        }
-	    });
-		
-		if(noSeleccionoLote){
-			alert("Debe seleccionar al menos un lote!");
-			return;
-		}
-		
-		$('#reciboFormId').submit();
-	});*/
-	
-	//el de leo
 	$('#idExportarLote').click(function(e) {
+		e.preventDefault();
 	
 		var noSeleccionoLote = true;
 		
@@ -113,10 +86,6 @@ $(document).ready(function(){
 				var idHiddenDate2 = idHiddenDate.getTime().toString();
 				
 	        	var loteId = $(this).find('.miId').text();
-	        	//alert('this checkbox is checked');
-	            //alert($(this).find('td').text());//esta linea que me traiga el valor de la primera celda
-	            //alert($(this).find('.miId').text());
-	            
 	            crearHiddenB('lotes', loteId, idHiddenDate2);
 	        }
 	    });
@@ -126,28 +95,25 @@ $(document).ready(function(){
 			return;
 		}
 		
-		e.preventDefault();
-		
-		var params = $('#reciboFormId').serialize();
-		console.log(params);
-		
-		$.ajax({
-			url: 'controlPanel/exportarRecibos',
-			type : 'POST',
-			data: params,
-			dataType : 'json',
-			success : function(data) {
+		$.fileDownload("controlPanel/exportarRecibos", {
+			data: $('#reciboFormId').serialize(), 
+			successCallback: function (url) { 
+				$('.alert.alert-success').show();
+				$('.alert.alert-success').fadeOut(5000);
 				
-				if(data.state === 'SUCCESS') {
-					$('#export-link-id')[0].click();
-				} else {
-			    	$('#export-container .alert.alert-danger').show();
-			    	$('#export-container .alert.alert-danger').fadeOut(5000);
-				}
-			}
+				$('#tblLotes').find('tr').each(function () {
+			        var row = $(this);
+			        if (row.find('input[type="checkbox"]').is(':checked')) {
+			        	row.remove();
+			        }
+			    });				
+			}, 
+			failCallback: function (responseHtml, url, error) { 
+		    	$('.alert.alert-danger').show();
+		    	$('.alert.alert-danger').fadeOut(5000);
+			}		
 		});
-});
-//end el de leo
+	});
 });
 
 crearHiddenB = function(nameVar, valueVar, id){

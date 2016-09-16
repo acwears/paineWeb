@@ -89,7 +89,7 @@ public class ControlPanelController {
 				
 				response.setContentType("text/plain");
 				response.setHeader("Content-Disposition", "attachment;filename=recibos.txt");
-				//response.setHeader("Content-Disposition", sLote);
+				response.setHeader("Set-Cookie", "fileDownload=true; path=/");
 				out = response.getOutputStream();
 				
 				List<String> datosReciboExportacion = fileService.exportarRecibos(Context.loggedUser(), loteNro);
@@ -98,30 +98,16 @@ public class ControlPanelController {
 				}
 			}
 			
-//			model.addAttribute("successMessage", "El Lote fue exportado con exito!");
-//			return "mensajeInformativo";
-
 		} catch (IOException e) {
-
 			log.error("Error exportando los recibos", e);
-//			model.addAttribute("errorMessage", "Se produjo un error al intentar exportar el Lote");
-//			return "mensajeInformativo";
-
 		} finally {
-
 			try {
-
 				out.flush();
 				out.close();
-
 			} catch (IOException e) {
 				log.error("Error cerrando output stream", e);
-//				model.addAttribute("errorMessage", "Se produjo un error al intentar exportar el Lote");
-//				return "mensajeInformativo";
 			}
 		}
-		//model.addAttribute("successMessage", "El Lote fue exportado con exito!");
-		//return "mensajeInformativo";
 	}
 	
 	private List<Integer> lotesParaExportar (LotesAExportarDto lotesAExportarDto) throws ParseException {
