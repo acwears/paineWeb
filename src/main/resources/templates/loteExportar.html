@@ -86,7 +86,8 @@ $(document).ready(function(){
 				var idHiddenDate2 = idHiddenDate.getTime().toString();
 				
 	        	var loteId = $(this).find('.miId').text();
-	            crearHiddenB('lotes', loteId, idHiddenDate2);
+	           <!-- crearHiddenB('lotes', loteId, idHiddenDate2); -->
+	            crearHiddenB('lotes', loteId, loteId);
 	        }
 	    });
 		
@@ -103,7 +104,11 @@ $(document).ready(function(){
 				
 				$('#tblLotes').find('tr').each(function () {
 			        var row = $(this);
+			        
+		        	var idHidden = $(row).find('.miId').text(); <!-- linea mia -->
+		        	
 			        if (row.find('input[type="checkbox"]').is(':checked')) {
+			        	$('.' + idHidden).remove(); <!-- linea mia -->
 			        	row.remove();
 			        }
 			    });				
