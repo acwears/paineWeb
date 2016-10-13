@@ -1,7 +1,9 @@
 package main.java.com.paine.core.service;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
@@ -18,6 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.apache.poi.*;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import main.java.com.paine.core.model.Banco;
 import main.java.com.paine.core.model.Cliente;
@@ -37,6 +45,7 @@ import main.java.com.paine.core.repository.TipoDePagoRepository;
 @Transactional
 @Service
 public class FileService {
+	
 	public StringBuilder sb = new StringBuilder();
 	
 	@Autowired
@@ -161,7 +170,8 @@ public class FileService {
 		if (CollectionUtils.isEmpty(recibos)) {
 			return null;
 		}
-
+		
+		
 		List<String> fileLines = new ArrayList<>(recibos.size());
 		for (Recibo recibo : recibos) {
 			
@@ -178,12 +188,18 @@ public class FileService {
 			sb.append(StringUtils.leftPad(Integer.toString(recibo.getCliente().getNumeroCliente()), 8, "0"));
 			fileLines.add(sb.toString());
 			
+
+			
+			
 			//****************** CUERPO DEL RECIBO
 			//EFECTIVO
 			TpEff efectivo = reciboCompleto.getTpEff();
 			if(efectivo != null){
+							
 				cabeceraTR2(recibo.getNumero(), "06", "121001", efectivo.getMonto());
 				fileLines.add(sb.toString());
+				
+
 			}
 			
 			//DEPOSITO:
@@ -209,6 +225,7 @@ public class FileService {
 				Banco banco = new Banco();
 				banco = bancoRepository.findOne(cheques.getBanco().getId());
 				//** end busco nombre banco
+				
 				
 				fechaChequeStr = sdf.format(cheques.getFechaDeposito());
 				cabeceraTR2(recibo.getNumero(), "03", "121002", cheques.getMonto());
@@ -249,6 +266,7 @@ public class FileService {
 		reciboRepository.modifyExportados(recibos, usuario);
 
 		return fileLines;
+		
 	}
 	
 	public void cabeceraTR2(long reciboNro, String tipo, String imputacion, double monto){

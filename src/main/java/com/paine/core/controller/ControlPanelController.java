@@ -1,17 +1,27 @@
 package main.java.com.paine.core.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -26,9 +36,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import main.java.com.paine.core.dto.view.LotesAExportarDto;
 import main.java.com.paine.core.dto.view.UsuarioDto;
+import main.java.com.paine.core.model.Banco;
+import main.java.com.paine.core.model.Recibo;
 import main.java.com.paine.core.model.Role;
+import main.java.com.paine.core.model.TpCheque;
+import main.java.com.paine.core.model.TpDeposito;
+import main.java.com.paine.core.model.TpEff;
 import main.java.com.paine.core.model.Usuario;
+import main.java.com.paine.core.repository.BancoRepository;
+import main.java.com.paine.core.repository.ReciboRepository;
 import main.java.com.paine.core.service.FileService;
+import main.java.com.paine.core.service.ReciboService;
 import main.java.com.paine.core.service.UsuarioService;
 import main.java.com.paine.core.util.Context;
 import main.java.com.paine.core.util.JsonMessageResult;
@@ -43,6 +61,15 @@ public class ControlPanelController {
 
 	@Autowired
 	private FileService fileService;
+	
+	@Autowired
+	private ReciboRepository reciboRepository;
+	
+	@Autowired
+	private ReciboService reciboService;
+	
+	@Autowired
+	private BancoRepository bancoRepository;
 
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping("/controlPanel")
@@ -80,10 +107,11 @@ public class ControlPanelController {
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping("/controlPanel/exportarRecibos")
 	public void exportarRecibos(HttpServletResponse response, Integer[] lotes, Model model) throws ParseException {
-
+				
 		ServletOutputStream out = null;
 		
 		try {
+			generarExcel(lotes);
 			
 			for (Integer loteNro : lotes) {
 				
@@ -107,6 +135,236 @@ public class ControlPanelController {
 			} catch (IOException e) {
 				log.error("Error cerrando output stream", e);
 			}
+		}
+	}
+	
+	private void generarExcel(Integer[] lotes){
+		//**** INICIALIZACION DEL ARCHIVO EXCEL
+		int filaIni_XCadaTipoDePago=0;
+		int filaComienzoSiguienteRecibo=0;
+		int fi = 0;
+		
+		String nomFile = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());	
+		String rutaArchivo = System.getProperty("user.home") + "/Recibos_" + nomFile + ".xls";
+		File archivoXLS = new File(rutaArchivo);
+		Workbook libro = new HSSFWorkbook();
+				
+		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
+		String fechaReciboStr;
+		
+		try{
+			archivoXLS.createNewFile();
+			FileOutputStream archivo = new FileOutputStream(archivoXLS);
+			Sheet hoja = libro.createSheet("recibos");
+		
+			Row fila;
+			Cell celda;
+			
+			for(int f=0;f<10000;f++){
+				fila = hoja.createRow(f);
+			}
+			
+			//fila = hoja.createRow(0);
+			fila = hoja.getRow(0);
+			celda = fila.createCell(0);
+			celda.setCellValue("Recibo");
+			
+			celda = fila.createCell(1);
+			celda.setCellValue("Cliente");
+
+			celda = fila.createCell(2);
+			celda.setCellValue("Factura");
+			
+			celda = fila.createCell(3);
+			celda.setCellValue("Importe");
+			
+			celda = fila.createCell(4);
+			celda.setCellValue("");
+			
+			celda = fila.createCell(5);
+			celda.setCellValue("Valor Imp.");
+			
+			celda = fila.createCell(6);
+			celda.setCellValue("Banco");
+			
+			celda = fila.createCell(7);
+			celda.setCellValue("Numero");
+			
+			celda = fila.createCell(8);
+			celda.setCellValue("Fecha");
+			
+			celda = fila.createCell(9);
+			celda.setCellValue("Efectivo");
+			
+			celda = fila.createCell(10);
+			celda.setCellValue("Retencion");
+			
+			celda = fila.createCell(11);
+			celda.setCellValue("Deposito");
+			
+		//***** FIN INICIALIZACION
+
+		
+		for (Integer lote : lotes) {
+			
+		
+		List<Recibo> recibos = reciboRepository.recibosParaExportar(lote);
+		
+		//try {
+			
+
+			
+		
+		
+	//	List<String> fileLines = new ArrayList<>(recibos.size());
+		for (Recibo recibo : recibos) {
+			
+			Recibo reciboCompleto = reciboService.findOne(recibo.getId());
+			
+			fechaReciboStr = sdf.format(recibo.getFecha());
+			
+			
+			filaIni_XCadaTipoDePago = filaComienzoSiguienteRecibo;
+			filaIni_XCadaTipoDePago++;
+			filaComienzoSiguienteRecibo = filaIni_XCadaTipoDePago;
+			fi = filaIni_XCadaTipoDePago;
+			fila = hoja.getRow(fi);
+			
+			//nro de recibo
+			celda = fila.createCell(0);
+			celda.setCellValue(recibo.getNumero());
+			//nombre cliente
+			celda = fila.createCell(1);
+			celda.setCellValue(recibo.getCliente().getNombre());
+			//nro factura
+			celda = fila.createCell(2);
+			celda.setCellValue(recibo.getNumero());//falta
+			//factura importe
+			celda = fila.createCell(3);
+			celda.setCellValue(recibo.getNumero());//falta
+			
+			//codigo para sber en que fila arranca el siguiente recibo
+			if (filaComienzoSiguienteRecibo < fi){
+				filaComienzoSiguienteRecibo = fi;
+			}
+			
+			//****************** CUERPO DEL RECIBO
+			fi = filaIni_XCadaTipoDePago;
+			//EFECTIVO
+			TpEff efectivo = reciboCompleto.getTpEff();
+			if(efectivo != null){
+				
+				fila = hoja.getRow(fi);
+				celda = fila.createCell(9);
+				celda.setCellValue(efectivo.getMonto());
+			}
+			
+			//codigo para sber en que fila arranca el siguiente recibo
+			if (filaComienzoSiguienteRecibo < fi){
+				filaComienzoSiguienteRecibo = fi;
+			}
+			
+			//DEPOSITO:
+			fi = filaIni_XCadaTipoDePago;
+			String fechaDepositoStr;
+			for(TpDeposito depositoss : reciboCompleto.getTpDepositos()){
+				fechaDepositoStr = sdf.format(depositoss.getFecha());
+			}
+			
+			//codigo para sber en que fila arranca el siguiente recibo
+			if (filaComienzoSiguienteRecibo < fi){
+				filaComienzoSiguienteRecibo = fi;
+			}
+			
+			//CHEQUE
+			fi = filaIni_XCadaTipoDePago;
+			String fechaChequeStr;
+			for(TpCheque cheques : reciboCompleto.getTpCheques()){
+				
+				//*** busco el nombre del banco
+				Banco banco = new Banco();
+				banco = bancoRepository.findOne(cheques.getBanco().getId());
+				//** end busco nombre banco
+				
+				//ini excel
+				//factura importe
+				fila = hoja.getRow(fi);
+				celda = fila.createCell(5);
+				celda.setCellValue(cheques.getMonto());
+				
+				celda = fila.createCell(6);
+				celda.setCellValue(cheques.getBanco().getNombre()); //viene vacio
+				
+				celda = fila.createCell(7);
+				celda.setCellValue(cheques.getNumero());
+				
+				celda = fila.createCell(8);
+				celda.setCellValue(cheques.getFechaDeposito());
+				fi++;
+				//fin excel
+				
+				fechaChequeStr = sdf.format(cheques.getFechaDeposito());
+			}
+			
+			//codigo para sber en que fila arranca el siguiente recibo
+			if (filaComienzoSiguienteRecibo < fi){
+				filaComienzoSiguienteRecibo = fi;
+			}
+			
+			//RETENCION scar
+			/*for(TpRetencion retenciones : reciboCompleto.getTpRetenciones()){
+				
+				//traigo el codigo de imputacion
+				TipoDePago tipoPago = new TipoDePago();
+				tipoPago = tipoDePagoRepository.findOne(retenciones.getTipoPago());
+				//end
+				
+				//cabeceraTR2(recibo.getNumero(), "16", "133301", retenciones.getMonto());
+				cabeceraTR2(recibo.getNumero(), tipoPago.getCodigo(), tipoPago.getImputacion(), retenciones.getMonto());
+				
+				sb.append("                                  ");
+				sb.append("16"); //tipo de pago, sacar de tabla tipo de pagos
+				//sb.append(StringUtils.leftPad(retenciones.getSucursal(), 4, "0"));
+				sb.append(StringUtils.leftPad(Integer.toString(retenciones.getAnio()), 4, "0"));
+				sb.append(StringUtils.leftPad(retenciones.getNumero(), 4, "0"));
+				//sb.append("REG"); //regimen, ver si va
+				//sb.append("BASECALCU"); //base calculo, ver si va
+				//sb.append("PORCE"); //porcentaje, ver si va
+				//sb.append("JU"); //juris, ver si va
+				
+				fileLines.add(sb.toString());
+			}*/
+		}
+		
+		}//fin del for de lotes
+		
+		/*fila = hoja.getRow(fi+1);
+		celda = fila.createCell(3);
+		String formula = "=SUM(D2:D" + fi + ")";
+		celda.setCellFormula("formula");
+		
+		celda = fila.createCell(5);
+		formula = "=SUM(F2:F" + fi + ")";
+		celda.setCellFormula("formula");
+		
+		celda = fila.createCell(9);
+		formula = "=SUM(J2:J" + fi + ")";
+		celda.setCellFormula("formula");*/
+		
+		libro.write(archivo);
+		archivo.close();
+		
+		try{
+	          Runtime.getRuntime().exec("cmd /c start " + rutaArchivo);
+	          }catch(IOException  e){
+	              e.printStackTrace();
+	          }
+		
+		//}//fin del for de lotes
+		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
