@@ -3,6 +3,7 @@ package main.java.com.paine.core.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -70,6 +73,9 @@ public class ControlPanelController {
 	
 	@Autowired
 	private BancoRepository bancoRepository;
+	
+	@Autowired
+	 private ResourceLoader resourceLoader;
 
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping("/controlPanel")
@@ -138,15 +144,33 @@ public class ControlPanelController {
 		}
 	}
 	
-	private void generarExcel(Integer[] lotes){
+	private void generarExcel(Integer[] lotes) throws IOException{
 		//**** INICIALIZACION DEL ARCHIVO EXCEL
 		int filaIni_XCadaTipoDePago=0;
 		int filaComienzoSiguienteRecibo=0;
 		int fi = 0;
 		
+		//linea cabeza
+		//Resource resource = resourceLoader.getResource("classpath:cwears.xls");
+		//File file = resource.getFile();
+		//InputStream inputStream = resource.getInputStream();
+		
+		/*
+		HttpServletResponse response = null;
+		ServletOutputStream out = null;
+		
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader("Content-Disposition", "attachment;filename=recibos.xls");
+		response.setHeader("Set-Cookie", "fileDownload=true; path=/");
+		out = response.getOutputStream();
+		*/
+		
+		//
+		
 		String nomFile = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());	
 		String rutaArchivo = System.getProperty("user.home") + "/Recibos_" + nomFile + ".xls";
 		File archivoXLS = new File(rutaArchivo);
+		//File archivoXLS = resource.getFile();// new File(rutaArchivo);
 		Workbook libro = new HSSFWorkbook();
 				
 		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
