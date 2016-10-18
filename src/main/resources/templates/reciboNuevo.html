@@ -214,7 +214,7 @@
 							        <span class="input-group-addon" id="basic-addon1">Banco</span>
 									<select class="form-control" id="chequeBancoID" aria-describedby="basic-addon1">
 							        	<option th:text="-------"></option>
-							        	<option th:each="bancoVar : ${bancos}" th:text="${bancoVar.id} + ' - ' +  ${bancoVar.nombre}" th:value="${bancoVar.id}"></option>
+							        	<option th:each="bancoVar : ${bancos}" th:text="${bancoVar.codigo} + ' - ' +  ${bancoVar.abreviatura}" th:value="${bancoVar.id}"></option>
 							        </select>
 								</div>
 								
@@ -671,6 +671,7 @@
  			$('#retencionTipoPago').val("-------");
 			$('#retencionNumero').val("");
 			$('#retencionImporte').val("");
+			$('#retencionTipoPago').focus();
 			//$('#retencionSucursal').val("");
 			//$('#retencionYear').val("");
 		});
@@ -709,6 +710,7 @@
  			//$('#depositoBancoId').val("");
 			$('#depositoImporteId').val("");
 			$('#depositoFechaId').val("");
+			$('#depositoImporteId').focus();
 		});
 		
 		$("#chequeBtnAgregarID").click(function() {
@@ -753,6 +755,7 @@
 			$('#chequeImporte').val("");
 			$('#chequeCuitId').val("");
 			$('#chequeFechaId').val("");
+			$('#chequeNroId').focus();
 		});
 		
 		$('#descuentoBtnAgregarId').click(function(){
@@ -788,6 +791,7 @@
  			
  			$('#descuentoPorcentajeId').val("");
 			$('#descuentoDescripcionId').val("");
+			$('#descuentoDescripcionId').focus();
 		});
 		
 		$('#idGuardarRecibo').click(function(){
@@ -1003,6 +1007,7 @@
 	};
 	
 	function validaIntegridad_DeCheque(){
+		var chequeCuitVar = $('#chequeCuitId').val();
 		
 		if($('#chequeBancoID').val() == '-------'){
 			document.getElementById('textModal').innerHTML = '- Seleccione el banco.';
@@ -1040,6 +1045,13 @@
 		
 		if($('#chequeCuitId').val() == ''){
 			document.getElementById('textModal').innerHTML = '- Ingrese el Nº de CUIT.';
+			errObject = '#chequeCuitId';
+			$('#modalMensajes').modal();
+			return false;
+		}
+			
+		if (validaCuit($('#chequeCuitId').val()) == false){
+			document.getElementById('textModal').innerHTML = '- CUIT Invalido.';
 			errObject = '#chequeCuitId';
 			$('#modalMensajes').modal();
 			return false;
@@ -1379,6 +1391,32 @@
 	    }
 	};
 	
+	function validaCuit(sCUIT) 
+	{     
+	    var aMult = '5432765432'; 
+	    var aMult = aMult.split(''); 
+	     
+	    if (sCUIT && sCUIT.length == 11) 
+	    { 
+	        aCUIT = sCUIT.split(''); 
+	        var iResult = 0; 
+	        for(i = 0; i <= 9; i++) 
+	        { 
+	            iResult += aCUIT[i] * aMult[i]; 
+	        } 
+	        iResult = (iResult % 11); 
+	        iResult = 11 - iResult; 
+	         
+	        if (iResult == 11) iResult = 0; 
+	        if (iResult == 10) iResult = 9; 
+	         
+	        if (iResult == aCUIT[10]) 
+	        { 
+	            return true; 
+	        } 
+	    }     
+	    return false; 
+	};
 </script>
 
 </html>
