@@ -96,22 +96,34 @@ $(document).ready(function(){
 			return;
 		}
 		
-		$.fileDownload("controlPanel/exportarRecibos", {
+		// Primero exportamos el excel
+		$.fileDownload("controlPanel/exportarRecibos/excel", {
 			data: $('#reciboFormId').serialize(), 
 			successCallback: function (url) { 
-				$('.alert.alert-success').show();
-				$('.alert.alert-success').fadeOut(5000);
-				
-				$('#tblLotes').find('tr').each(function () {
-			        var row = $(this);
-			        
-		        	var idHidden = $(row).find('.miId').text(); <!-- linea mia -->
-		        	
-			        if (row.find('input[type="checkbox"]').is(':checked')) {
-			        	$('.' + idHidden).remove(); <!-- linea mia -->
-			        	row.remove();
-			        }
-			    });				
+
+				// Despues exportamos el txt
+				$.fileDownload("controlPanel/exportarRecibos", {
+					data: $('#reciboFormId').serialize(), 
+					successCallback: function (url) { 
+						$('.alert.alert-success').show();
+						$('.alert.alert-success').fadeOut(5000);
+						
+						$('#tblLotes').find('tr').each(function () {
+					        var row = $(this);
+					        
+				        	var idHidden = $(row).find('.miId').text(); <!-- linea mia -->
+				        	
+					        if (row.find('input[type="checkbox"]').is(':checked')) {
+					        	$('.' + idHidden).remove(); <!-- linea mia -->
+					        	row.remove();
+					        }
+					    });				
+					}, 
+					failCallback: function (responseHtml, url, error) { 
+				    	$('.alert.alert-danger').show();
+				    	$('.alert.alert-danger').fadeOut(5000);
+					}		
+				});
 			}, 
 			failCallback: function (responseHtml, url, error) { 
 		    	$('.alert.alert-danger').show();
