@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import main.java.com.paine.core.config.LoggedUser;
+import main.java.com.paine.core.model.Banco;
 import main.java.com.paine.core.model.Cliente;
 import main.java.com.paine.core.model.Descuento;
 import main.java.com.paine.core.model.Factura;
@@ -24,6 +27,9 @@ import main.java.com.paine.core.util.SqlUtil;
 @Repository
 public class ReciboRepository extends JDBCRepository {
 
+	@Autowired
+	private BancoRepository bancoRepository;
+	
 	// ****************************************************************************************
 	// ******************* traigo datos del RECIBO
 	// ********************************************
@@ -50,6 +56,7 @@ public class ReciboRepository extends JDBCRepository {
 			recibo.setImporteTotal(rs.getDouble("importe_total"));
 			recibo.setObservaciones(rs.getString("observaciones"));
 			recibo.setFechaProceso(rs.getDate("fecha_proceso"));
+			recibo.setFechaLote(rs.getDate("fecha_lote"));
 
 			return recibo;
 		});
@@ -103,7 +110,11 @@ public class ReciboRepository extends JDBCRepository {
 				tpCheque.setFechaDeposito(rs.getDate("fecha_deposito"));
 				tpCheque.setMonto(rs.getDouble("importe"));
 				tpCheque.setNumero(rs.getInt("numero"));
-
+				
+				Banco banco = new Banco(); //traer nombre banco
+				banco = bancoRepository.findOne(rs.getInt("id_banco"));
+				tpCheque.setBanco(banco);
+				
 				return tpCheque;
 
 			} catch (EmptyResultDataAccessException e) {
@@ -377,6 +388,7 @@ public class ReciboRepository extends JDBCRepository {
 			recibos.setObservaciones(rs.getString("observaciones"));
 			recibos.setFechaProceso(rs.getDate("fecha_proceso"));
 			recibos.setLote(rs.getInt("lote"));
+			recibos.setFechaLote(rs.getDate("fecha_lote"));
 			
 			Cliente cliente = new Cliente();
 			cliente.setId(rs.getInt("idCliente"));
@@ -527,9 +539,69 @@ public List<Recibo> lotesEnviados() {
 	// LISTADO DE RECIBOS PARA SELECCIONAR EN EL MENU 'VER'
 	public List<Recibo> listarRecibos() {
 
+		//sb.append(" SELECT re.*, cl.id as clienteId, cl.nro_cliente, cl.nombre  FROM clientes cl ");
 		StringBuilder sb = new StringBuilder();
-		sb.append(" SELECT re.*, cl.id as clienteId, cl.nro_cliente, cl.nombre  FROM clientes cl ");
-		sb.append(" inner join recibo re on re.id_cliente = cl.id ");
+		
+		
+		if (Context.loggedUser().isAdmin()) {
+			sb.append(" SELECT re.*, cl.id as clienteId, cl.nro_cliente, cl.nombre  FROM clientes cl ");
+			sb.append(" inner join recibo re on re.id_cliente = cl.id ");
+			sb.append(" ORDER BY re.fecha DESC ");			
+		}
+		else{
+			sb.append(" SELECT re.*, cl.id as clienteId, cl.nro_cliente, cl.nombre  FROM clientes cl ");
+			sb.append(" inner join recibo re on re.id_cliente = cl.id ");
+			sb.append(" WHERE id_usuario = ");
+			sb.append(Context.loggedUser().getId());
+			sb.append(" ORDER BY re.fecha DESC ");
+		}
+		//el order by funciona en workbench pero no aca
+
+		return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
+
+			Recibo recibos = new Recibo();
+
+			recibos.setId(rs.getInt("id"));
+			recibos.setNumero(rs.getInt("nro_recibo"));
+			recibos.setDescuento(rs.getDouble("descuento"));
+			recibos.setFecha(rs.getDate("fecha"));
+			recibos.setFechaProceso(rs.getDate("fecha_proceso"));
+			recibos.setImporteSumaFacturas(rs.getDouble("importe_suma_facturas"));
+			recibos.setImporteTotal(rs.getDouble("importe_total"));
+			recibos.setObservaciones(rs.getString("observaciones"));
+			recibos.setFechaProceso(rs.getDate("fecha_proceso"));
+
+			Cliente cliente = new Cliente();
+			cliente.setId(rs.getInt("id"));
+			cliente.setNumeroCliente(rs.getInt("nro_cliente"));
+			cliente.setNombre(rs.getString("nombre"));
+
+			recibos.setCliente(cliente);
+
+			return recibos;
+		});
+
+	}
+	
+	// LISTADO DE RECIBOS PARA SELECCIONAR EN EL MENU 'MODIFICAR'
+	public List<Recibo> listarRecibosHabilitadosModificar() {
+
+		StringBuilder sb = new StringBuilder();
+		
+		if (Context.loggedUser().isAdmin()) {
+			sb.append(" SELECT re.*, cl.id as clienteId, cl.nro_cliente, cl.nombre  FROM clientes cl ");
+			sb.append(" inner join recibo re on re.id_cliente = cl.id ");
+			sb.append(" WHERE exportado = 'EN_ESPERA' ");
+			sb.append(" ORDER BY re.fecha DESC ");
+		}
+		else{
+			sb.append(" SELECT re.*, cl.id as clienteId, cl.nro_cliente, cl.nombre  FROM clientes cl ");
+			sb.append(" inner join recibo re on re.id_cliente = cl.id ");
+			sb.append(" WHERE exportado = 'EN_ESPERA' AND id_usuario = ");
+			sb.append(Context.loggedUser().getId());
+			sb.append(" ORDER BY re.fecha DESC ");
+		}
+		//el order by funciona en workbench pero no aca
 
 		return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
 

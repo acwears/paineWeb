@@ -18,8 +18,15 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.format.CellFormatType;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -40,11 +47,13 @@ import org.springframework.web.servlet.ModelAndView;
 import main.java.com.paine.core.dto.view.LotesAExportarDto;
 import main.java.com.paine.core.dto.view.UsuarioDto;
 import main.java.com.paine.core.model.Banco;
+import main.java.com.paine.core.model.Factura;
 import main.java.com.paine.core.model.Recibo;
 import main.java.com.paine.core.model.Role;
 import main.java.com.paine.core.model.TpCheque;
 import main.java.com.paine.core.model.TpDeposito;
 import main.java.com.paine.core.model.TpEff;
+import main.java.com.paine.core.model.TpRetencion;
 import main.java.com.paine.core.model.Usuario;
 import main.java.com.paine.core.repository.BancoRepository;
 import main.java.com.paine.core.repository.ReciboRepository;
@@ -77,6 +86,8 @@ public class ControlPanelController {
 	@Autowired
 	private ResourceLoader resourceLoader;
 
+	//public static final CellFormatType general;
+	
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping("/controlPanel")
 	public ModelAndView listado(String successMessage, String errorMessage) {
@@ -152,19 +163,21 @@ public class ControlPanelController {
 			response.setContentType("application/vnd.ms-excel");
 			response.setHeader("Content-Disposition", "attachment; filename=recibos.xls");
 			response.setHeader("Set-Cookie", "fileDownload=true; path=/");
-			generarExcel(lotes, response.getOutputStream());
+			generarExcel(lotes, response.getOutputStream()); //generarExcel(lotes, response.getOutputStream());
 
 		} catch (IOException e) {
 			log.error("Error exportando los recibos", e);
 		}
 	}
-
+	
 	private FileOutputStream generarExcel(Integer[] lotes, ServletOutputStream outputStream) throws IOException {
+		
+		
 		// **** INICIALIZACION DEL ARCHIVO EXCEL
 		FileOutputStream archivo = null;
-		int filaIni_XCadaTipoDePago = 0;
-		int filaComienzoSiguienteRecibo = 0;
-		int fi = 0;
+		int filaIni_XCadaTipoDePago = 1;
+		int filaComienzoSiguienteRecibo = 1;
+		int fi = 1;
 
 		// linea cabeza
 		// Resource resource =
@@ -189,6 +202,32 @@ public class ControlPanelController {
 		// File archivoXLS = resource.getFile();// new File(rutaArchivo);
 		Workbook libro = new HSSFWorkbook();
 
+		//parte de fuente
+		DataFormat format = libro.createDataFormat();
+		
+		CellStyle my_style = libro.createCellStyle();
+		Font my_font = libro.createFont();
+		my_font.setFontName("Calibri");
+		my_font.setFontHeightInPoints((short)8);
+		my_style.setFont(my_font);
+		//my_style.setDataFormat(CellFormatType.GENERAL.values());
+		//my_style.setDataFormat(format.getFormat("0.0"));
+		
+		
+		/*my_style.setBorderBottom(CellStyle.BORDER_THIN);
+		my_style.setBorderLeft(CellStyle.BORDER_THIN);
+		my_style.setBorderRight(CellStyle.BORDER_THIN);
+		my_style.setBorderTop(CellStyle.BORDER_THIN);*/
+		
+		CellStyle my_style_encabezado = libro.createCellStyle();
+		my_style_encabezado.setBorderBottom(CellStyle.BORDER_THIN);
+		my_style_encabezado.setBorderLeft(CellStyle.BORDER_THIN);
+		my_style_encabezado.setBorderRight(CellStyle.BORDER_THIN);
+		my_style_encabezado.setBorderTop(CellStyle.BORDER_THIN);
+		my_style_encabezado.setFillBackgroundColor(IndexedColors.GREY_80_PERCENT.getIndex());
+		my_style_encabezado.setFillForegroundColor(IndexedColors.GREY_80_PERCENT.getIndex());
+		//end fuente
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
 		String fechaReciboStr;
 
@@ -196,7 +235,7 @@ public class ControlPanelController {
 			archivoXLS.createNewFile();
 			archivo = new FileOutputStream(archivoXLS);
 			Sheet hoja = libro.createSheet("recibos");
-
+			
 			Row fila;
 			Cell celda;
 
@@ -208,39 +247,63 @@ public class ControlPanelController {
 			fila = hoja.getRow(0);
 			celda = fila.createCell(0);
 			celda.setCellValue("Recibo");
-
+			celda.setCellStyle(my_style_encabezado);
+			
 			celda = fila.createCell(1);
 			celda.setCellValue("Cliente");
+			celda.setCellStyle(my_style_encabezado);
 
 			celda = fila.createCell(2);
 			celda.setCellValue("Factura");
+			celda.setCellStyle(my_style_encabezado);
 
 			celda = fila.createCell(3);
 			celda.setCellValue("Importe");
+			celda.setCellStyle(my_style_encabezado);
 
 			celda = fila.createCell(4);
 			celda.setCellValue("");
+			celda.setCellStyle(my_style_encabezado);
 
 			celda = fila.createCell(5);
 			celda.setCellValue("Valor Imp.");
+			celda.setCellStyle(my_style_encabezado);
 
 			celda = fila.createCell(6);
 			celda.setCellValue("Banco");
+			celda.setCellStyle(my_style_encabezado);
 
 			celda = fila.createCell(7);
 			celda.setCellValue("Numero");
+			celda.setCellStyle(my_style_encabezado);
 
 			celda = fila.createCell(8);
 			celda.setCellValue("Fecha");
+			celda.setCellStyle(my_style_encabezado);
 
 			celda = fila.createCell(9);
 			celda.setCellValue("Efectivo");
+			celda.setCellStyle(my_style_encabezado);
 
 			celda = fila.createCell(10);
 			celda.setCellValue("Retencion");
+			celda.setCellStyle(my_style_encabezado);
 
 			celda = fila.createCell(11);
 			celda.setCellValue("Deposito");
+			celda.setCellStyle(my_style_encabezado);
+			
+			celda = fila.createCell(12);
+			celda.setCellValue("Fecha");
+			celda.setCellStyle(my_style_encabezado);
+			
+			celda = fila.createCell(13);
+			celda.setCellValue("Nro. Lote");
+			celda.setCellStyle(my_style_encabezado);
+			
+			celda = fila.createCell(14);
+			celda.setCellValue("Fecha");
+			celda.setCellStyle(my_style_encabezado);
 
 			// ***** FIN INICIALIZACION
 
@@ -255,10 +318,23 @@ public class ControlPanelController {
 
 					Recibo reciboCompleto = reciboService.findOne(recibo.getId());
 
+					//pongo lote y fecha lote
+					String fechaLoteStr = sdf.format(reciboCompleto.getFechaLote());
+					fila = hoja.getRow(fi);
+					celda = fila.createCell(13);
+					celda.setCellValue(lote);
+					celda.setCellStyle(my_style);
+					
+					celda = fila.createCell(14);
+					celda.setCellValue(fechaLoteStr);
+					celda.setCellStyle(my_style);
+					//end
+					
+					
 					fechaReciboStr = sdf.format(recibo.getFecha());
 
 					filaIni_XCadaTipoDePago = filaComienzoSiguienteRecibo;
-					filaIni_XCadaTipoDePago++;
+					//filaIni_XCadaTipoDePago++;
 					filaComienzoSiguienteRecibo = filaIni_XCadaTipoDePago;
 					fi = filaIni_XCadaTipoDePago;
 					fila = hoja.getRow(fi);
@@ -266,23 +342,41 @@ public class ControlPanelController {
 					// nro de recibo
 					celda = fila.createCell(0);
 					celda.setCellValue(recibo.getNumero());
+					celda.setCellStyle(my_style);
 					// nombre cliente
 					celda = fila.createCell(1);
 					celda.setCellValue(recibo.getCliente().getNombre());
-					// nro factura
-					celda = fila.createCell(2);
-					celda.setCellValue(recibo.getNumero());// falta
-					// factura importe
-					celda = fila.createCell(3);
-					celda.setCellValue(recibo.getNumero());// falta
-
+					celda.setCellStyle(my_style);
+					
+					
 					// codigo para sber en que fila arranca el siguiente recibo
 					if (filaComienzoSiguienteRecibo < fi) {
 						filaComienzoSiguienteRecibo = fi;
 					}
 
+					// FACTURA:
+					fi = filaIni_XCadaTipoDePago;
+					//arranca facturas
+					for (Factura fac : reciboCompleto.getFacturas()) {
+						// nro factura
+						fila = hoja.getRow(fi);
+						celda = fila.createCell(2); //2
+						celda.setCellValue(fac.getNumero());
+						celda.setCellStyle(my_style);
+						// factura importe
+						celda = fila.createCell(3); //3
+						celda.setCellValue(fac.getMonto());
+						celda.setCellStyle(my_style);
+						
+						fi++;
+					}
+					// codigo para sber en que fila arranca el siguiente recibo
+					if (filaComienzoSiguienteRecibo < fi) {
+						filaComienzoSiguienteRecibo = fi;
+					}
 					// ****************** CUERPO DEL RECIBO
 					fi = filaIni_XCadaTipoDePago;
+					
 					// EFECTIVO
 					TpEff efectivo = reciboCompleto.getTpEff();
 					if (efectivo != null) {
@@ -290,18 +384,33 @@ public class ControlPanelController {
 						fila = hoja.getRow(fi);
 						celda = fila.createCell(9);
 						celda.setCellValue(efectivo.getMonto());
+						celda.setCellStyle(my_style);
+						
+						fi++; //ver si va
 					}
 
 					// codigo para sber en que fila arranca el siguiente recibo
 					if (filaComienzoSiguienteRecibo < fi) {
 						filaComienzoSiguienteRecibo = fi;
 					}
-
+					
+					
 					// DEPOSITO:
 					fi = filaIni_XCadaTipoDePago;
 					String fechaDepositoStr;
 					for (TpDeposito depositoss : reciboCompleto.getTpDepositos()) {
 						fechaDepositoStr = sdf.format(depositoss.getFecha());
+						
+						fila = hoja.getRow(fi);
+						celda = fila.createCell(11);
+						celda.setCellValue(depositoss.getMonto());
+						celda.setCellStyle(my_style);
+						
+						celda = fila.createCell(12);
+						celda.setCellValue(fechaDepositoStr);
+						celda.setCellStyle(my_style);
+						
+						fi++;
 					}
 
 					// codigo para sber en que fila arranca el siguiente recibo
@@ -324,27 +433,47 @@ public class ControlPanelController {
 						fila = hoja.getRow(fi);
 						celda = fila.createCell(5);
 						celda.setCellValue(cheques.getMonto());
+						celda.setCellStyle(my_style);
 
 						celda = fila.createCell(6);
-						celda.setCellValue(cheques.getBanco().getNombre()); // viene
-																			// vacio
+						celda.setCellValue(cheques.getBanco().getAbreviatura()); // viene
+						celda.setCellStyle(my_style);
 
 						celda = fila.createCell(7);
 						celda.setCellValue(cheques.getNumero());
+						celda.setCellStyle(my_style);
 
+						fechaChequeStr = sdf.format(cheques.getFechaDeposito());
 						celda = fila.createCell(8);
-						celda.setCellValue(cheques.getFechaDeposito());
+						celda.setCellValue(fechaChequeStr);
+						celda.setCellStyle(my_style);
+						
 						fi++;
 						// fin excel
 
-						fechaChequeStr = sdf.format(cheques.getFechaDeposito());
+						
 					}
 
 					// codigo para sber en que fila arranca el siguiente recibo
 					if (filaComienzoSiguienteRecibo < fi) {
 						filaComienzoSiguienteRecibo = fi;
 					}
+					
+					//RETENCION
+					fi = filaIni_XCadaTipoDePago;
+					for(TpRetencion retenciones : reciboCompleto.getTpRetenciones()){
+						fila = hoja.getRow(fi);
+						celda = fila.createCell(10);
+						celda.setCellValue(retenciones.getMonto());
+						celda.setCellStyle(my_style);
+						
+						fi++;
+					}
 
+					// codigo para sber en que fila arranca el siguiente recibo
+					if (filaComienzoSiguienteRecibo < fi) {
+						filaComienzoSiguienteRecibo = fi;
+					}
 					// RETENCION scar
 					/*
 					 * for(TpRetencion retenciones :
@@ -391,6 +520,22 @@ public class ControlPanelController {
 			 * celda.setCellFormula("formula");
 			 */
 
+			hoja.autoSizeColumn(0);
+			hoja.autoSizeColumn(1);
+			hoja.autoSizeColumn(2);
+			hoja.autoSizeColumn(3);
+			hoja.autoSizeColumn(4);
+			hoja.autoSizeColumn(5);
+			hoja.autoSizeColumn(6);
+			hoja.autoSizeColumn(7);
+			hoja.autoSizeColumn(8);
+			hoja.autoSizeColumn(9);
+			hoja.autoSizeColumn(10);
+			hoja.autoSizeColumn(11);
+			hoja.autoSizeColumn(12);
+			hoja.autoSizeColumn(13);
+			hoja.autoSizeColumn(14);
+			
 			libro.write(outputStream);
 			archivo.close();
 

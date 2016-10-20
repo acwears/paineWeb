@@ -57,7 +57,8 @@ public class ModificarReciboController {
 
 		try {
 
-			List<Recibo> recibos = reciboService.findAll();
+			//List<Recibo> recibos = reciboService.findAll();
+			List<Recibo> recibos = reciboService.findAllHabilitadosModificar();
 			model.addAttribute("recibos", recibos);
 
 		} catch (Exception e) {

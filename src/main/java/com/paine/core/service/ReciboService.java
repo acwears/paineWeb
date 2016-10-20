@@ -101,6 +101,11 @@ public class ReciboService {
 		return recibos;
 	}
 	
+	public List<Recibo> findAllHabilitadosModificar(){
+		List<Recibo> recibos = reciboRepository.listarRecibosHabilitadosModificar();
+		return recibos;
+	}
+	
 	public List<Recibo> recibosNoEnviados(){
 		List<Recibo> recibos = reciboRepository.recibosEnEsperaDeEnvio();
 		return recibos;

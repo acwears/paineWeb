@@ -60,12 +60,11 @@
 					</div>
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-default">Salvar</button>
-							<a th:href="@{/controlPanel}" class="btn btn-default">Volver</a>
+							<button type="submit" id="idBtnSalvar" class="btn btn-default">Salvar</button>
+					 		<a th:href="@{/controlPanel}" class="btn btn-default">Volver</a>
 						</div>
 					</div>
 				</form>
-
 
 			</div>
 		</div>
@@ -80,7 +79,17 @@
 
 <script type="text/javascript">
 
-	
+/*$(document).ready(function(){
+	$('#idBtnSalvar').click(function(){
+		if($('#inputPasswordId').val() == ''){
+			alert("Complete el pwd");
+			return;
+		}
+		
+		$('#idBtnSalvar').submit();
+	});
+});*/ //END ready(function()
+
 </script>
 
 </html>

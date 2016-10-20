@@ -979,6 +979,13 @@
 			return false;
 		}
 		
+		if($('#nroRecibo').val().length > 8){
+			document.getElementById('textModal').innerHTML = '- El Nº de Recibo no puede contener más de 8 caracteres.';
+			errObject = '#nroRecibo';
+			$('#modalMensajes').modal();			
+			return false;
+		}
+		
 		if($('#fechaRecibo').val() == ''){
 			document.getElementById('textModal').innerHTML = '- Ingrese la fecha del Recibo.';
 			errObject = '#fechaRecibo';

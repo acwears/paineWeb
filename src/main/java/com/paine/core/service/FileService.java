@@ -164,6 +164,7 @@ public class FileService {
 	public List<String> exportarRecibos(Usuario usuario, int lote) {
 		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
 		String fechaReciboStr;
+		String fechaLoteStr;
 		
 		List<Recibo> recibos = reciboRepository.recibosParaExportar(lote);
 
@@ -178,13 +179,14 @@ public class FileService {
 			Recibo reciboCompleto = reciboService.findOne(recibo.getId());
 			
 			fechaReciboStr = sdf.format(recibo.getFecha());
+			fechaLoteStr = sdf.format(recibo.getFechaLote());
 		
 			sb = new StringBuilder();
 			
 			//CABECERA X CADA RECIBO
 			sb.append("1");
 			sb.append(StringUtils.leftPad(Long.toString(recibo.getNumero()), 8, "0"));
-			sb.append(fechaReciboStr);
+			sb.append(fechaLoteStr); //antes fechaReciboStr
 			sb.append(StringUtils.leftPad(Integer.toString(recibo.getCliente().getNumeroCliente()), 8, "0"));
 			fileLines.add(sb.toString());
 			
