@@ -95,7 +95,6 @@
 		$("#modal_recibos").modal({backdrop: 'static', keyboard: false});
 
 		// Funcion para cargar recibo por id
-		//$('#tableSelectCliente tbody tr').click(function() {
 		selectRow = function(aThis) {
 			var reciboId = $(aThis).find("td").first().text();
 			
@@ -108,8 +107,8 @@
 				type : 'GET',
 				dataType : 'html',
 				success : function(data) {
-					$('#container').html(data);
-		 			$("#modal_recibos").modal('toggle');
+					//$('#container').html(data);
+		 			//$("#modal_recibos").modal('toggle');
 				},
 				error : function() {
 					// Aqui código cuando servidor retorna error

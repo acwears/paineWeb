@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      
+<head th:include="layout :: headerFragment"></head>
+
+<body>
+	<div th:include="layout :: menuFragment"></div>
+
+
+	<div id="container">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Recibos cargados</h3>
+			</div>
+			<div class="panel-body">
+				<!-- Table -->
+				<table class="table table-hover" id="tblRecibos">
+					<thead>
+						<tr>
+							<th><font color="#000000">Lote #</font></th>
+							<th><font color="#000000">Fecha</font></th>
+							<th><font color="#000000">Monto total del lote</font></th>
+							<th><font color="#000000">Estado</font></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="varRecibosSinEnviar : ${recibos}">
+							<td th:text="${varRecibosSinEnviar.lote}"></td>
+							<td th:text="${varRecibosSinEnviar.fechaLote}"></td>
+							<td th:text="${varRecibosSinEnviar.importeTotal}"></td>
+							<td th:text="${varRecibosSinEnviar.estadoLote}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<!-- <form action="#" th:action="@{/crearExcelPorUnLote}" method="post" id="reciboFormId">
+	</form>-->
+
+	<div th:include="layout :: footerFragment"></div>
+		
+</body>
+
+<style> 
+#mnuLoteVer{color:white;} 
+</style> 
+
+<script type="text/javascript">
+/*
+	$(document).ready(function() {
+$("#tableSelectCliente").dataTable();
+		
+		$("#tblRecibos").on( 'draw.dt', function () {
+			 $(this).find('tr').bind("click", function(){
+				selectRow(this);
+			});		 
+		} );
+		
+		$("#tblRecibos tr").click(function(){
+			selectRow(this);
+		})
+		
+		selectRow = function(aThis) {
+			var loteId = $(aThis).find("td").first().text();
+			
+			//$('.modal-footer').hide();
+			//$('.modal-body').html('<p style="color: red;">Cargando recibo...</div>');
+
+			$.ajax({
+				url : '/crearExcelPorUnLote',
+				data : 'loteId=' + loteId,
+				type : 'GET',
+				dataType : 'html',
+				success : function(data) {
+					$('#container').html(data);
+		 			//$("#modal_recibos").modal('toggle');
+				},
+				error : function() {
+					// Aqui código cuando servidor retorna error
+				},
+			});
+
+		}; //end selectRow = function(aThis) {
+			
+			
+			
+		// Primero exportamos el excel
+		$.fileDownload("crearExcelPorUnLote", {
+			data: $('#reciboFormId').serialize(), 
+			successCallback: function (url) { 
+
+
+			}, 
+			failCallback: function (responseHtml, url, error) { 
+		    	$('.alert.alert-danger').show();
+		    	$('.alert.alert-danger').fadeOut(5000);
+			}		
+		});
+		//end prueba
+		
+		
+			
+	}); //end ready function
+	
+	*/
+
+</script>
+
+</html>

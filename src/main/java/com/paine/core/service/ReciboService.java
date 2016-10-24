@@ -116,6 +116,11 @@ public class ReciboService {
 		return recibos;
 	}
 	
+	public List<Recibo> lotesEnviadosAgrupados(){
+		List<Recibo> recibos = reciboRepository.lotesEnviadosAgrupadosPorLote();
+		return recibos;
+	}
+	
 	public void salvarLote(List<Integer> listado){
 		reciboRepository.salvarLote(listado, reciboRepository.maxLote());
 	}

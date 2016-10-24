@@ -473,7 +473,7 @@ public List<Recibo> recibosEnEsperaDeExportacion() {
 	});
 }
 
-public List<Recibo> lotesEnviados() {
+public List<Recibo> lotesEnviados() { //este puede servir para hacer clic en el lote y muestre los recibos del lote
 	
 	StringBuilder sb = new StringBuilder();
 	sb.append(" SELECT re.*, cl.id as idCliente, cl.nro_cliente, cl.nombre FROM recibo re ");
@@ -505,6 +505,38 @@ public List<Recibo> lotesEnviados() {
 
 		recibos.setCliente(cliente);
 
+		return recibos;
+	});
+}
+
+public List<Recibo> lotesEnviadosAgrupadosPorLote() {
+	StringBuilder sb = new StringBuilder();
+	
+	if(Context.loggedUser().isAdmin()){
+		sb.append(" SELECT re.lote, re.fecha_lote, re.exportado, sum(re.importe_total) as suma_monto ");
+		sb.append(" FROM recibo re ");
+		sb.append(" WHERE lote <> 0 ");
+		sb.append(" GROUP BY re.lote ");
+		sb.append(" ORDER BY lote DESC ");
+	}
+	else{
+		sb.append(" SELECT re.lote, re.fecha_lote, re.exportado, sum(re.importe_total) as suma_monto ");
+		sb.append(" FROM recibo re ");
+		sb.append(" WHERE id_usuario = ");
+		sb.append(Context.loggedUser().getId());
+		sb.append(" AND lote <> 0 ");
+		sb.append(" GROUP BY re.lote ");
+	}
+	
+	return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
+
+		Recibo recibos = new Recibo();
+
+		recibos.setImporteTotal(rs.getDouble("suma_monto")); //aca mando el monto total de cada lote
+		recibos.setFechaLote(rs.getDate("fecha_lote"));
+		recibos.setLote(rs.getInt("lote"));
+		recibos.setEstadoLote(rs.getString("exportado"));
+		
 		return recibos;
 	});
 }
