@@ -50,63 +50,41 @@
 </style> 
 
 <script type="text/javascript">
-/*
-	$(document).ready(function() {
-$("#tableSelectCliente").dataTable();
-		
-		$("#tblRecibos").on( 'draw.dt', function () {
-			 $(this).find('tr').bind("click", function(){
-				selectRow(this);
-			});		 
-		} );
-		
-		$("#tblRecibos tr").click(function(){
+
+$(document).ready(function() {
+	
+	$("#tableSelectCliente").dataTable();
+	
+	$("#tblRecibos").on( 'draw.dt', function () {
+		 $(this).find('tr').bind("click", function(){
 			selectRow(this);
-		})
+		});		 
+	} );
+	
+	$("#tblRecibos tr").click(function(){
+		selectRow(this);
+	});
+	
+	selectRow = function(aThis) {
+		var loteId = $(aThis).find("td").first().text();
 		
-		selectRow = function(aThis) {
-			var loteId = $(aThis).find("td").first().text();
-			
-			//$('.modal-footer').hide();
-			//$('.modal-body').html('<p style="color: red;">Cargando recibo...</div>');
-
-			$.ajax({
-				url : '/crearExcelPorUnLote',
-				data : 'loteId=' + loteId,
-				type : 'GET',
-				dataType : 'html',
-				success : function(data) {
-					$('#container').html(data);
-		 			//$("#modal_recibos").modal('toggle');
-				},
-				error : function() {
-					// Aqui código cuando servidor retorna error
-				},
-			});
-
-		}; //end selectRow = function(aThis) {
-			
-			
-			
-		// Primero exportamos el excel
 		$.fileDownload("crearExcelPorUnLote", {
-			data: $('#reciboFormId').serialize(), 
+			data: 'loteId=' + loteId, 
 			successCallback: function (url) { 
-
+				// No se que vas a hacer acá
 
 			}, 
 			failCallback: function (responseHtml, url, error) { 
-		    	$('.alert.alert-danger').show();
-		    	$('.alert.alert-danger').fadeOut(5000);
+				$('.alert.alert-danger').show();
+				$('.alert.alert-danger').fadeOut(5000);
 			}		
 		});
-		//end prueba
+
+	}; //end selectRow = function(aThis) {
+
 		
-		
-			
-	}); //end ready function
+}); //end ready function
 	
-	*/
 
 </script>
 
