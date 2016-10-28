@@ -74,7 +74,7 @@ public class ReciboRepository extends JDBCRepository {
 		Object[] params = new Object[] { id };
 
 		return getJdbcTemplate().query(sb.toString(), params, (rs, rowNum) -> {
-
+		
 			Factura factura = new Factura();
 
 			factura.setId(rs.getInt("id"));
