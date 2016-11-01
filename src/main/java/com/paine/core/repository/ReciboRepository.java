@@ -523,17 +523,18 @@ public List<Recibo> lotesEnviadosAgrupadosPorLote() {
 	if(Context.loggedUser().isAdmin()){
 		sb.append(" SELECT re.lote, re.fecha_lote, re.exportado, sum(re.importe_total) as suma_monto, re.id_usuario ");
 		sb.append(" FROM recibo re ");
-		sb.append(" WHERE lote <> 0 ");
+		sb.append(" WHERE re.lote <> 0 ");
 		sb.append(" GROUP BY re.lote ");
-		sb.append(" ORDER BY lote DESC ");
+		sb.append(" ORDER BY re.lote DESC ");
 	}
 	else{
 		sb.append(" SELECT re.lote, re.fecha_lote, re.exportado, sum(re.importe_total) as suma_monto, re.id_usuario ");
 		sb.append(" FROM recibo re ");
-		sb.append(" WHERE id_usuario = ");
+		sb.append(" WHERE re.id_usuario = ");
 		sb.append(Context.loggedUser().getId());
-		sb.append(" AND lote <> 0 ");
+		sb.append(" AND re.lote <> 0 ");
 		sb.append(" GROUP BY re.lote ");
+		sb.append(" ORDER BY re.lote DESC ");
 	}
 	
 	return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
@@ -547,7 +548,7 @@ public List<Recibo> lotesEnviadosAgrupadosPorLote() {
 		
 		//aca poner nombre del vendedor
 		Usuario usuario = new Usuario();
-		usuario = usuarioRepository.find(rs.getInt("id_usuario"));
+		usuario = usuarioRepository.findOne(rs.getInt("id_usuario"));
 		
 		recibos.setUsuario(usuario);
 		

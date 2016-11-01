@@ -78,6 +78,25 @@ public class UsuarioRepository extends JDBCRepository {
 			return usuario;
 		});
 	}
+	
+	public Usuario findOne(Integer usuarioId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(" SELECT * FROM usuario WHERE id = ? ");
+
+		return getJdbcTemplate().queryForObject(sb.toString(), new Object[] { usuarioId }, (rs, rowNum) -> {
+
+			Usuario usuario = new Usuario();
+
+			usuario.setId(rs.getInt("id"));
+			usuario.setCodigo(rs.getInt("codigo"));
+			usuario.setNombre(rs.getString("nombre"));
+			usuario.setEmail(rs.getString("email"));
+			usuario.setPwd(rs.getString("pwd"));
+			usuario.setRole(Role.getByValue(rs.getString("role")));
+
+			return usuario;
+		});
+	}
 
 	public void salvar(Usuario usuario) {
 		 Map<String, Object> parameters = new HashMap<>();
