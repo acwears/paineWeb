@@ -102,7 +102,7 @@
 						    
 							<tbody>
 							 	<tr th:each="chequeVar : ${recibo.getTpCheques()}">
-									<td th:text="${chequeVar.banco.id}"></td>
+									<td th:text="${chequeVar.banco.abreviatura}"></td>
 									<td th:text="${chequeVar.monto}"></td>
 									<td th:text="${chequeVar.numero}"></td>
 									<td th:text="${chequeVar.cuit}"></td>
@@ -128,7 +128,7 @@
 						        </tr>
 						    </thead>
 							 	<tr th:each="depositoVar : ${recibo.getTpDepositos()}">
-									<td th:text="${depositoVar.banco.id}"></td>
+									<td th:text="${depositoVar.banco.abreviatura}"></td>
 									<td th:text="${depositoVar.monto}"></td>
 									<td th:text="${depositoVar.fecha}"></td>							
 								</tr>						    
@@ -192,10 +192,13 @@
 				<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
 					<div>
 						<label for="exampleInputEmail1"><font color = "green">Importe total del recibo</font></label>
-						<input style="width:240px;" type="text" class="form-control" readonly="readonly" id="idMontoTotalRecibo" th:value="${recibo.importeTotal}">
+						<input type="text" class="form-control" readonly="readonly" id="idMontoTotalRecibo" th:value="${recibo.importeTotal}">
 					</div>
-					<br>
-					<br>
+	    		</div>
+	    		
+	    		<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+					<label for="exampleInputEmail1"><font color = "green">Lote</font></label>
+	    			<input type="text" class="form-control" id="idLote" th:value="${recibo.lote}">
 	    		</div>
 			</div>
 		</div> <!-- *** END descuento e importe total *** -->

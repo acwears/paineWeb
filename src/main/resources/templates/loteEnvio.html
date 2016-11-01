@@ -41,6 +41,7 @@
 					</tbody>
 				</table>
 			</div>
+			<input class="btn btn-secondary btn-sm" type="button" value="Seleccionar todos" id="idSelectAll">
 		</div>
 		<input class="btn btn-primary btn-lg" type="button" value="Enviar Lote" id="idEnviarLote">
 		<br>
@@ -64,6 +65,20 @@ $(document).ready(function(){
 	
 	$("#successMessage").fadeOut(10000);
 	$("#errorMessage").fadeOut(10000);
+	
+	$("#idSelectAll").click(function(){
+		
+		$('#tblRecibos').find('tr').each(function () {
+	        var row = $(this);
+	        if (row.find('input[type="checkbox"]').is(':checked')) {
+	        }
+	        else{
+	        	row.find('input[type="checkbox"]').prop( "checked", true );
+	        }
+	    });
+		
+	});
+	
 	
 	$("#idEnviarLote").click(function(){
 		var noSeleccionoRecibo = true;

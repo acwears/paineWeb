@@ -77,11 +77,14 @@ $(document).ready(function(){
 		e.preventDefault();
 	
 		var noSeleccionoLote = true;
+		var cantSelecciones = 0;
 		
 		$('#tblLotes').find('tr').each(function () {
 	        var row = $(this);
 	        if (row.find('input[type="checkbox"]').is(':checked')) {
 	        	noSeleccionoLote = false;
+	        	cantSelecciones++;
+	        	
 	        	var idHiddenDate = new Date();
 				var idHiddenDate2 = idHiddenDate.getTime().toString();
 				
@@ -92,7 +95,12 @@ $(document).ready(function(){
 	    });
 		
 		if(noSeleccionoLote){
-			alert("Debe seleccionar al menos un lote!");
+			alert("Debe seleccionar un lote!");
+			return;
+		}
+		
+		if(cantSelecciones > 1){
+			alert("No puede exportar mas de un lote a la vez!");
 			return;
 		}
 		

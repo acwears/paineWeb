@@ -47,6 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
 import main.java.com.paine.core.dto.view.LotesAExportarDto;
 import main.java.com.paine.core.dto.view.UsuarioDto;
 import main.java.com.paine.core.model.Banco;
+import main.java.com.paine.core.model.Descuento;
 import main.java.com.paine.core.model.Factura;
 import main.java.com.paine.core.model.Recibo;
 import main.java.com.paine.core.model.Role;
@@ -100,13 +101,6 @@ public class ControlPanelController {
 		model.addObject("errorMessage", errorMessage);
 
 		return model;
-	}
-
-	@Secured({ "ROLE_ADMIN" })
-	@RequestMapping("/controlPanel/nuevo")
-	public String crearNuevo(@ModelAttribute("usuarioDto") UsuarioDto usuarioDto, Model model) {
-		model.addAttribute("roles", Role.values());
-		return "salvarUsuario";
 	}
 
 	@Secured({ "ROLE_ADMIN" })
@@ -175,9 +169,9 @@ public class ControlPanelController {
 		
 		// **** INICIALIZACION DEL ARCHIVO EXCEL
 		FileOutputStream archivo = null;
-		int filaIni_XCadaTipoDePago = 1;
-		int filaComienzoSiguienteRecibo = 1;
-		int fi = 1;
+		int filaIni_XCadaTipoDePago = 4;
+		int filaComienzoSiguienteRecibo = 4;
+		int fi = 4;
 
 		// linea cabeza
 		// Resource resource =
@@ -242,9 +236,22 @@ public class ControlPanelController {
 			for (int f = 0; f < 10000; f++) {
 				fila = hoja.createRow(f);
 			}
-
-			// fila = hoja.createRow(0);
+			
+			//lote y fecha
 			fila = hoja.getRow(0);
+			celda = fila.createCell(0);
+			celda.setCellValue("Nro. Lote");
+			celda.setCellStyle(my_style_encabezado);
+			
+			celda = fila.createCell(1);
+			celda.setCellValue("Fecha");
+			celda.setCellStyle(my_style_encabezado);
+			
+			//end lote y fecha
+
+			
+			// fila = hoja.createRow(0);
+			fila = hoja.getRow(3); //hoja.getRow(0);
 			celda = fila.createCell(0);
 			celda.setCellValue("Recibo");
 			celda.setCellStyle(my_style_encabezado);
@@ -298,11 +305,11 @@ public class ControlPanelController {
 			celda.setCellStyle(my_style_encabezado);
 			
 			celda = fila.createCell(13);
-			celda.setCellValue("Nro. Lote");
+			celda.setCellValue("Descuento");
 			celda.setCellStyle(my_style_encabezado);
 			
 			celda = fila.createCell(14);
-			celda.setCellValue("Fecha");
+			celda.setCellValue("Descripción");
 			celda.setCellStyle(my_style_encabezado);
 
 			// ***** FIN INICIALIZACION
@@ -320,12 +327,12 @@ public class ControlPanelController {
 
 					//pongo lote y fecha lote
 					String fechaLoteStr = sdf.format(reciboCompleto.getFechaLote());
-					fila = hoja.getRow(fi);
-					celda = fila.createCell(13);
+					fila = hoja.getRow(1); //fila = hoja.getRow(fi);
+					celda = fila.createCell(0); //fila.createCell(13);
 					celda.setCellValue(lote);
 					celda.setCellStyle(my_style);
 					
-					celda = fila.createCell(14);
+					celda = fila.createCell(1); //fila.createCell(14);
 					celda.setCellValue(fechaLoteStr);
 					celda.setCellStyle(my_style);
 					//end
@@ -474,6 +481,26 @@ public class ControlPanelController {
 					if (filaComienzoSiguienteRecibo < fi) {
 						filaComienzoSiguienteRecibo = fi;
 					}
+					
+					//DESCUENTO
+					fi = filaIni_XCadaTipoDePago;
+					for(Descuento descuento : reciboCompleto.getDescuentos()){
+						fila = hoja.getRow(fi);
+						celda = fila.createCell(13);
+						celda.setCellValue(descuento.getPorcentaje());
+						celda.setCellStyle(my_style);
+						
+						celda = fila.createCell(14);
+						celda.setCellValue(descuento.getDescripcion());
+						celda.setCellStyle(my_style);
+						
+						fi++;
+					}
+					
+					// codigo para sber en que fila arranca el siguiente recibo
+					if (filaComienzoSiguienteRecibo < fi) {
+						filaComienzoSiguienteRecibo = fi;
+					}
 					// RETENCION scar
 					/*
 					 * for(TpRetencion retenciones :
@@ -568,23 +595,26 @@ public class ControlPanelController {
 
 		return "salvarUsuario";
 	}
+	
+	@Secured({ "ROLE_ADMIN" })
+	@RequestMapping("/controlPanel/nuevo")
+	public String crearNuevo(@ModelAttribute("usuarioDto") UsuarioDto usuarioDto, Model model) {
+		model.addAttribute("roles", Role.values());
+		return "salvarUsuario";
+	}	
 
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping("/controlPanel/salvar")
-	public ModelAndView salvar(@ModelAttribute("usuarioDto") UsuarioDto usuarioDto, Model model) {
+	public ModelAndView salvar(@ModelAttribute("usuarioDto") UsuarioDto usuarioDto) {
 
 		try {
 
 			if (usuarioDto.getId() == null) {
 
 				// Validar el DTO antes de criar el usuário
-				if (validate(usuarioDto) == false) {
-					return this.listado(null, "Todos los campos son obligatorios en la creación de nuevo usuário");
-				}
-
-				Usuario existeUsuario = usuarioService.findByEmail(usuarioDto.getEmail());
-				if (existeUsuario != null) {
-					return this.listado(null, "El usuário no fue creado porque ya existe!");
+				ModelAndView validationResult = validate(usuarioDto, true);
+				if(validationResult != null) {
+					return validationResult;
 				}
 
 				// Todo ok, criar usuário
@@ -596,23 +626,20 @@ public class ControlPanelController {
 				usuario.setPwd(usuarioDto.getPwd());
 				usuarioService.salvar(usuario);
 
-				return this.listado("Usuario criado com suceso!", null);
+				// Mensaje de suceso
+				ModelAndView mav = new ModelAndView("salvarUsuario");
+				mav.addObject("roles", Role.values());
+				mav.addObject("successMessage", "El usuário foi criado con suceso!");
+				return mav;
 
 			} else {
 
 				Usuario usuario = usuarioService.find(usuarioDto.getId());
 
-				// Si el usuario, no actualizo el password (lo dejó vacio),
-				// cargar el password en el DTO antes de validarlo, para
-				// que no de error
-				if (StringUtils.isEmpty(usuarioDto.getPwd()) && StringUtils.isEmpty(usuarioDto.getPwdConfirmacion())) {
-					usuarioDto.setPwd(usuario.getPwd());
-					usuarioDto.setPwdConfirmacion(usuario.getPwd());
-				}
-
-				// Ahora si validar el usuarioDto
-				if (validate(usuarioDto) == false) {
-					return this.listado(null, "Algún campo obligatório no fue cargado");
+				// Validar el DTO antes de criar el usuário
+				ModelAndView validationResult = validate(usuarioDto, false);
+				if(validationResult != null) {
+					return validationResult;
 				}
 
 				// Todo ok, actualizar el usuario
@@ -623,7 +650,11 @@ public class ControlPanelController {
 				usuario.setPwd(usuarioDto.getPwd());
 				usuarioService.actualizar(usuario);
 
-				return this.listado("Usuario actualizado com suceso!", null);
+				// Mensaje de suceso
+				ModelAndView mav = new ModelAndView("salvarUsuario");
+				mav.addObject("roles", Role.values());
+				mav.addObject("successMessage", "El usuário foi actualizado con suceso!");
+				return mav;
 			}
 
 		} catch (Exception e) {
@@ -661,24 +692,43 @@ public class ControlPanelController {
 		return JsonMessageResult.success();
 	}
 
-	private boolean validate(UsuarioDto usuarioDto) {
+	private ModelAndView validate(UsuarioDto usuarioDto, boolean newUsuario) {
 
-		boolean result = true;
-
+		boolean emptyValues = false;
 		if (StringUtils.isEmpty(usuarioDto.getNombre())) {
-			result = false;
+			emptyValues = true;
 		} else if (StringUtils.isEmpty(usuarioDto.getEmail())) {
-			result = false;
+			emptyValues = true;
 		} else if (StringUtils.isEmpty(usuarioDto.getPwd())) {
-			result = false;
+			emptyValues = true;
 		} else if (StringUtils.isEmpty(usuarioDto.getPwdConfirmacion())) {
-			result = false;
+			emptyValues = true;
 		} else if (StringUtils.isEmpty(usuarioDto.getRole())) {
-			result = false;
-		} else if (!usuarioDto.getPwd().equals(usuarioDto.getPwd())) {
-			result = false;
+			emptyValues = true;
+		} 
+		
+		if(emptyValues) {
+			ModelAndView mav = new ModelAndView("salvarUsuario");
+			mav.addObject("roles", Role.values());
+			mav.addObject("errorMessage", "Todos los campos son obligatorios en la creación de nuevo usuário");
+			return mav;
 		}
-
-		return result;
+		
+		if (!usuarioDto.getPwd().equals(usuarioDto.getPwdConfirmacion())) {
+			ModelAndView mav = new ModelAndView("salvarUsuario");
+			mav.addObject("roles", Role.values());
+			mav.addObject("errorMessage", "Los password no coinciden");
+			return mav;
+		}
+		
+		Usuario existeUsuario = usuarioService.findByEmail(usuarioDto.getEmail());
+		if (newUsuario && existeUsuario != null) {
+			ModelAndView mav = new ModelAndView("salvarUsuario");
+			mav.addObject("roles", Role.values());
+			mav.addObject("errorMessage", "El usuário no fue creado porque ya existe!");
+			return mav;					
+		}		
+		
+		return null;
 	}
 }

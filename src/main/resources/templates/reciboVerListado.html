@@ -80,7 +80,9 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 
-		$("#tableSelectCliente").dataTable();
+		$("#tableSelectCliente").dataTable({
+			"order": []
+		});
 		
 		$("#tableSelectCliente").on( 'draw.dt', function () {
 			 $(this).find('tr').bind("click", function(){
@@ -107,8 +109,8 @@
 				type : 'GET',
 				dataType : 'html',
 				success : function(data) {
-					//$('#container').html(data);
-		 			//$("#modal_recibos").modal('toggle');
+					$('#container').html(data);
+		 			$("#modal_recibos").modal('toggle');
 				},
 				error : function() {
 					// Aqui código cuando servidor retorna error

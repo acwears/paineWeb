@@ -669,7 +669,9 @@
 			document.getElementById("tblFactura").deleteRow(1);
 	    });*/
 		
-		$("#idTableSelectCte1").dataTable();
+		$("#idTableSelectCte1").dataTable({
+			"order": []
+		});
 		
 		$('#idTableSelectCte1').on( 'draw.dt', function () {
 			$(this).find('tr').bind("click", function(){

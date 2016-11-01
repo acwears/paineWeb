@@ -30,6 +30,9 @@ public class ReciboRepository extends JDBCRepository {
 	@Autowired
 	private BancoRepository bancoRepository;
 	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
 	// ****************************************************************************************
 	// ******************* traigo datos del RECIBO
 	// ********************************************
@@ -57,6 +60,7 @@ public class ReciboRepository extends JDBCRepository {
 			recibo.setObservaciones(rs.getString("observaciones"));
 			recibo.setFechaProceso(rs.getDate("fecha_proceso"));
 			recibo.setFechaLote(rs.getDate("fecha_lote"));
+			recibo.setLote(rs.getInt("lote"));
 
 			return recibo;
 		});
@@ -144,6 +148,10 @@ public class ReciboRepository extends JDBCRepository {
 			tpDeposito.setMonto(rs.getDouble("importe"));
 			tpDeposito.setFecha(rs.getDate("fecha"));
 
+			Banco banco = new Banco(); 
+			banco = bancoRepository.findOne(rs.getInt("id_banco"));
+			tpDeposito.setBanco(banco);
+			
 			return tpDeposito;
 		});
 	}
@@ -340,7 +348,7 @@ public class ReciboRepository extends JDBCRepository {
 		sb.append(SqlUtil.createSQLIn(recibos));
 		sb.append(" ) ");
 		
-		Object[] params = new Object[] { "SI", usuario.getId(), new Date() };
+		Object[] params = new Object[] { "EXPORTADO", usuario.getId(), new Date() }; //ANTES ERA "SI"
 		getJdbcTemplate().update(sb.toString(), params);		
 	}
 	
@@ -366,12 +374,12 @@ public class ReciboRepository extends JDBCRepository {
 		if (lote != 0){
 			sb.append(" SELECT re.*, cl.id as idCliente, cl.nro_cliente, cl.nombre FROM recibo re ");
 			sb.append(" JOIN clientes cl ON cl.id = re.id_cliente ");
-			sb.append(" WHERE re.exportado = 'ENVIADO' AND re.lote =" + lote);
+			sb.append(" WHERE re.lote =" + lote); //sb.append(" WHERE re.exportado = 'ENVIADO' AND re.lote =" + lote);
 		}
 		else{
 			sb.append(" SELECT re.*, cl.id as idCliente, cl.nro_cliente, cl.nombre FROM recibo re ");
 			sb.append(" JOIN clientes cl ON cl.id = re.id_cliente ");
-			sb.append(" WHERE re.exportado = 'ENVIADO'");
+			sb.append(" WHERE re.exportado = 'ENVIADO'"); //sb.append(" WHERE re.exportado = 'ENVIADO'");
 		}
 		
 		return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
@@ -513,14 +521,14 @@ public List<Recibo> lotesEnviadosAgrupadosPorLote() {
 	StringBuilder sb = new StringBuilder();
 	
 	if(Context.loggedUser().isAdmin()){
-		sb.append(" SELECT re.lote, re.fecha_lote, re.exportado, sum(re.importe_total) as suma_monto ");
+		sb.append(" SELECT re.lote, re.fecha_lote, re.exportado, sum(re.importe_total) as suma_monto, re.id_usuario ");
 		sb.append(" FROM recibo re ");
 		sb.append(" WHERE lote <> 0 ");
 		sb.append(" GROUP BY re.lote ");
 		sb.append(" ORDER BY lote DESC ");
 	}
 	else{
-		sb.append(" SELECT re.lote, re.fecha_lote, re.exportado, sum(re.importe_total) as suma_monto ");
+		sb.append(" SELECT re.lote, re.fecha_lote, re.exportado, sum(re.importe_total) as suma_monto, re.id_usuario ");
 		sb.append(" FROM recibo re ");
 		sb.append(" WHERE id_usuario = ");
 		sb.append(Context.loggedUser().getId());
@@ -536,6 +544,12 @@ public List<Recibo> lotesEnviadosAgrupadosPorLote() {
 		recibos.setFechaLote(rs.getDate("fecha_lote"));
 		recibos.setLote(rs.getInt("lote"));
 		recibos.setEstadoLote(rs.getString("exportado"));
+		
+		//aca poner nombre del vendedor
+		Usuario usuario = new Usuario();
+		usuario = usuarioRepository.find(rs.getInt("id_usuario"));
+		
+		recibos.setUsuario(usuario);
 		
 		return recibos;
 	});
@@ -602,6 +616,7 @@ public List<Recibo> lotesEnviadosAgrupadosPorLote() {
 			recibos.setImporteTotal(rs.getDouble("importe_total"));
 			recibos.setObservaciones(rs.getString("observaciones"));
 			recibos.setFechaProceso(rs.getDate("fecha_proceso"));
+			recibos.setLote(rs.getInt("lote"));
 
 			Cliente cliente = new Cliente();
 			cliente.setId(rs.getInt("id"));

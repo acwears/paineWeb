@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import main.java.com.paine.core.dto.view.LoteDto;
 import main.java.com.paine.core.model.Banco;
+import main.java.com.paine.core.model.Descuento;
 import main.java.com.paine.core.model.Factura;
 import main.java.com.paine.core.model.Recibo;
 import main.java.com.paine.core.model.TpCheque;
@@ -228,9 +229,9 @@ private FileOutputStream generarExcel(Integer lotes, ServletOutputStream outputS
 		
 		// **** INICIALIZACION DEL ARCHIVO EXCEL
 		FileOutputStream archivo = null;
-		int filaIni_XCadaTipoDePago = 1;
-		int filaComienzoSiguienteRecibo = 1;
-		int fi = 1;
+		int filaIni_XCadaTipoDePago = 4;
+		int filaComienzoSiguienteRecibo = 4;
+		int fi = 4;
 
 		String nomFile = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		String rutaArchivo = System.getProperty("user.home") + "/Recibos_" + nomFile + ".xls";
@@ -263,7 +264,7 @@ private FileOutputStream generarExcel(Integer lotes, ServletOutputStream outputS
 		my_style_encabezado.setFillForegroundColor(IndexedColors.GREY_80_PERCENT.getIndex());
 		//end fuente
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		String fechaReciboStr;
 
 		try {
@@ -278,8 +279,20 @@ private FileOutputStream generarExcel(Integer lotes, ServletOutputStream outputS
 				fila = hoja.createRow(f);
 			}
 
-			// fila = hoja.createRow(0);
+			//lote y fecha
 			fila = hoja.getRow(0);
+			celda = fila.createCell(0);
+			celda.setCellValue("Nro. Lote");
+			celda.setCellStyle(my_style_encabezado);
+			
+			celda = fila.createCell(1);
+			celda.setCellValue("Fecha");
+			celda.setCellStyle(my_style_encabezado);
+			
+			//end lote y fecha
+			
+			// fila = hoja.createRow(0);
+			fila = hoja.getRow(3);
 			celda = fila.createCell(0);
 			celda.setCellValue("Recibo");
 			celda.setCellStyle(my_style_encabezado);
@@ -333,11 +346,11 @@ private FileOutputStream generarExcel(Integer lotes, ServletOutputStream outputS
 			celda.setCellStyle(my_style_encabezado);
 			
 			celda = fila.createCell(13);
-			celda.setCellValue("Nro. Lote");
+			celda.setCellValue("Descuento");
 			celda.setCellStyle(my_style_encabezado);
 			
 			celda = fila.createCell(14);
-			celda.setCellValue("Fecha");
+			celda.setCellValue("Descripción");
 			celda.setCellStyle(my_style_encabezado);
 
 			// ***** FIN INICIALIZACION
@@ -354,14 +367,16 @@ private FileOutputStream generarExcel(Integer lotes, ServletOutputStream outputS
 
 					Recibo reciboCompleto = reciboService.findOne(recibo.getId());
 
+					
+					
 					//pongo lote y fecha lote
 					String fechaLoteStr = sdf.format(reciboCompleto.getFechaLote());
-					fila = hoja.getRow(fi);
-					celda = fila.createCell(13);
+					fila = hoja.getRow(1);
+					celda = fila.createCell(0);
 					celda.setCellValue(lote);
 					celda.setCellStyle(my_style);
 					
-					celda = fila.createCell(14);
+					celda = fila.createCell(1);
 					celda.setCellValue(fechaLoteStr);
 					celda.setCellStyle(my_style);
 					//end
@@ -506,6 +521,26 @@ private FileOutputStream generarExcel(Integer lotes, ServletOutputStream outputS
 						fi++;
 					}
 
+					// codigo para sber en que fila arranca el siguiente recibo
+					if (filaComienzoSiguienteRecibo < fi) {
+						filaComienzoSiguienteRecibo = fi;
+					}
+					
+					//DESCUENTO
+					fi = filaIni_XCadaTipoDePago;
+					for(Descuento descuento : reciboCompleto.getDescuentos()){
+						fila = hoja.getRow(fi);
+						celda = fila.createCell(13);
+						celda.setCellValue(descuento.getPorcentaje());
+						celda.setCellStyle(my_style);
+						
+						celda = fila.createCell(14);
+						celda.setCellValue(descuento.getDescripcion());
+						celda.setCellStyle(my_style);
+						
+						fi++;
+					}
+					
 					// codigo para sber en que fila arranca el siguiente recibo
 					if (filaComienzoSiguienteRecibo < fi) {
 						filaComienzoSiguienteRecibo = fi;

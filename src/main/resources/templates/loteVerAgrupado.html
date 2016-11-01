@@ -22,6 +22,7 @@
 							<th><font color="#000000">Lote #</font></th>
 							<th><font color="#000000">Fecha</font></th>
 							<th><font color="#000000">Monto total del lote</font></th>
+							<th><font color="#000000">Usuario</font></th>
 							<th><font color="#000000">Estado</font></th>
 						</tr>
 					</thead>
@@ -30,6 +31,7 @@
 							<td th:text="${varRecibosSinEnviar.lote}"></td>
 							<td th:text="${varRecibosSinEnviar.fechaLote}"></td>
 							<td th:text="${varRecibosSinEnviar.importeTotal}"></td>
+							<td th:text="${varRecibosSinEnviar.getUsuario().nombre}"></td>
 							<td th:text="${varRecibosSinEnviar.estadoLote}"></td>
 						</tr>
 					</tbody>

@@ -97,6 +97,10 @@
 	
 	$(document).ready(function(){	
 		
+		$("#tableSelectCliente").dataTable({
+			"order": []
+		});
+		
 		$("#tableSelectCliente").dataTable();
 		
 		$('#tableSelectCliente').on( 'draw.dt', function () {

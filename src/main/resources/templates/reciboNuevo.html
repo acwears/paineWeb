@@ -1152,7 +1152,14 @@
 			errObject = '#descuentoDescripcionId';
 			$('#modalMensajes').modal();
 			return false;
-		}	
+		}
+		
+		if($('#descuentoDescripcionId').val().length > 25){
+			document.getElementById('textModal').innerHTML = '- La descripción del descuento no puede contener más de 25 caracteres.';
+			errObject = '#descuentoDescripcionId';
+			$('#modalMensajes').modal();			
+			return false;
+		}
 		
 		if($('#descuentoPorcentajeId').val() == ''){
 			document.getElementById('textModal').innerHTML = '- Indique el monto del descuento.';
