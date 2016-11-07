@@ -209,7 +209,7 @@ public class FileService {
 			for(TpDeposito depositoss : reciboCompleto.getTpDepositos()){
 				fechaDepositoStr = sdf.format(depositoss.getFecha());
 				
-				cabeceraTR2(recibo.getNumero(), "14", "121201", depositoss.getMonto());
+				cabeceraTR2(recibo.getNumero(), "14", "121209", depositoss.getMonto());
 				
 				//sb.append("A"); //pago de terceros, A ó B VER
 				//sb.append(StringUtils.leftPad(Integer.toString(depositoss.getBanco().getCodigo()),11,"0"));
