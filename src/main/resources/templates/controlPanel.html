@@ -65,10 +65,10 @@
 		<div class="row">
 			<div class="col-md-1"></div>
 
-			<div class="col-md-4" id="subir-datos-container">
+			<div class="col-md-5" id="subir-datos-container">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h3 class="panel-title">Subir datos</h3>
+						<h3 class="panel-title">Actualizar CC</h3>
 					</div>
 					<div class="panel-body">
 						<form class="form-inline">
@@ -78,9 +78,9 @@
 														
 							<div class="form-group">             
 								<label class="btn btn-default btn-file">
-								    Subir datos <input type="file" id="fileupload" name="fileUpload" style="display: none;">
+								    Actualizar <input type="file" id="fileupload" name="fileUpload" style="display: none;">
 								</label>							
-								<p class="help-block">Elegir el archivo a subir</p>
+								<p class="help-block">Elige el archivo a subir</p>
 							</div>
 							
 <!-- 							<div class="form-group">              -->
@@ -98,6 +98,37 @@
 					</div>
 				</div>
 			</div>
+			
+			<!-- parte de subir agend -->
+			<div class="col-md-5" id="subir-datos-container-agenda">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Actualizar Agenda</h3>
+					</div>
+					<div class="panel-body">
+						<form class="form-inline">
+
+							<div class="alert alert-success" role="alert" style="display: none;">File uploaded!</div>
+							<div class="alert alert-danger" role="alert" style="display: none;">Error uploading file</div>
+														
+							<div class="form-group">             
+								<label class="btn btn-default btn-file">
+								    Actualizar <input type="file" id="fileuploadAgenda" name="fileUploadAgenda" style="display: none;">
+								</label>							
+								<p class="help-block">Elige el archivo a subir</p>
+							</div>
+							
+							<div class="progress-agenda" style="display: none;">
+								<div class="progress-bar-agenda" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+									<span class="sr-only">60% Complete</span>
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- end subir agenda -->
 
 		<!-- 	<div class="col-md-4" id="export-container">
 				<div class="panel panel-default">
@@ -200,8 +231,43 @@ $(function () {
 	    	$('#subir-datos-container .alert.alert-danger').show();
 	    	$('#subir-datos-container .alert.alert-danger').fadeOut(5000);	    	
 	    }	    
-    });
+    });    
 });
+
+$(function () {
+    //agenda2
+    $('#fileuploadAgenda').fileupload({
+    	url: /*[[@{/controlPanel/uploadAgenda}]]*/,
+        dataType: 'json',
+	    send: function (e, data) {
+			$('.progress-agenda').show();
+	    }, 
+	    progress: function (e, data) {
+	        var progress = parseInt(data.loaded / data.total * 100, 10);
+	        $('.progress-bar-agenda').css('width', progress + '%');
+	    }, 
+	    always: function (e, data) {
+	    	$('.progress-agenda').hide();
+			$('.progress-bar-agenda').css('width', '0%');
+	    }, 
+	    done: function (e, data) {
+	    	
+			if(data.result.state === 'ERROR') {
+		    	$('#subir-datos-container-agenda .alert.alert-danger').show();
+		    	$('#subir-datos-container-agenda .alert.alert-danger').fadeOut(5000);
+	    	} else if(data.result.state === 'SUCCESS') {
+		    	$('#subir-datos-container-agenda .alert.alert-success').show();
+		    	$('#subir-datos-container-agenda .alert.alert-success').fadeOut(5000);
+	    	}
+	    }, 
+	    fail: function (e, data) {
+	    	$('#subir-datos-container-agenda .alert.alert-danger').show();
+	    	$('#subir-datos-container-agenda .alert.alert-danger').fadeOut(5000);	    	
+	    }	    
+    });
+    //agenda2 end
+});
+
 </script>
 
 </html>

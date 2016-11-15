@@ -38,6 +38,7 @@ import main.java.com.paine.core.model.TpEff;
 import main.java.com.paine.core.model.TpRetencion;
 import main.java.com.paine.core.model.Usuario;
 import main.java.com.paine.core.repository.BancoRepository;
+import main.java.com.paine.core.repository.ClienteRepository;
 import main.java.com.paine.core.repository.CuentaCorrienteRepository;
 import main.java.com.paine.core.repository.ReciboRepository;
 import main.java.com.paine.core.repository.TipoDePagoRepository;
@@ -62,6 +63,9 @@ public class FileService {
 	
 	@Autowired
 	private TipoDePagoRepository tipoDePagoRepository;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
 
 	public void saveFile(MultipartFile fileUpload) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -323,5 +327,115 @@ public class FileService {
 
 		return fileLines;
 	}
+	
+	//file upload Agenda
+	public void saveAgenda(MultipartFile fileUpload) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Scanner s = null;
+		boolean bandera = false;
 
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(fileUpload.getInputStream()));
+			String line;
+			List<Cliente> Clientes = new ArrayList<>();
+			
+			while ((line = reader.readLine()) != null) {
+
+				String[] lineArray = line.split(";");
+
+				if(bandera){
+				
+					Cliente cltes = new Cliente();
+	
+					cltes.setNumeroCliente(Integer.parseInt(lineArray[0]));
+					cltes.setNombre(lineArray[1]);
+	
+					if(!StringUtils.isEmpty(lineArray[2])){
+						cltes.setDomicilio(lineArray[2]);
+					}
+					else{
+						cltes.setDomicilio("-");
+					}
+					
+					if(!StringUtils.isEmpty(lineArray[3])){
+						cltes.setLocalidad(lineArray[3]);
+					}
+					else{
+						cltes.setLocalidad("-");
+					}
+					
+					if(!StringUtils.isEmpty(lineArray[4])){
+						cltes.setCp(lineArray[4]);
+					}
+					else{
+						cltes.setCp("-");
+					}
+					
+					if(!StringUtils.isEmpty(lineArray[5])){
+						cltes.setZona(lineArray[5]);
+					}
+					else{
+						cltes.setZona("-");
+					}
+					
+					if(!StringUtils.isEmpty(lineArray[6])){
+						cltes.setVendedor(lineArray[6]);
+					}
+					else{
+						cltes.setVendedor("-");
+					}
+					
+					if(!StringUtils.isEmpty(lineArray[7])){
+						cltes.setTransporte(lineArray[7]);
+					}
+					else{
+						cltes.setTransporte("-");
+					}
+					
+					if(!StringUtils.isEmpty(lineArray[8])){
+						cltes.setEsCliente(lineArray[8]);
+					}
+					else{
+						cltes.setEsCliente("-");
+					}
+					
+					if(!StringUtils.isEmpty(lineArray[9])){
+						cltes.setEsVendedor(lineArray[9]);
+					}
+					else{
+						cltes.setEsVendedor("-");
+					}
+					
+					if(!StringUtils.isEmpty(lineArray[10])){
+						cltes.setEsTransporte(lineArray[10]);
+					}
+					else{
+						cltes.setEsTransporte("-");
+					}
+	
+	
+					Clientes.add(cltes);
+				
+				} //end if bandera para que no tome la primer linea
+				else{
+					bandera = true;
+				}
+				
+			} //end while
+			
+			//cuentaCorrienteRepository.saveCC(Clientes);
+			clienteRepository.saveCliente(Clientes);
+
+		} catch (Exception ex) {
+			System.out.println("Mensaje: " + ex.getMessage());
+		} finally {
+			// Cerramos el archivo
+			try {
+				if (s != null)
+					s.close();
+			} catch (Exception ex2) {
+				System.out.println("Mensaje 2: " + ex2.getMessage());
+			}
+		}
+	}
 }

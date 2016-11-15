@@ -1,10 +1,15 @@
 package main.java.com.paine.core.repository;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
 import main.java.com.paine.core.model.Cliente;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 
 @Repository
 public class ClienteRepository extends JDBCRepository{
@@ -80,6 +85,40 @@ public class ClienteRepository extends JDBCRepository{
 			cliente.setVendedor(rs.getString("vendedor"));
 			
 			return cliente;
+		});
+	}
+	
+	public void saveCliente(List<Cliente> clientes){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		 StringBuilder sb = new StringBuilder();
+		 sb.append(" INSERT INTO clientes (nro_cliente, nombre, domicilio, localidad, cp, zona, vendedor, transporte, es_cliente, es_vendedor, es_transporte) ");
+		 sb.append(" VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		 
+		 getJdbcTemplate().batchUpdate(sb.toString(), new BatchPreparedStatementSetter() {
+			
+				@Override
+				public void setValues(PreparedStatement ps, int index) throws SQLException {
+					
+					Cliente cte = clientes.get(index);
+					
+					ps.setInt(1, cte.getNumeroCliente());
+					ps.setString(2, cte.getNombre());
+					ps.setString(3, cte.getDomicilio());
+					ps.setString(4, cte.getLocalidad());
+					ps.setString(5, cte.getCp());
+					ps.setString(6, cte.getZona());
+					ps.setString(7, cte.getVendedor());
+					ps.setString(8, cte.getTransporte());
+					ps.setString(9, cte.getEsCliente());
+					ps.setString(10, cte.getEsVendedor());
+					ps.setString(11, cte.getEsTransporte());
+				}
+				
+				@Override
+				public int getBatchSize() {
+					return clientes.size();
+				}
 		});
 	}
 }

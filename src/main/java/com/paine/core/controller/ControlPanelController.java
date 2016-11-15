@@ -691,6 +691,35 @@ public class ControlPanelController {
 
 		return JsonMessageResult.success();
 	}
+	
+	@Secured({ "ROLE_ADMIN" })
+	@ResponseBody
+	@RequestMapping(value = "/controlPanel/uploadAgenda")
+	public JsonMessageResult uploadFileAgenda(@RequestParam MultipartFile fileUploadAgenda) {
+
+		try {
+
+			log.info("Uploading file");
+
+			if (fileUploadAgenda == null || fileUploadAgenda.isEmpty()) {
+				log.info("File contain is empty, uploading aborted");
+				return JsonMessageResult.error().result("FILE_EMPTY");
+			}
+
+			if (!fileUploadAgenda.getOriginalFilename().contains(".txt")) {
+				log.info("Invalid file extension");
+				return JsonMessageResult.error().result("INVALID_FILE_EXTENSION");
+			}
+
+			fileService.saveAgenda(fileUploadAgenda);
+
+		} catch (Exception e) {
+			log.error("Error uploading profile picture");
+			return JsonMessageResult.error();
+		}
+
+		return JsonMessageResult.success();
+	}
 
 	private ModelAndView validate(UsuarioDto usuarioDto, boolean newUsuario) {
 
