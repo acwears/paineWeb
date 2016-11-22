@@ -345,6 +345,8 @@ public class FileService {
 
 				if(bandera){
 				
+					//preguntar aca si existe el cliente en la gaenda
+					
 					Cliente cltes = new Cliente();
 	
 					cltes.setNumeroCliente(Integer.parseInt(lineArray[0]));

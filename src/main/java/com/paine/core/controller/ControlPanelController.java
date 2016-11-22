@@ -706,7 +706,7 @@ public class ControlPanelController {
 				return JsonMessageResult.error().result("FILE_EMPTY");
 			}
 
-			if (!fileUploadAgenda.getOriginalFilename().contains(".txt")) {
+			if (!fileUploadAgenda.getOriginalFilename().contains(".csv")) {
 				log.info("Invalid file extension");
 				return JsonMessageResult.error().result("INVALID_FILE_EXTENSION");
 			}
