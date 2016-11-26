@@ -19,8 +19,8 @@
 								        <tr> <!-- class="success" -->
 								        	<th style="display: none;"></th>
 								        	<th>Nro. factura</font></th> <!-- <font color = "#000000"> -->
-								            <th>Cliente nro.</font></th>
-								            <th>Nombre</font></th>
+								            <th style="display: none;">Cliente nro.</font></th>
+								            <th style="display: none;">Nombre</font></th>
 								            <th>Fecha factura</font></th>
 								            <th>Monto original</font></th>
 								            <th>Monto adeudado</font></th>
@@ -32,8 +32,8 @@
 										<tr th:each="ccVar : ${cuentasCorrientes}">
 											<td th:attr="class='hidden-td-' + ${ccVar.nro_factura}" style="display: none;"></td>
 											<td th:text="${ccVar.nro_factura}"></td>
-											<td th:text="${ccVar.id}"></td>
-											<td th:text="${ccVar.nombre}"></td>
+											<td style="display: none;" th:text="${ccVar.id}"></td>
+											<td style="display: none;" th:text="${ccVar.nombre}"></td>
 											<td th:text="${#dates.format(ccVar.fecha_factura, 'dd/MM/yyyy')}"></td>
 											<td th:text="${ccVar.monto_original}"></td>
 											<td th:text="${ccVar.monto_adeudado}"></td>

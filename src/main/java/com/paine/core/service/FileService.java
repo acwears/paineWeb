@@ -345,78 +345,81 @@ public class FileService {
 
 				if(bandera){
 				
-					//preguntar aca si existe el cliente en la gaenda
+					//pregunto aca si existe el cliente en la gaenda	
+					if (!clienteRepository.existeCliente(Integer.parseInt(lineArray[0]))){
 					
-					Cliente cltes = new Cliente();
-	
-					cltes.setNumeroCliente(Integer.parseInt(lineArray[0]));
-					cltes.setNombre(lineArray[1]);
-	
-					if(!StringUtils.isEmpty(lineArray[2])){
-						cltes.setDomicilio(lineArray[2]);
-					}
-					else{
-						cltes.setDomicilio("-");
-					}
+						Cliente cltes = new Cliente();
+		
+						cltes.setNumeroCliente(Integer.parseInt(lineArray[0]));
+						cltes.setNombre(lineArray[1]);
+		
+						if(!StringUtils.isEmpty(lineArray[2])){
+							cltes.setDomicilio(lineArray[2]);
+						}
+						else{
+							cltes.setDomicilio("-");
+						}
+						
+						if(!StringUtils.isEmpty(lineArray[3])){
+							cltes.setLocalidad(lineArray[3]);
+						}
+						else{
+							cltes.setLocalidad("-");
+						}
+						
+						if(!StringUtils.isEmpty(lineArray[4])){
+							cltes.setCp(lineArray[4]);
+						}
+						else{
+							cltes.setCp("-");
+						}
+						
+						if(!StringUtils.isEmpty(lineArray[5])){
+							cltes.setZona(lineArray[5]);
+						}
+						else{
+							cltes.setZona("-");
+						}
+						
+						if(!StringUtils.isEmpty(lineArray[6])){
+							cltes.setVendedor(lineArray[6]);
+						}
+						else{
+							cltes.setVendedor("-");
+						}
+						
+						if(!StringUtils.isEmpty(lineArray[7])){
+							cltes.setTransporte(lineArray[7]);
+						}
+						else{
+							cltes.setTransporte("-");
+						}
+						
+						if(!StringUtils.isEmpty(lineArray[8])){
+							cltes.setEsCliente(lineArray[8]);
+						}
+						else{
+							cltes.setEsCliente("-");
+						}
+						
+						if(!StringUtils.isEmpty(lineArray[9])){
+							cltes.setEsVendedor(lineArray[9]);
+						}
+						else{
+							cltes.setEsVendedor("-");
+						}
+						
+						if(!StringUtils.isEmpty(lineArray[10])){
+							cltes.setEsTransporte(lineArray[10]);
+						}
+						else{
+							cltes.setEsTransporte("-");
+						}
+		
+		
+						Clientes.add(cltes);
 					
-					if(!StringUtils.isEmpty(lineArray[3])){
-						cltes.setLocalidad(lineArray[3]);
-					}
-					else{
-						cltes.setLocalidad("-");
-					}
-					
-					if(!StringUtils.isEmpty(lineArray[4])){
-						cltes.setCp(lineArray[4]);
-					}
-					else{
-						cltes.setCp("-");
-					}
-					
-					if(!StringUtils.isEmpty(lineArray[5])){
-						cltes.setZona(lineArray[5]);
-					}
-					else{
-						cltes.setZona("-");
-					}
-					
-					if(!StringUtils.isEmpty(lineArray[6])){
-						cltes.setVendedor(lineArray[6]);
-					}
-					else{
-						cltes.setVendedor("-");
-					}
-					
-					if(!StringUtils.isEmpty(lineArray[7])){
-						cltes.setTransporte(lineArray[7]);
-					}
-					else{
-						cltes.setTransporte("-");
-					}
-					
-					if(!StringUtils.isEmpty(lineArray[8])){
-						cltes.setEsCliente(lineArray[8]);
-					}
-					else{
-						cltes.setEsCliente("-");
-					}
-					
-					if(!StringUtils.isEmpty(lineArray[9])){
-						cltes.setEsVendedor(lineArray[9]);
-					}
-					else{
-						cltes.setEsVendedor("-");
-					}
-					
-					if(!StringUtils.isEmpty(lineArray[10])){
-						cltes.setEsTransporte(lineArray[10]);
-					}
-					else{
-						cltes.setEsTransporte("-");
-					}
-	
-	
-					Clientes.add(cltes);
+					}//end if de si existe el cliente
 				
 				} //end if bandera para que no tome la primer linea
 				else{

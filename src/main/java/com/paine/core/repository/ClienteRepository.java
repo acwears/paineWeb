@@ -9,6 +9,8 @@ import main.java.com.paine.core.model.Cliente;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 
 @Repository
@@ -86,6 +88,22 @@ public class ClienteRepository extends JDBCRepository{
 			
 			return cliente;
 		});
+	}
+	
+	public boolean existeCliente(int nro) {
+		try {
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append(" SELECT * FROM clientes WHERE nro_cliente = ? ");
+			Object[] params = new Object[]{nro};
+			
+			return getJdbcTemplate().queryForObject(sb.toString(), params, (rs, rowNum) -> {
+				return true;
+			});
+			
+		} catch (EmptyResultDataAccessException e) {
+			return false;
+		}
 	}
 	
 	public void saveCliente(List<Cliente> clientes){

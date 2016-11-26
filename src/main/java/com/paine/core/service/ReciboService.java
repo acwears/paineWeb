@@ -204,4 +204,8 @@ public class ReciboService {
 			tpRetencionRepository.save(tpRetencion);
 		}
 	}
+	
+	public int existeElRecibo(int nro){
+		return  reciboRepository.existeRecibo(nro);
+	}
 }

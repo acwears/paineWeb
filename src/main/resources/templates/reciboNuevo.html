@@ -31,8 +31,12 @@
     				<input type="miTabPanelText2" class="form-control" id="fechaRecibo" aria-describedby="basic-addon16">
     			</div>
     			<input type="miTabPanelText2" class="form-control" id="fechaActual" style="display: none;" readonly="readonly">
-            </div>                                
-
+    			
+    			<div id="miControlRecibo">
+    				<!-- ESTE CONTENIDO LO COMPLETARA AJAX -->
+    			</div>
+            </div>          
+                  
     		<div class="col-xs-12 col-sm-6 col-md-2 col-lg-2 col-lg-offset-2">	    			
     			<input type="text" class="form-control" id="clienteId" style="display: none;" readonly="readonly">
     			<div class="input-group input-group-sm">
@@ -573,6 +577,25 @@
 		});
 		
 		
+		$('#nroRecibo').blur(function() {
+			var nroRecibo = $("#nroRecibo").val();
+			//alert("lost focuuuuuus");
+			$.ajax({
+				url : '/chekRecibo',
+				data : 'nroRecibo=' + nroRecibo,
+				type : 'GET',
+				dataType : 'html',
+				success : function(data) {
+					$('#miControlRecibo').html(data);
+					/*$("#modal_factura").modal();
+		 			ajaxExecuted = true;*/
+				},
+				error : function() {
+					// Aqui código cuando servidor retorna error
+				}
+			});
+		});
+		
 		$("#mostrar_mdl_factura").click(function() {
 			
 			// Do not call ajax again if it already was called				
@@ -926,7 +949,23 @@
 		$("#clienteNombre").val(clienteNombre);
 		$("#clienteId").val(clienteId);
 		
-		ajaxExecuted = false;		
+		ajaxExecuted = false;
+		
+		//var reciboNroOk = '0';
+		
+		//elimino los datos de la tabla factura al seleccionar nuevamente un cliente
+		$('#tblFactura tr').each(function() {
+			var trs=$("#tblFactura tr").length;
+			if(trs>1)
+            {
+                // Eliminamos la ultima columna
+                $("#tblFactura tr:last").remove();
+            }
+		});
+		
+		$('#facturasMontoTotal').val(0);
+		calcularMontoTotalRecibo();
+ 		calcularBalance();
 	};
 	
 	
@@ -985,7 +1024,14 @@
 			$('#modalMensajes').modal();			
 			return false;
 		}
-		
+			
+		if($('#ctrlRecibo').val() == '1'){
+			document.getElementById('textModal').innerHTML = '- El Nº de recibo ya existe en el sistema.';
+			$('#modalMensajes').modal();
+			errObject = '#nroRecibo';
+			return false;
+		}
+			
 		if($('#fechaRecibo').val() == ''){
 			document.getElementById('textModal').innerHTML = '- Ingrese la fecha del Recibo.';
 			errObject = '#fechaRecibo';

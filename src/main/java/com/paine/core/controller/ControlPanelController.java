@@ -305,12 +305,16 @@ public class ControlPanelController {
 			celda.setCellStyle(my_style_encabezado);
 			
 			celda = fila.createCell(13);
+			celda.setCellValue("Observaciones");
+			celda.setCellStyle(my_style_encabezado);
+			
+		/*	celda = fila.createCell(13);
 			celda.setCellValue("Descuento");
 			celda.setCellStyle(my_style_encabezado);
 			
 			celda = fila.createCell(14);
 			celda.setCellValue("Descripción");
-			celda.setCellStyle(my_style_encabezado);
+			celda.setCellStyle(my_style_encabezado); */
 
 			// ***** FIN INICIALIZACION
 
@@ -355,6 +359,11 @@ public class ControlPanelController {
 					celda.setCellValue(recibo.getCliente().getNombre());
 					celda.setCellStyle(my_style);
 					
+					//OBSERVACIONES
+					celda = fila.createCell(13);
+					celda.setCellValue(recibo.getObservaciones());
+					celda.setCellStyle(my_style);
+					
 					
 					// codigo para sber en que fila arranca el siguiente recibo
 					if (filaComienzoSiguienteRecibo < fi) {
@@ -377,6 +386,23 @@ public class ControlPanelController {
 						
 						fi++;
 					}
+					
+					//ini DESCUENTO
+					for(Descuento descuento : reciboCompleto.getDescuentos()){
+						fila = hoja.getRow(fi);
+						
+						celda = fila.createCell(2);
+						celda.setCellValue(descuento.getDescripcion());
+						celda.setCellStyle(my_style);
+						
+						celda = fila.createCell(3);
+						celda.setCellValue(descuento.getPorcentaje());
+						celda.setCellStyle(my_style);
+						
+						fi++;
+					}
+					//end new descuento y descripcion
+					
 					// codigo para sber en que fila arranca el siguiente recibo
 					if (filaComienzoSiguienteRecibo < fi) {
 						filaComienzoSiguienteRecibo = fi;
@@ -482,8 +508,11 @@ public class ControlPanelController {
 						filaComienzoSiguienteRecibo = fi;
 					}
 					
+					
+					
+					
 					//DESCUENTO
-					fi = filaIni_XCadaTipoDePago;
+				/*	fi = filaIni_XCadaTipoDePago;
 					for(Descuento descuento : reciboCompleto.getDescuentos()){
 						fila = hoja.getRow(fi);
 						celda = fila.createCell(13);
@@ -500,7 +529,12 @@ public class ControlPanelController {
 					// codigo para sber en que fila arranca el siguiente recibo
 					if (filaComienzoSiguienteRecibo < fi) {
 						filaComienzoSiguienteRecibo = fi;
-					}
+					}*/
+					
+					
+					
+					
+					
 					// RETENCION scar
 					/*
 					 * for(TpRetencion retenciones :

@@ -690,4 +690,20 @@ public List<Recibo> lotesEnviadosAgrupadosPorLote() {
 			return 0;
 		}
 	}
+	
+	public int existeRecibo(int nro) {
+		try {
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append(" SELECT * FROM recibo WHERE nro_recibo = ? ");
+			Object[] params = new Object[]{nro};
+			
+			return getJdbcTemplate().queryForObject(sb.toString(), params, (rs, rowNum) -> {
+				return 1;
+			});
+			
+		} catch (EmptyResultDataAccessException e) {
+			return 0;
+		}
+	}
 }

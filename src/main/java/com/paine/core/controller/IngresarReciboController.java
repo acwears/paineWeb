@@ -32,6 +32,7 @@ import main.java.com.paine.core.model.Usuario;
 import main.java.com.paine.core.repository.BancoRepository;
 import main.java.com.paine.core.repository.ClienteRepository;
 import main.java.com.paine.core.repository.CuentaCorrienteRepository;
+import main.java.com.paine.core.repository.ReciboRepository;
 import main.java.com.paine.core.repository.TpDepositoRepository;
 import main.java.com.paine.core.service.CuentaCorrienteService;
 import main.java.com.paine.core.service.ReciboService;
@@ -285,5 +286,22 @@ public class IngresarReciboController {
 		// reciboService.salvar(recibo);
 
 		return recibo;
+	}
+	
+	@RequestMapping("/chekRecibo")
+	public String chekRecibo(@RequestParam Integer nroRecibo, Model model) {
+		
+		try {
+			int bandera;
+			bandera = reciboService.existeElRecibo(nroRecibo);
+			//List<CuentaCorriente> cuentasCorrientes = cuentaCorrienteRepository.cargarCCByCustomer(clienteNro);
+			model.addAttribute("bandera", bandera);	
+			//model.addAttribute("reciboDto", new ReciboDto());
+			
+		} catch (Exception e) {
+			log.info("THIS IS THE LOGGER *** There is exception! ***", e);
+		}
+
+		return "chekDuplicidadRecibo";
 	}
 }

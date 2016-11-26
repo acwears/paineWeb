@@ -30,7 +30,8 @@
 						<tr th:each="varRecibosSinEnviar : ${recibos}">
 							<td th:text="${varRecibosSinEnviar.lote}"></td>
 							<td th:text="${varRecibosSinEnviar.fechaLote}"></td>
-							<td th:text="${varRecibosSinEnviar.importeTotal}"></td>
+							<!-- <td th:text="${varRecibosSinEnviar.importeTotal}"></td> -->
+					 		<td th:text="${#numbers.formatDecimal(varRecibosSinEnviar.importeTotal, 0, 2)}"></td>
 							<td th:text="${varRecibosSinEnviar.getUsuario().nombre}"></td>
 							<td th:text="${varRecibosSinEnviar.estadoLote}"></td>
 						</tr>
