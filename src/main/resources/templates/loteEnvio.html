@@ -44,6 +44,7 @@
 			<input class="btn btn-secondary btn-sm" type="button" value="Seleccionar todos" id="idSelectAll">
 		</div>
 		<input class="btn btn-primary btn-lg" type="button" value="Enviar Lote" id="idEnviarLote">
+		<input class="btn btn-primary btn-lg" type="button" value="Previsualización en excel" id="idPrevisualizar">
 		<br>
 		<br>
 	<!-- 	<input th:value="${nroLote}" id="idNroLote" readonly="readonly" width="50px">  -->
@@ -106,7 +107,48 @@ $(document).ready(function(){
 		
 		$('#reciboFormId').submit();
 	});
-});
+	
+	
+	//inicio previsualizacion
+	$("#idPrevisualizar").click(function(){
+		var noSeleccionoRecibo = true;
+		var recibosPre = [];
+		var cant = 0;
+		
+		$('#tblRecibos').find('tr').each(function () {
+	        var row = $(this);
+	        if (row.find('input[type="checkbox"]').is(':checked')) {
+	        	
+	        	noSeleccionoRecibo = false;			
+	        	recibosPre[cant] = $(this).find('.miId').text();            
+
+	        	cant++;
+	        }
+	    });
+		
+		if(noSeleccionoRecibo){
+			alert("Debe seleccionar al menos un recibo!");
+			return;
+		}
+		
+		$.fileDownload("crearExcelPorRecibosALotear", {
+			data: 'recibosPre=' + recibosPre, 
+			successCallback: function (url) { 
+				// No se que vas a hacer acá
+
+			}, 
+			failCallback: function (responseHtml, url, error) { 
+				$('.alert.alert-danger').show();
+				$('.alert.alert-danger').fadeOut(5000);
+			}		
+		});
+		
+		//alert("termino previsualizacion");
+		
+	});
+	//end previsualizacion
+	
+}); //end ready function
 
 crearHiddenB = function(nameVar, valueVar, id){
 	//elimino los '.' y los espacios en blanco para el ID del Hidden

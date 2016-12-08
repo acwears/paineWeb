@@ -409,6 +409,48 @@ public class ReciboRepository extends JDBCRepository {
 		});
 	}
 	
+	public List<Recibo> recibosParaPrevisualizar(int recib) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		if (recib != 0){
+			sb.append(" SELECT re.*, cl.id as idCliente, cl.nro_cliente, cl.nombre FROM recibo re ");
+			sb.append(" JOIN clientes cl ON cl.id = re.id_cliente ");
+			sb.append(" WHERE re.id =" + recib); //sb.append(" WHERE re.exportado = 'ENVIADO' AND re.lote =" + lote);
+		}
+		else{
+			sb.append(" SELECT re.*, cl.id as idCliente, cl.nro_cliente, cl.nombre FROM recibo re ");
+			sb.append(" JOIN clientes cl ON cl.id = re.id_cliente ");
+			sb.append(" WHERE re.exportado = 'ENVIADO'"); //sb.append(" WHERE re.exportado = 'ENVIADO'");
+		}
+		
+		return getJdbcTemplate().query(sb.toString(), (rs, rowNum) -> {
+
+			Recibo recibos = new Recibo();
+
+			recibos.setId(rs.getInt("id"));
+			recibos.setNumero(rs.getInt("nro_recibo"));
+			recibos.setDescuento(rs.getDouble("descuento"));
+			recibos.setFecha(rs.getDate("fecha"));
+			recibos.setFechaProceso(rs.getDate("fecha_proceso"));
+			recibos.setImporteSumaFacturas(rs.getDouble("importe_suma_facturas"));
+			recibos.setImporteTotal(rs.getDouble("importe_total"));
+			recibos.setObservaciones(rs.getString("observaciones"));
+			recibos.setFechaProceso(rs.getDate("fecha_proceso"));
+			recibos.setLote(rs.getInt("lote"));
+			recibos.setFechaLote(rs.getDate("fecha_lote"));
+			
+			Cliente cliente = new Cliente();
+			cliente.setId(rs.getInt("idCliente"));
+			cliente.setNumeroCliente(rs.getInt("nro_cliente"));
+			cliente.setNombre(rs.getString("nombre"));
+
+			recibos.setCliente(cliente);
+
+			return recibos;
+		});
+	}
+	
 public List<Recibo> recibosEnEsperaDeEnvio() {
 		
 		StringBuilder sb = new StringBuilder();
