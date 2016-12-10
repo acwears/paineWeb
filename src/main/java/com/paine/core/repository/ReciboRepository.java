@@ -325,14 +325,14 @@ public class ReciboRepository extends JDBCRepository {
 		sb.append(" importe_suma_facturas = ?, ");
 		sb.append(" importe_total = ?, ");
 		sb.append(" observaciones = ?, ");
-		sb.append(" id_usuario = ?, ");
+		//sb.append(" id_usuario = ?, ");
 		sb.append(" fecha_proceso = ? ");
 		sb.append(" WHERE id = ? ");
 
 		// recibo.getFecha()
-
+		//26561556
 		Object[] params = new Object[] { recibo.getNumero(), recibo.getCliente().getId(), recibo.getFecha(), recibo.getDescuento(), recibo.getImporteSumaFacturas(), recibo.getImporteTotal(),
-				recibo.getObservaciones(), 26561556, recibo.getFechaProceso(), recibo.getId() };
+				recibo.getObservaciones(), recibo.getFechaProceso(), recibo.getId() };
 
 		getJdbcTemplate().update(sb.toString(), params);
 	}
