@@ -360,6 +360,10 @@ private FileOutputStream generarExcel(Integer lotes, ServletOutputStream outputS
 			// ***** FIN INICIALIZACION
 
 			//for (Integer lote : lotes) {
+			//new 12/12/2016
+			double montoRecibo = 0;
+			double montoFacturas = 0;
+			
 			int lote = lotes;
 
 				List<Recibo> recibos = reciboRepository.recibosParaExportar(lote);
@@ -408,6 +412,10 @@ private FileOutputStream generarExcel(Integer lotes, ServletOutputStream outputS
 					celda.setCellValue(recibo.getObservaciones());
 					celda.setCellStyle(my_style);
 					
+					//new 12/12/2016
+					montoRecibo = recibo.getImporteTotal();
+					montoFacturas = recibo.getImporteSumaFacturas();
+					
 					// codigo para sber en que fila arranca el siguiente recibo
 					if (filaComienzoSiguienteRecibo < fi) {
 						filaComienzoSiguienteRecibo = fi;
@@ -425,6 +433,20 @@ private FileOutputStream generarExcel(Integer lotes, ServletOutputStream outputS
 						// factura importe
 						celda = fila.createCell(3); //3
 						celda.setCellValue(fac.getMonto());
+						celda.setCellStyle(my_style);
+						
+						fi++;
+					}
+					
+					//new 12/12/2016
+					if(montoRecibo > montoFacturas){
+						fila = hoja.getRow(fi);
+						celda = fila.createCell(2);
+						celda.setCellValue("a cuenta");
+						celda.setCellStyle(my_style);
+						
+						celda = fila.createCell(3); //3
+						celda.setCellValue(montoRecibo - montoFacturas);
 						celda.setCellStyle(my_style);
 						
 						fi++;
@@ -575,17 +597,32 @@ private FileOutputStream generarExcel(Integer lotes, ServletOutputStream outputS
 
 			//} // fin del for de lotes
 
-			/*
-			 * fila = hoja.getRow(fi+1); celda = fila.createCell(3); String
-			 * formula = "=SUM(D2:D" + fi + ")";
-			 * celda.setCellFormula("formula");
-			 * 
-			 * celda = fila.createCell(5); formula = "=SUM(F2:F" + fi + ")";
-			 * celda.setCellFormula("formula");
-			 * 
-			 * celda = fila.createCell(9); formula = "=SUM(J2:J" + fi + ")";
-			 * celda.setCellFormula("formula");
-			 */
+			  String formula="";
+			  fila = hoja.getRow(filaComienzoSiguienteRecibo+1);
+			  
+			  celda = fila.createCell(2);
+			  celda.setCellValue("TOTALES");
+			  
+			  celda = fila.createCell(3); 
+			  formula = "SUM(D5:D" + filaComienzoSiguienteRecibo + ")";
+			  celda.setCellFormula(formula);
+			  
+			  celda = fila.createCell(5);
+			  formula = "SUM(F5:F" + filaComienzoSiguienteRecibo + ")";
+			  celda.setCellFormula(formula);
+			  
+			  celda = fila.createCell(9);
+			  formula = "SUM(J5:J" + filaComienzoSiguienteRecibo + ")";
+			  celda.setCellFormula(formula);
+			  
+			  celda = fila.createCell(10);
+			  formula = "SUM(K5:K" + filaComienzoSiguienteRecibo + ")";
+			  celda.setCellFormula(formula);
+			  
+			  celda = fila.createCell(11);
+			  formula = "SUM(L5:L" + filaComienzoSiguienteRecibo + ")";
+			  celda.setCellFormula(formula);
+			 
 
 			hoja.autoSizeColumn(0);
 			hoja.autoSizeColumn(1);
@@ -688,7 +725,7 @@ private FileOutputStream generarExcelResivosPrevisualizar(Integer[] lotes, Servl
 	my_style_encabezado.setFillForegroundColor(IndexedColors.GREY_80_PERCENT.getIndex());
 	//end fuente
 	
-	SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
+	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	String fechaReciboStr;
 
 	try {
@@ -783,7 +820,10 @@ private FileOutputStream generarExcelResivosPrevisualizar(Integer[] lotes, Servl
 		celda.setCellStyle(my_style_encabezado); */
 
 		// ***** FIN INICIALIZACION
-
+		//new 12/12/2016
+		double montoRecibo = 0;
+		double montoFacturas = 0;
+		
 		for (Integer lote : lotes) {
 
 			List<Recibo> recibos = reciboRepository.recibosParaPrevisualizar(lote); //lote en realidad (en este caso) es nro de recibo
@@ -830,6 +870,10 @@ private FileOutputStream generarExcelResivosPrevisualizar(Integer[] lotes, Servl
 				celda.setCellValue(recibo.getObservaciones());
 				celda.setCellStyle(my_style);
 				
+				//new 12/12/2016
+				montoRecibo = recibo.getImporteTotal();
+				montoFacturas = recibo.getImporteSumaFacturas();
+				
 				
 				// codigo para sber en que fila arranca el siguiente recibo
 				if (filaComienzoSiguienteRecibo < fi) {
@@ -848,6 +892,20 @@ private FileOutputStream generarExcelResivosPrevisualizar(Integer[] lotes, Servl
 					// factura importe
 					celda = fila.createCell(3); //3
 					celda.setCellValue(fac.getMonto());
+					celda.setCellStyle(my_style);
+					
+					fi++;
+				}
+				
+				//new 12/12/2016
+				if(montoRecibo > montoFacturas){
+					fila = hoja.getRow(fi);
+					celda = fila.createCell(2);
+					celda.setCellValue("a cuenta");
+					celda.setCellStyle(my_style);
+					
+					celda = fila.createCell(3); //3
+					celda.setCellValue(montoRecibo - montoFacturas);
 					celda.setCellStyle(my_style);
 					
 					fi++;
@@ -1035,18 +1093,33 @@ private FileOutputStream generarExcelResivosPrevisualizar(Integer[] lotes, Servl
 
 		} // fin del for de lotes
 
-		/*
-		 * fila = hoja.getRow(fi+1); celda = fila.createCell(3); String
-		 * formula = "=SUM(D2:D" + fi + ")";
-		 * celda.setCellFormula("formula");
-		 * 
-		 * celda = fila.createCell(5); formula = "=SUM(F2:F" + fi + ")";
-		 * celda.setCellFormula("formula");
-		 * 
-		 * celda = fila.createCell(9); formula = "=SUM(J2:J" + fi + ")";
-		 * celda.setCellFormula("formula");
-		 */
+		  String formula="";
+		  fila = hoja.getRow(filaComienzoSiguienteRecibo+1);
+		  
+		  celda = fila.createCell(2);
+		  celda.setCellValue("TOTALES");
+		  
+		  celda = fila.createCell(3); 
+		  formula = "SUM(D5:D" + filaComienzoSiguienteRecibo + ")";
+		  celda.setCellFormula(formula);
+		  
+		  celda = fila.createCell(5);
+		  formula = "SUM(F5:F" + filaComienzoSiguienteRecibo + ")";
+		  celda.setCellFormula(formula);
+		  
+		  celda = fila.createCell(9);
+		  formula = "SUM(J5:J" + filaComienzoSiguienteRecibo + ")";
+		  celda.setCellFormula(formula);
+		  
+		  celda = fila.createCell(10);
+		  formula = "SUM(K5:K" + filaComienzoSiguienteRecibo + ")";
+		  celda.setCellFormula(formula);
+		  
+		  celda = fila.createCell(11);
+		  formula = "SUM(L5:L" + filaComienzoSiguienteRecibo + ")";
+		  celda.setCellFormula(formula);
 
+		  
 		hoja.autoSizeColumn(0);
 		hoja.autoSizeColumn(1);
 		hoja.autoSizeColumn(2);
