@@ -320,6 +320,7 @@ public class ControlPanelController {
 			//new 12/12/2016
 			double montoRecibo = 0;
 			double montoFacturas = 0;
+			double montoDescuento = 0;
 			
 			for (Integer lote : lotes) {
 
@@ -370,6 +371,7 @@ public class ControlPanelController {
 					//new 12/12/2016
 					montoRecibo = recibo.getImporteTotal();
 					montoFacturas = recibo.getImporteSumaFacturas();
+					montoDescuento = recibo.getDescuento();
 					
 					// codigo para sber en que fila arranca el siguiente recibo
 					if (filaComienzoSiguienteRecibo < fi) {
@@ -401,7 +403,7 @@ public class ControlPanelController {
 						celda.setCellStyle(my_style);
 						
 						celda = fila.createCell(3); //3
-						celda.setCellValue(montoRecibo - montoFacturas);
+						celda.setCellValue(montoRecibo - montoFacturas + montoDescuento);
 						celda.setCellStyle(my_style);
 						
 						fi++;
@@ -416,7 +418,7 @@ public class ControlPanelController {
 						celda.setCellStyle(my_style);
 						
 						celda = fila.createCell(3);
-						celda.setCellValue(descuento.getPorcentaje());
+						celda.setCellValue(descuento.getPorcentaje()*-1);
 						celda.setCellStyle(my_style);
 						
 						fi++;
@@ -593,25 +595,31 @@ public class ControlPanelController {
 			  fila = hoja.getRow(filaComienzoSiguienteRecibo+1);
 			  
 			  celda = fila.createCell(2);
+			  celda.setCellStyle(my_style);
 			  celda.setCellValue("TOTALES");
 			  
 			  celda = fila.createCell(3); 
+			  celda.setCellStyle(my_style);
 			  formula = "SUM(D5:D" + filaComienzoSiguienteRecibo + ")";
 			  celda.setCellFormula(formula);
 			  
 			  celda = fila.createCell(5);
+			  celda.setCellStyle(my_style);
 			  formula = "SUM(F5:F" + filaComienzoSiguienteRecibo + ")";
 			  celda.setCellFormula(formula);
 			  
 			  celda = fila.createCell(9);
+			  celda.setCellStyle(my_style);
 			  formula = "SUM(J5:J" + filaComienzoSiguienteRecibo + ")";
 			  celda.setCellFormula(formula);
 			  
 			  celda = fila.createCell(10);
+			  celda.setCellStyle(my_style);
 			  formula = "SUM(K5:K" + filaComienzoSiguienteRecibo + ")";
 			  celda.setCellFormula(formula);
 			  
 			  celda = fila.createCell(11);
+			  celda.setCellStyle(my_style);
 			  formula = "SUM(L5:L" + filaComienzoSiguienteRecibo + ")";
 			  celda.setCellFormula(formula);
 
