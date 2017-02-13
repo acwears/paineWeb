@@ -211,9 +211,15 @@ public class FileService {
 			//DEPOSITO:
 			String fechaDepositoStr;
 			for(TpDeposito depositoss : reciboCompleto.getTpDepositos()){
+				
+				//inicio saco el numero de imputacion para deposito new del 13/02/2017
+				
+				//end saco el numero de imputacion para deposito new del 13/02/2017
+				
 				fechaDepositoStr = sdf.format(depositoss.getFecha());
 				
-				cabeceraTR2(recibo.getNumero(), "14", "121209", depositoss.getMonto());
+				//cabeceraTR2(recibo.getNumero(), "14", "121209", depositoss.getMonto()); //este es de antes de la linea de abajo
+				cabeceraTR2(recibo.getNumero(), depositoss.getTipoDePago().getCodigo(), depositoss.getTipoDePago().getImputacion(), depositoss.getMonto()); //new 13/02/2017
 				
 				//sb.append("A"); //pago de terceros, A ó B VER
 				//sb.append(StringUtils.leftPad(Integer.toString(depositoss.getBanco().getCodigo()),11,"0"));

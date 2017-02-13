@@ -15,6 +15,7 @@ public class TpDeposito extends Bean{
 	//private int banco;
 	private Banco banco;
 	private Date fecha;
+	private TipoDePago tipoDePago;
 	
 	public Recibo getRecibo() {
 		return recibo;
@@ -50,6 +51,12 @@ public class TpDeposito extends Bean{
 	}
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+	public TipoDePago getTipoDePago() {
+		return tipoDePago;
+	}
+	public void setTipoDePago(TipoDePago tipoDePago) {
+		this.tipoDePago = tipoDePago;
 	}
 
 }

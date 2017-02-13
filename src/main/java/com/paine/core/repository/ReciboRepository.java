@@ -16,6 +16,7 @@ import main.java.com.paine.core.model.Cliente;
 import main.java.com.paine.core.model.Descuento;
 import main.java.com.paine.core.model.Factura;
 import main.java.com.paine.core.model.Recibo;
+import main.java.com.paine.core.model.TipoDePago;
 import main.java.com.paine.core.model.TpCheque;
 import main.java.com.paine.core.model.TpDeposito;
 import main.java.com.paine.core.model.TpEff;
@@ -29,6 +30,9 @@ public class ReciboRepository extends JDBCRepository {
 
 	@Autowired
 	private BancoRepository bancoRepository;
+	
+	@Autowired
+	private TipoDePagoRepository tipoDePagoRepository;
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
@@ -151,6 +155,10 @@ public class ReciboRepository extends JDBCRepository {
 			Banco banco = new Banco(); 
 			banco = bancoRepository.findOne(rs.getInt("id_banco"));
 			tpDeposito.setBanco(banco);
+			
+			TipoDePago tipoDePago = new TipoDePago();
+			tipoDePago = tipoDePagoRepository.findOneByID(3); //le paso ID 3 porque es el de deposito en eff para paine (bco frances)
+			tpDeposito.setTipoDePago(tipoDePago);
 			
 			return tpDeposito;
 		});
